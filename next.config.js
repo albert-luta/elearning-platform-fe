@@ -1,3 +1,4 @@
 module.exports = {
-	env: {}
+	env: {},
+	reactStrictMode: true
 };

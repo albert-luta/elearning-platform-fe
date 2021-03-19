@@ -1,0 +1,5 @@
+query GetTestMessage {
+	justForQuery(id: 5) {
+		exampleField
+	}
+}

@@ -1,14 +1,8 @@
-import { gql, useQuery } from '@apollo/client';
 import { Button } from '@material-ui/core';
-
-const GET_TEST_MESSAGE = gql`
-	query GetTestMessage {
-		message
-	}
-`;
+import { useGetTestMessageQuery } from '../generated/graphql';
 
 export default function Home() {
-	const { loading, data, error } = useQuery(GET_TEST_MESSAGE);
+	const { loading, data, error } = useGetTestMessageQuery();
 
 	if (loading) return <h1>Loading</h1>;
 
@@ -16,7 +10,7 @@ export default function Home() {
 
 	return (
 		<div>
-			<h1>Message: {data.message}</h1>
+			<h1>Message: {data?.justForQuery.exampleField}</h1>
 			<Button variant="contained" size="large">
 				Primary
 			</Button>

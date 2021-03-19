@@ -9,7 +9,7 @@ module.exports = {
 		},
 		project: 'tsconfig.json'
 	},
-	plugins: ['react', '@typescript-eslint/eslint-plugin', 'prettier'],
+	plugins: ['prettier', 'react', '@typescript-eslint/eslint-plugin'],
 	settings: {
 		react: {
 			version: 'detect'
@@ -24,10 +24,10 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:prettier/recommended',
+		'plugin:react/recommended',
+		'plugin:react-hooks/recommended',
 		'plugin:@typescript-eslint/eslint-recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:react/recommended',
-		'plugin:react-hooks/recommended'
 	],
 	root: true,
 	env: {
@@ -40,6 +40,7 @@ module.exports = {
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
-		'react/react-in-jsx-scope': 'off'
+		'react/react-in-jsx-scope': 'off',
+		"react/prop-types": "off"
 	}
 };

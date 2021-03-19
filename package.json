@@ -8,14 +8,9 @@
 		"start": "next start",
 		"format": "prettier --write \"*/**/*.{js,jsx,ts,tsx}\"",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-		"pre-commit": "npm run format && npm run lint && git add .",
+		"pre-commit": "npm run format && npm run lint",
 		"gen": "graphql-codegen --config codegen.yml",
 		"prepare": "husky install"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run pre-commit"
-		}
 	},
 	"dependencies": {
 		"@apollo/client": "^3.3.12",

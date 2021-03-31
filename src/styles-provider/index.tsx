@@ -1,4 +1,4 @@
-import { FC, memo, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { ThemeProvider as MaterialUiProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider as StyledComponentsProvider } from 'styled-components';
@@ -10,11 +10,7 @@ const theme = createMuiTheme({
 	}
 });
 
-console.log({ theme });
-
-export const GlobalStylesProvider: FC = memo(function GlobalStylesProvider({
-	children
-}) {
+export const GlobalStylesProvider: FC = ({ children }) => {
 	// Material-ui Server-side rendering thing
 	useEffect(() => {
 		// Remove the server-side injected CSS.
@@ -32,4 +28,4 @@ export const GlobalStylesProvider: FC = memo(function GlobalStylesProvider({
 			</StyledComponentsProvider>
 		</MaterialUiProvider>
 	);
-});
+};

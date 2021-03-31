@@ -1,19 +1,15 @@
-import { Button } from '@material-ui/core';
-import { useGetTestMessageQuery } from '../generated/graphql';
+import Link from 'next/link';
 
 export default function Home() {
-	const { loading, data, error } = useGetTestMessageQuery();
-
-	if (loading) return <h1>Loading</h1>;
-
-	if (error) return <h1>{error.message}</h1>;
-
 	return (
 		<div>
-			<h1>Message: {data?.justForQuery.exampleField}</h1>
-			<Button variant="contained" size="large">
-				Primary
-			</Button>
+			<h1>
+				This is just the presentation page, to proceed to the app click{' '}
+				<Link href="/app/auth">
+					<a>here</a>
+				</Link>
+				.
+			</h1>
 		</div>
 	);
 }

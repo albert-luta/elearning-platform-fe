@@ -3,15 +3,16 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "concurrently -n next,codegen \"next dev\" \"npm run gen:watch\"",
 		"build": "next build",
 		"start": "next start",
-		"check:format": "prettier --check \"*/**/*.{js,jsx,ts,tsx}\"",
-		"check:lint": "eslint . --ext .js,.jsx,.ts,.tsx",
 		"format": "prettier --write \"*/**/*.{js,jsx,ts,tsx}\"",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+		"check:format": "prettier --check \"*/**/*.{js,jsx,ts,tsx}\"",
+		"check:lint": "eslint . --ext .js,.jsx,.ts,.tsx",
 		"pre-commit": "npm run check:format && npm run check:lint",
 		"gen": "graphql-codegen --config codegen.yml",
+		"gen:watch": "graphql-codegen --config codegen.yml -w",
 		"prepare": "husky install"
 	},
 	"dependencies": {
@@ -20,6 +21,7 @@
 		"@material-ui/icons": "^4.11.2",
 		"graphql": "^15.5.0",
 		"next": "10.0.9",
+		"notistack": "^1.0.5",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
 		"styled-components": "^5.2.1"
@@ -35,6 +37,7 @@
 		"@typescript-eslint/eslint-plugin": "^4.18.0",
 		"@typescript-eslint/parser": "^4.18.0",
 		"babel-plugin-styled-components": "^1.12.0",
+		"concurrently": "^6.0.0",
 		"eslint": "^7.22.0",
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-import": "^2.22.1",

@@ -1,0 +1,5 @@
+mutation Register($user: RegisterUserInput!) {
+	register(user: $user) {
+		...AuthenticationFields
+	}
+}

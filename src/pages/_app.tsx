@@ -2,21 +2,34 @@ import { ApolloProvider } from '@apollo/client';
 import { AppProps } from 'next/app';
 import { client } from '../store';
 import { GlobalStylesProvider } from '../styles-provider';
-import Head from 'next/head';
+import { ProtectRoutes } from '../domains/auth/components/ProtectRoutes';
+import { SnackbarProvider } from 'notistack';
+import { SnackbarUtilsConfigurator } from '../domains/shared/utils/snackbar';
+import { MyHead } from '../domains/shared/components/MyHead';
+import { RefreshTokens } from '../domains/auth/components/RefreshTokens';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
-			<Head>
+			<MyHead>
+				<meta charSet="UTF-8" />
+				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 				<meta
 					name="viewport"
-					content="minimum-scale=1, initial-scale=1, width=device-width"
+					content="width=device-width, initial-scale=1.0"
 				/>
-			</Head>
+			</MyHead>
 
 			<ApolloProvider client={client}>
 				<GlobalStylesProvider>
-					<Component {...pageProps} />
+					<SnackbarProvider>
+						<SnackbarUtilsConfigurator />
+						<RefreshTokens>
+							<ProtectRoutes>
+								<Component {...pageProps} />
+							</ProtectRoutes>
+						</RefreshTokens>
+					</SnackbarProvider>
 				</GlobalStylesProvider>
 			</ApolloProvider>
 		</>

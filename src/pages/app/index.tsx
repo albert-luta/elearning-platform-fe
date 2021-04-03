@@ -1,4 +1,4 @@
-import { useLogoutMutation, useTestAuthQuery } from '../../generated/graphql';
+import { useLogoutMutation, useTestAuthQuery } from 'generated/graphql';
 
 export default function App() {
 	const [logout] = useLogoutMutation();

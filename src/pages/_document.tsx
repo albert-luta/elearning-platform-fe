@@ -18,10 +18,8 @@ export default class MyDocument extends Document {
 			ctx.renderPage = () =>
 				originalRenderPage({
 					enhanceApp: (App) => (props) =>
-						materialUiSheet.collect(
-							styledComponentsSheet.collectStyles(
-								<App {...props} />
-							)
+						styledComponentsSheet.collectStyles(
+							materialUiSheet.collect(<App {...props} />)
 						)
 				});
 
@@ -31,8 +29,8 @@ export default class MyDocument extends Document {
 				styles: (
 					<>
 						{initialProps.styles}
-						{styledComponentsSheet.getStyleElement()}
 						{materialUiSheet.getStyleElement()}
+						{styledComponentsSheet.getStyleElement()}
 					</>
 				)
 			};

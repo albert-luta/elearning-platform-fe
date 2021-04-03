@@ -1,10 +1,13 @@
 import { FC, useEffect } from 'react';
 import { ThemeProvider as MaterialUiProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider as StyledComponentsProvider } from 'styled-components';
+import {
+	DefaultTheme,
+	ThemeProvider as StyledComponentsProvider
+} from 'styled-components';
 import { createMuiTheme } from '@material-ui/core';
 
-const theme = createMuiTheme({
+const theme: DefaultTheme = createMuiTheme({
 	palette: {
 		type: 'dark'
 	}

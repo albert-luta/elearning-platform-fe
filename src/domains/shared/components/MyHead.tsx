@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 import Head from 'next/head';
-import { APP_NAME } from '../constants';
+import { APP_NAME } from '../constants/app-name';
 
 interface MyHeadProps {
 	title?: string;

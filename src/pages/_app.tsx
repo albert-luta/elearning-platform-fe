@@ -2,11 +2,11 @@ import { ApolloProvider } from '@apollo/client';
 import { AppProps } from 'next/app';
 import { client } from '../store';
 import { GlobalStylesProvider } from '../styles-provider';
-import { ProtectRoutes } from '../domains/auth/components/ProtectRoutes';
+import { ProtectRoutes } from 'domains/auth/components/ProtectRoutes';
 import { SnackbarProvider } from 'notistack';
-import { SnackbarUtilsConfigurator } from '../domains/shared/utils/snackbar';
-import { MyHead } from '../domains/shared/components/MyHead';
-import { RefreshTokens } from '../domains/auth/components/RefreshTokens';
+import { SnackbarUtilsConfigurator } from 'domains/shared/utils/snackbar';
+import { RefreshTokens } from 'domains/auth/components/RefreshTokens';
+import { MyHead } from 'domains/shared/components/MyHead';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (

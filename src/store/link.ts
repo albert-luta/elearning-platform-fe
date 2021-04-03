@@ -1,8 +1,8 @@
 import { ApolloLink, HttpLink } from '@apollo/client';
-import { accessTokenVar } from '../domains/auth/reactive-vars';
+import { accessTokenVar } from 'domains/auth/reactive-vars';
 import { onError } from '@apollo/client/link/error';
-import { resetStore } from '../domains/global/utils/resetStore';
-import { SnackbarUtils } from '../domains/shared/utils/snackbar';
+import { resetStore } from 'domains/global/utils/resetStore';
+import { SnackbarUtils } from 'domains/shared/utils/snackbar';
 
 const httpLink = new HttpLink({
 	uri: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -44,6 +44,13 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 				SnackbarUtils.enqueueSnackbar(snackbarMessage, {
 					variant: 'error'
 				});
+			} else if (statusCode === 500) {
+				SnackbarUtils.enqueueSnackbar(
+					'There was an internal server error, please try again later!',
+					{
+						variant: 'error'
+					}
+				);
 			}
 		});
 	}

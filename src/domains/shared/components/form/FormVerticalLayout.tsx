@@ -2,18 +2,18 @@ import { Children, FC, memo, ReactNode } from 'react';
 import { isFragment } from 'react-is';
 import styled from 'styled-components';
 
-const FieldCss = styled.div``;
-const ActionsCss = styled.div``;
-const ContainerCss = styled.div<{ spacing: number }>`
+const Field = styled.div``;
+const Actions = styled.div``;
+const Container = styled.div<{ spacing: number }>`
 	display: flex;
 	flex-direction: column;
 
-	& > ${FieldCss}:not(:last-child) {
+	& > ${Field}:not(:last-child) {
 		padding-bottom: ${({ spacing, theme }) => theme.spacing(spacing)}px;
 	}
 
-	& > ${ActionsCss} {
-		padding-top: ${({ spacing, theme }) => 2 * theme.spacing(spacing)}px;
+	& > ${Actions} {
+		padding-top: ${({ spacing, theme }) => theme.spacing(2 * spacing)}px;
 	}
 `;
 
@@ -26,16 +26,16 @@ interface FormVerticalLayoutProps {
 export const FormVerticalLayout: FC<FormVerticalLayoutProps> = memo(
 	function FormVerticalLayout({ fields, actions, spacing = 2 }) {
 		return (
-			<ContainerCss spacing={spacing}>
+			<Container spacing={spacing}>
 				{isFragment(fields) ? (
 					Children.map(fields.props.children, (child) => (
-						<FieldCss>{child}</FieldCss>
+						<Field>{child}</Field>
 					))
 				) : (
-					<FieldCss>{fields}</FieldCss>
+					<Field>{fields}</Field>
 				)}
-				{actions && <ActionsCss>{actions}</ActionsCss>}
-			</ContainerCss>
+				{actions && <Actions>{actions}</Actions>}
+			</Container>
 		);
 	}
 );

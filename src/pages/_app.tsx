@@ -7,6 +7,7 @@ import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from 'domains/shared/utils/snackbar';
 import { RefreshTokens } from 'domains/auth/components/RefreshTokens';
 import { MyHead } from 'domains/shared/components/MyHead';
+import { GlobalLayout } from 'domains/shared/components/GlobalLayout';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
@@ -26,7 +27,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 						<SnackbarUtilsConfigurator />
 						<RefreshTokens>
 							<ProtectRoutes>
-								<Component {...pageProps} />
+								<GlobalLayout>
+									<Component {...pageProps} />
+								</GlobalLayout>
 							</ProtectRoutes>
 						</RefreshTokens>
 					</SnackbarProvider>

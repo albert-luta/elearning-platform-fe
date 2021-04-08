@@ -1,7 +1,7 @@
 import { ApolloLink, HttpLink } from '@apollo/client';
-import { accessTokenVar } from 'domains/auth/reactive-vars';
+import { accessTokenVar } from 'domains/auth/reactiveVars';
 import { onError } from '@apollo/client/link/error';
-import { resetStore } from 'domains/global/utils/resetStore';
+import { resetStore } from 'domains/shared/utils/resetStore';
 import { SnackbarUtils } from 'domains/shared/utils/snackbar';
 
 const httpLink = new HttpLink({

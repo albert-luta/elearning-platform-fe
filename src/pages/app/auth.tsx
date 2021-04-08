@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { AppBar, Box, Container, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContent } from 'domains/shared/components/TabContent';
@@ -13,12 +13,9 @@ enum AuthTabs {
 
 export default function Auth() {
 	const [selectedTab, setSelectedTab] = useState(AuthTabs.LOGIN);
-	const handleTabChange = useCallback(
-		(event: ChangeEvent<unknown>, tab: AuthTabs) => {
-			setSelectedTab(tab);
-		},
-		[]
-	);
+	const handleTabChange = useCallback((_, tab: AuthTabs) => {
+		setSelectedTab(tab);
+	}, []);
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { resetAuthReactiveVars } from '../auth/reactive-vars';
+import { resetAuthReactiveVars } from '../auth/reactiveVars';
 
 export const resetGlobalReactiveVars = () => {
 	resetAuthReactiveVars();

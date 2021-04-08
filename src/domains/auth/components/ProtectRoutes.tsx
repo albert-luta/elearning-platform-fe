@@ -1,12 +1,13 @@
 import { useReactiveVar } from '@apollo/client';
+import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
+import { isBrowser } from 'domains/shared/utils/isBrowser';
+import { isRouteMatching } from 'domains/shared/utils/isRouteMatching';
 import { NextRouter, useRouter } from 'next/router';
 import { FC, memo } from 'react';
-import { accessTokenVar } from '../reactive-vars';
-
-const PUBLIC_ROUTES = ['/', '/app/auth'];
+import { accessTokenVar } from '../reactiveVars';
 
 const redirect = (path: string, router: NextRouter) => {
-	if (typeof window !== 'undefined') {
+	if (isBrowser()) {
 		try {
 			router.push(path);
 		} catch (e) {
@@ -22,10 +23,13 @@ export const ProtectRoutes: FC = memo(function ProtectRoutes({ children }) {
 	const accessToken = useReactiveVar(accessTokenVar);
 	const isAuthenticated = !!accessToken;
 
-	if (isAuthenticated && router.pathname === '/app/auth') {
-		return redirect('/app', router);
-	} else if (!isAuthenticated && !PUBLIC_ROUTES.includes(router.pathname)) {
-		return redirect('/app/auth', router);
+	if (isAuthenticated && router.pathname === Routes.auth.LOGIN_REGISTER) {
+		return redirect(Routes.user.DASHBOARD, router);
+	} else if (
+		!isAuthenticated &&
+		!isRouteMatching(router.pathname, RoutesGroups.PUBLIC)
+	) {
+		return redirect(Routes.auth.LOGIN_REGISTER, router);
 	}
 
 	return <>{children}</>;

@@ -1,7 +1,7 @@
 import { FC, memo, useCallback, useEffect } from 'react';
 import { useRefreshTokensMutation } from 'generated/graphql';
 import { REFRESH_TOKENS_INTERVAL_TIME } from '../constants';
-import { accessTokenVar } from '../reactive-vars';
+import { accessTokenVar } from '../reactiveVars';
 
 export const RefreshTokens: FC = memo(function RefreshTokens({ children }) {
 	const [refreshTokensMutation] = useRefreshTokensMutation({

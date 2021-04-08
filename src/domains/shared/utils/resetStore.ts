@@ -1,5 +1,5 @@
 import { client } from '../../../store';
-import { resetGlobalReactiveVars } from '../reactive-vars';
+import { resetGlobalReactiveVars } from '../reactiveVars';
 
 export const resetStore = () => {
 	client.cache.reset();

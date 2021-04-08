@@ -1,13 +1,13 @@
 import { FormVerticalLayout } from 'domains/shared/components/form/FormVerticalLayout';
-import { FormErrors } from 'domains/shared/constants/form-errors';
+import { FormErrors } from 'domains/shared/constants/FormErrors';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { FC, memo, useCallback } from 'react';
 import * as yup from 'yup';
 import { useLoginMutation } from 'generated/graphql';
-import { accessTokenVar } from 'domains/auth/reactive-vars';
+import { accessTokenVar } from 'domains/auth/reactiveVars';
 import { toFormikErrors } from 'domains/shared/utils/toFormikErrors';
-import { ButtonWithLoader } from 'domains/shared/components/ButtonWithLoader';
+import { ButtonWithLoader } from 'domains/shared/components/buttons/ButtonWithLoader';
 
 interface Values {
 	email: string;
@@ -39,7 +39,8 @@ export const LoginForm: FC = memo(function LoginForm() {
 				const res = await login({
 					variables: {
 						user: values
-					}
+					},
+					fetchPolicy: 'no-cache'
 				});
 				accessTokenVar(res.data?.login.accessToken);
 			} catch (e) {

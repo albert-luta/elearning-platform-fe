@@ -1,14 +1,14 @@
-import React, { ChangeEvent, FC, memo, useCallback } from 'react';
+import { ChangeEvent, FC, memo, useCallback } from 'react';
 import * as yup from 'yup';
-import { FormErrors } from 'domains/shared/constants/form-errors';
+import { FormErrors } from 'domains/shared/constants/FormErrors';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { FormVerticalLayout } from 'domains/shared/components/form/FormVerticalLayout';
-import { Regex } from 'domains/shared/constants/regex';
+import { Regex } from 'domains/shared/constants/Regex';
 import { useRegisterMutation } from 'generated/graphql';
 import { toFormikErrors } from 'domains/shared/utils/toFormikErrors';
-import { accessTokenVar } from '../reactive-vars';
-import { ButtonWithLoader } from 'domains/shared/components/ButtonWithLoader';
+import { accessTokenVar } from '../reactiveVars';
+import { ButtonWithLoader } from 'domains/shared/components/buttons/ButtonWithLoader';
 
 interface Values {
 	firstName: string;
@@ -53,7 +53,8 @@ export const RegisterForm: FC = memo(function RegisterForm() {
 				const res = await register({
 					variables: {
 						user: values
-					}
+					},
+					fetchPolicy: 'no-cache'
 				});
 				accessTokenVar(res.data?.register.accessToken);
 			} catch (e) {

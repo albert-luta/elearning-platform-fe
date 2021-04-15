@@ -1,0 +1,15 @@
+query Me {
+	me {
+		id
+		email
+		fatherInitial
+		firstName
+		lastName
+		companies {
+			id
+			logo
+			name
+			role
+		}
+	}
+}

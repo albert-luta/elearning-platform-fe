@@ -7,4 +7,5 @@
 **/tsconfig.json
 **/.next
 **/next-env.d.ts
-src/generated/**/*
+
+src/generated

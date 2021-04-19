@@ -19,37 +19,11 @@ export type Authentication = {
   accessToken: Scalars['String'];
 };
 
-export type Company = {
-  __typename?: 'Company';
-  companyUser?: Maybe<Array<CompanyUser>>;
-  id: Scalars['ID'];
-  logo?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
+export type GroupedByRoleUniversitiesObject = {
+  __typename?: 'GroupedByRoleUniversitiesObject';
+  role: Scalars['String'];
+  universities: Array<UniversityObject>;
 };
-
-export type CompanyUser = {
-  __typename?: 'CompanyUser';
-  company: Company;
-  companyId: Scalars['String'];
-  id: Scalars['ID'];
-  role: CompanyUserRole;
-  user: User;
-  userId: Scalars['String'];
-};
-
-export type CompanyUserObject = {
-  __typename?: 'CompanyUserObject';
-  id: Scalars['ID'];
-  logo?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  role: CompanyUserRole;
-};
-
-export enum CompanyUserRole {
-  Admin = 'ADMIN',
-  Student = 'STUDENT',
-  Teacher = 'TEACHER'
-}
 
 export type LoginUserInput = {
   email: Scalars['String'];
@@ -77,7 +51,6 @@ export type MutationRegisterArgs = {
 export type Query = {
   __typename?: 'Query';
   me: UserObject;
-  testAuth: Scalars['String'];
 };
 
 export type RegisterUserInput = {
@@ -88,24 +61,67 @@ export type RegisterUserInput = {
   password: Scalars['String'];
 };
 
+export type Role = {
+  __typename?: 'Role';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  scopes?: Maybe<Array<Scope>>;
+  universityUsers?: Maybe<Array<UniversityUser>>;
+};
+
+export type Scope = {
+  __typename?: 'Scope';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  roles?: Maybe<Array<Role>>;
+};
+
+export type University = {
+  __typename?: 'University';
+  id: Scalars['ID'];
+  logo?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  universityUsers?: Maybe<Array<UniversityUser>>;
+};
+
+export type UniversityObject = {
+  __typename?: 'UniversityObject';
+  id: Scalars['ID'];
+  logo?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type UniversityUser = {
+  __typename?: 'UniversityUser';
+  role: Role;
+  roleId: Scalars['String'];
+  university: University;
+  universityId: Scalars['String'];
+  user: User;
+  userId: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
-  companyUser?: Maybe<Array<CompanyUser>>;
+  avatar?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   /** First letter of the father's first name */
   fatherInitial: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
   lastName: Scalars['String'];
+  password: Scalars['String'];
+  universityUsers?: Maybe<Array<UniversityUser>>;
 };
 
 export type UserObject = {
   __typename?: 'UserObject';
-  companies: Array<CompanyUserObject>;
+  avatar?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   /** First letter of the father's first name */
   fatherInitial: Scalars['String'];
   firstName: Scalars['String'];
+  groupedByRoleUniversities: Array<GroupedByRoleUniversitiesObject>;
   id: Scalars['ID'];
   lastName: Scalars['String'];
 };
@@ -170,10 +186,14 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'UserObject' }
-    & Pick<UserObject, 'id' | 'email' | 'fatherInitial' | 'firstName' | 'lastName'>
-    & { companies: Array<(
-      { __typename?: 'CompanyUserObject' }
-      & Pick<CompanyUserObject, 'id' | 'logo' | 'name' | 'role'>
+    & Pick<UserObject, 'id' | 'email' | 'fatherInitial' | 'firstName' | 'lastName' | 'avatar'>
+    & { groupedByRoleUniversities: Array<(
+      { __typename?: 'GroupedByRoleUniversitiesObject' }
+      & Pick<GroupedByRoleUniversitiesObject, 'role'>
+      & { universities: Array<(
+        { __typename?: 'UniversityObject' }
+        & Pick<UniversityObject, 'id' | 'logo' | 'name'>
+      )> }
     )> }
   ) }
 );
@@ -321,11 +341,14 @@ export const MeDocument = gql`
     fatherInitial
     firstName
     lastName
-    companies {
-      id
-      logo
-      name
+    avatar
+    groupedByRoleUniversities {
       role
+      universities {
+        id
+        logo
+        name
+      }
     }
   }
 }

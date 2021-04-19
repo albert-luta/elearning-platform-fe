@@ -1,4 +1,4 @@
-import { Toolbar } from '@material-ui/core';
+import { Container, Toolbar } from '@material-ui/core';
 import { LayoutMeasurements } from 'domains/shared/constants/LayoutMeasurements';
 import { FC, memo } from 'react';
 import styled from 'styled-components';
@@ -11,7 +11,6 @@ interface MainContentProps {
 
 const MainStyled = styled.main<MainContentProps>`
 	overflow-x: hidden;
-	padding: ${({ theme }) => theme.spacing(2)}px;
 
 	${({ isDrawerOpen }) => drawerTransitionMixin(isDrawerOpen, 'margin-left')}
 
@@ -19,6 +18,10 @@ const MainStyled = styled.main<MainContentProps>`
 		isDesktopDrawer &&
 		isDrawerOpen &&
 		`margin-left: ${LayoutMeasurements.drawers.desktop.WIDTH};`}
+`;
+const MainContentContainer = styled(Container)`
+	padding-top: ${({ theme }) => theme.spacing(2)}px;
+	padding-bottom: ${({ theme }) => theme.spacing(2)}px;
 `;
 export const MainContent: FC<MainContentProps> = memo(function MainContent({
 	isDesktopDrawer,
@@ -32,7 +35,9 @@ export const MainContent: FC<MainContentProps> = memo(function MainContent({
 				isDrawerOpen={isDrawerOpen}
 				isDesktopDrawer={isDesktopDrawer}
 			>
-				{children}
+				<MainContentContainer maxWidth="md">
+					<>{children}</>
+				</MainContentContainer>
 			</MainStyled>
 		</>
 	);

@@ -1,5 +1,7 @@
-import { resetAuthReactiveVars } from '../auth/reactiveVars';
+import { resetUniversityVars } from 'domains/university/reactiveVars';
+import { resetAuthVars } from '../auth/reactiveVars';
 
-export const resetGlobalReactiveVars = () => {
-	resetAuthReactiveVars();
+export const resetGlobalVars = () => {
+	resetAuthVars();
+	resetUniversityVars();
 };

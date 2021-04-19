@@ -5,11 +5,14 @@ query Me {
 		fatherInitial
 		firstName
 		lastName
-		companies {
-			id
-			logo
-			name
+		avatar
+		groupedByRoleUniversities {
 			role
+			universities {
+				id
+				logo
+				name
+			}
 		}
 	}
 }

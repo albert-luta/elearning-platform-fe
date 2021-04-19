@@ -4,7 +4,7 @@ import { FormErrors } from 'domains/shared/constants/FormErrors';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { FormVerticalLayout } from 'domains/shared/components/form/FormVerticalLayout';
-import { Regex } from 'domains/shared/constants/Regex';
+import { ValidationRegexp } from 'domains/shared/constants/ValidationRegexp';
 import { useRegisterMutation } from 'generated/graphql';
 import { toFormikErrors } from 'domains/shared/utils/toFormikErrors';
 import { accessTokenVar } from '../reactiveVars';
@@ -31,7 +31,7 @@ const validationSchema = yup.object().shape({
 	lastName: yup.string().trim().required(FormErrors.REQUIRED),
 	fatherInitial: yup
 		.string()
-		.matches(Regex.ALPHA, FormErrors.ALPHA)
+		.matches(ValidationRegexp.ALPHA, FormErrors.ALPHA)
 		.trim()
 		.required(FormErrors.REQUIRED),
 	email: yup

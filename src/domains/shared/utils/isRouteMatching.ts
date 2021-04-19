@@ -3,7 +3,7 @@ import { pathToRegexp } from 'path-to-regexp';
 export const isRouteMatching = (
 	route: string,
 	routesToMatch: string | string[]
-) => {
+): boolean => {
 	if (typeof routesToMatch === 'string') {
 		const regexp = pathToRegexp(routesToMatch);
 

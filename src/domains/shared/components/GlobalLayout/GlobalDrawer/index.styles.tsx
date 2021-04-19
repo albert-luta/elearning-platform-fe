@@ -5,7 +5,8 @@ import {
 	DrawerProps,
 	IconButton,
 	createStyles,
-	makeStyles
+	makeStyles,
+	Tooltip
 } from '@material-ui/core';
 import { FC, memo } from 'react';
 import { ChevronLeft } from '@material-ui/icons';
@@ -60,9 +61,11 @@ export const DrawerHeader: FC<DrawerHeaderProps> = memo(function DrawerHeader({
 		<>
 			<div className={classes.drawerHeader}>
 				{onClose && (
-					<IconButton onClick={onClose}>
-						<ChevronLeft />
-					</IconButton>
+					<Tooltip title="Close Drawer">
+						<IconButton onClick={onClose}>
+							<ChevronLeft />
+						</IconButton>
+					</Tooltip>
 				)}
 			</div>
 			<Divider />

@@ -1,8 +1,9 @@
 import { Theme, useMediaQuery } from '@material-ui/core';
 import { RoutesGroups } from 'domains/shared/constants/Routes';
 import { isRouteMatching } from 'domains/shared/utils/isRouteMatching';
+import { UserRoutesContentLayout } from 'domains/user/components/UserRoutesContentLayout';
 import { useRouter } from 'next/router';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { GlobalAppBar } from './GlobalAppBar';
 import { GlobalDrawer } from './GlobalDrawer';
 import { MainContent } from './MainContent';
@@ -13,13 +14,6 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const [hideDrawer, setHideDrawer] = useState(
 		isRouteMatching(pathname, RoutesGroups.NO_DRAWER)
 	);
-	useEffect(() => {
-		if (isRouteMatching(pathname, RoutesGroups.NO_DRAWER)) {
-			setHideDrawer(true);
-		} else {
-			setHideDrawer(false);
-		}
-	}, [pathname]);
 
 	const isDesktopDrawer = useMediaQuery((theme: Theme) =>
 		theme.breakpoints.up('lg')
@@ -28,6 +22,25 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
 	const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+	useEffect(() => {
+		if (isRouteMatching(pathname, RoutesGroups.NO_DRAWER)) {
+			setHideDrawer(true);
+			setIsDrawerOpen(false);
+		} else {
+			setHideDrawer(false);
+		}
+	}, [pathname]);
+
+	const content = useMemo(() => {
+		if (isRouteMatching(pathname, RoutesGroups.USER)) {
+			return (
+				<UserRoutesContentLayout>{children}</UserRoutesContentLayout>
+			);
+		}
+
+		return <>{children}</>;
+	}, [pathname, children]);
 
 	if (isRouteMatching(pathname, RoutesGroups.PUBLIC)) {
 		return <>{children}</>;
@@ -52,7 +65,7 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 				isDrawerOpen={isDrawerOpen}
 				isDesktopDrawer={isDesktopDrawer}
 			>
-				{children}
+				{content}
 			</MainContent>
 		</>
 	);

@@ -6,7 +6,7 @@ import { NextRouter, useRouter } from 'next/router';
 import { FC, memo } from 'react';
 import { accessTokenVar } from '../reactiveVars';
 
-const redirect = (path: string, router: NextRouter) => {
+const redirect = (path: string, router: NextRouter): null => {
 	if (isBrowser()) {
 		try {
 			router.push(path);

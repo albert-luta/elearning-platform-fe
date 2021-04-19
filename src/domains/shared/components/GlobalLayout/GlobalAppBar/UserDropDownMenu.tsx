@@ -6,7 +6,13 @@ import {
 	MenuList,
 	Popover
 } from '@material-ui/core';
-import { Settings, MeetingRoom } from '@material-ui/icons';
+import {
+	Settings,
+	MeetingRoom,
+	EventNote,
+	DateRange,
+	Person
+} from '@material-ui/icons';
 import { Routes } from 'domains/shared/constants/Routes';
 import { useLogoutMutation } from 'generated/graphql';
 import { PopupState, bindPopover } from 'material-ui-popup-state/core';
@@ -39,6 +45,33 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 			>
 				<MenuList>
 					<MenuLinkItem
+						href={Routes.user.PROFILE}
+						onClick={popupState.close}
+					>
+						<ListItemIcon>
+							<Person />
+						</ListItemIcon>
+						<ListItemText primary="Profile" />
+					</MenuLinkItem>
+					<MenuLinkItem
+						href={Routes.user.GRADES}
+						onClick={popupState.close}
+					>
+						<ListItemIcon>
+							<EventNote />
+						</ListItemIcon>
+						<ListItemText primary="Grades" />
+					</MenuLinkItem>
+					<MenuLinkItem
+						href={Routes.user.CALENDAR}
+						onClick={popupState.close}
+					>
+						<ListItemIcon>
+							<DateRange />
+						</ListItemIcon>
+						<ListItemText primary="Calendar" />
+					</MenuLinkItem>
+					<MenuLinkItem
 						href={Routes.user.SETTINGS}
 						onClick={popupState.close}
 					>
@@ -47,9 +80,11 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						</ListItemIcon>
 						<ListItemText primary="Settings" />
 					</MenuLinkItem>
+				</MenuList>
 
-					<Divider />
+				<Divider />
 
+				<MenuList>
 					<MenuItem onClick={handleLogout}>
 						<ListItemIcon>
 							<MeetingRoom />

@@ -5,11 +5,19 @@ export const Routes = {
 	},
 	user: {
 		DASHBOARD: '/app',
-		SETTINGS: '/app/settings'
+		PROFILE: '/app/profile',
+		GRADES: '/app/grades',
+		CALENDAR: '/app/calendar',
+		SETTINGS: '/app/settings',
+		CREATE_UNIVERSITY: '/app/create-university'
+	},
+	university: {
+		DASHBOARD: '/app/university/:universityId'
 	}
 };
 
 export const RoutesGroups = {
 	PUBLIC: [Routes.PRESENTATION, ...Object.values(Routes.auth)],
-	NO_DRAWER: [...Object.values(Routes.user)]
+	NO_DRAWER: [...Object.values(Routes.user)],
+	USER: [...Object.values(Routes.user)]
 };

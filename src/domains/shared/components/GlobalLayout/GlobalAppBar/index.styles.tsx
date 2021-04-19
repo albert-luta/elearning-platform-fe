@@ -26,9 +26,12 @@ export const EmptyMiddleSpace = styled.div`
 `;
 
 export const AccountImgContainer = styled.span`
-	margin-left: ${({ theme }) => theme.spacing(1.5)}px;
 	width: 2.1875rem;
 	height: 2.1875rem;
 	border-radius: 50%;
 	overflow: hidden;
+
+	${({ theme }) => theme.breakpoints.up('sm')} {
+		margin-left: ${({ theme }) => theme.spacing(1.5)}px;
+	}
 `;

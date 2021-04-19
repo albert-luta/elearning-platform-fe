@@ -3,8 +3,8 @@ import { MyHead } from 'domains/shared/components/MyHead';
 import { AppBar, Box, Container, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContent } from 'domains/shared/components/TabContent';
 import { LoginForm } from 'domains/auth/components/LoginForm';
-import { FormContainer } from 'domains/shared/components/form/FormContainer';
 import { RegisterForm } from 'domains/auth/components/RegisterForm';
+import { Content } from 'domains/shared/components/layout/Content';
 
 enum AuthTabs {
 	LOGIN,
@@ -40,7 +40,7 @@ export default function Auth() {
 						</AppBar>
 
 						<Box maxHeight="calc(75vh - 50px)" overflow="auto">
-							<FormContainer>
+							<Content>
 								<TabContent
 									value={AuthTabs.LOGIN}
 									selected={selectedTab}
@@ -53,7 +53,7 @@ export default function Auth() {
 								>
 									<RegisterForm />
 								</TabContent>
-							</FormContainer>
+							</Content>
 						</Box>
 					</Paper>
 				</Box>

@@ -12,12 +12,10 @@ export type NextLinkComposedProps = Omit<
 
 export const NextLinkComposed: FC<NextLinkComposedProps> = memo(
 	forwardRef<HTMLAnchorElement, NextLinkComposedProps>(
-		({ href, linkProps, children, ...anchorProps }, ref) => {
+		({ href, linkProps, ...anchorProps }, ref) => {
 			return (
 				<Link {...linkProps} href={href}>
-					<a {...anchorProps} ref={ref}>
-						{children}
-					</a>
+					<a {...anchorProps} ref={ref} />
 				</Link>
 			);
 		}

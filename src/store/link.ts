@@ -3,6 +3,7 @@ import { accessTokenVar } from 'domains/auth/reactiveVars';
 import { onError } from '@apollo/client/link/error';
 import { resetStore } from 'domains/shared/utils/resetStore';
 import { SnackbarUtils } from 'domains/shared/utils/snackbar';
+import { selectedUniversityVar } from 'domains/university/reactiveVars';
 
 const httpLink = new HttpLink({
 	uri: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -12,11 +13,29 @@ const httpLink = new HttpLink({
 const authLink = new ApolloLink((operation, forward) => {
 	const accessToken = accessTokenVar();
 
-	operation.setContext({
+	operation.setContext((prevContext: Record<string, any>) => ({
+		...prevContext,
 		headers: {
-			authorization: accessToken ? `Bearer ${accessToken}` : null
+			...prevContext.headers,
+			...(accessToken != null && {
+				authorization: `Bearer ${accessToken}`
+			})
 		}
-	});
+	}));
+
+	return forward(operation);
+});
+
+const universityLink = new ApolloLink((operation, forward) => {
+	const univeristy = selectedUniversityVar();
+
+	operation.setContext((prevContext: Record<string, any>) => ({
+		...prevContext,
+		headers: {
+			...prevContext.headers,
+			...(univeristy != null && { 'x-university': univeristy.id })
+		}
+	}));
 
 	return forward(operation);
 });
@@ -63,4 +82,6 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 	}
 });
 
-export const link = logoutLink.concat(authLink.concat(httpLink));
+export const link = logoutLink.concat(
+	authLink.concat(universityLink.concat(httpLink))
+);

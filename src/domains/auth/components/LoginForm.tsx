@@ -22,8 +22,8 @@ const initialValues: Values = {
 const validationSchema = yup.object().shape({
 	email: yup
 		.string()
-		.email(FormErrors.VALID_EMAIL)
 		.trim()
+		.email(FormErrors.VALID_EMAIL)
 		.required(FormErrors.REQUIRED),
 	password: yup.string().trim().required(FormErrors.REQUIRED)
 });

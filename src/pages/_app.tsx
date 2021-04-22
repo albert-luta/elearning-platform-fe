@@ -3,8 +3,6 @@ import { AppProps } from 'next/app';
 import { client } from '../store';
 import { GlobalStylesProvider } from '../styles-provider';
 import { ProtectRoutes } from 'domains/auth/components/ProtectRoutes';
-import { SnackbarProvider } from 'notistack';
-import { SnackbarUtilsConfigurator } from 'domains/shared/utils/snackbar';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { GlobalLayout } from 'domains/shared/components/GlobalLayout';
 import { FC, memo } from 'react';
@@ -32,15 +30,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
 			<ApolloProvider client={client}>
 				<GlobalStylesProvider>
-					<SnackbarProvider>
-						<SnackbarUtilsConfigurator />
-						<ProtectRoutes>
-							<InsideProviders />
-							<GlobalLayout>
-								<Component {...pageProps} />
-							</GlobalLayout>
-						</ProtectRoutes>
-					</SnackbarProvider>
+					<ProtectRoutes>
+						<InsideProviders />
+						<GlobalLayout>
+							<Component {...pageProps} />
+						</GlobalLayout>
+					</ProtectRoutes>
 				</GlobalStylesProvider>
 			</ApolloProvider>
 		</>

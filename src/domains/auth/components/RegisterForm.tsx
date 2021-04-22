@@ -31,13 +31,13 @@ const validationSchema = yup.object().shape({
 	lastName: yup.string().trim().required(FormErrors.REQUIRED),
 	fatherInitial: yup
 		.string()
-		.matches(ValidationRegexp.ALPHA, FormErrors.ALPHA)
 		.trim()
+		.matches(ValidationRegexp.ALPHA, FormErrors.ALPHA)
 		.required(FormErrors.REQUIRED),
 	email: yup
 		.string()
-		.email(FormErrors.VALID_EMAIL)
 		.trim()
+		.email(FormErrors.VALID_EMAIL)
 		.required(FormErrors.REQUIRED),
 	password: yup.string().trim().required(FormErrors.REQUIRED)
 });

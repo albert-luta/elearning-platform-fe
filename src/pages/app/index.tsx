@@ -1,20 +1,15 @@
-import { Box, IconButton, Tooltip } from '@material-ui/core';
+import { Box, Tooltip } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import { IconButtonLink } from 'domains/shared/components/buttons/IconButtonLink';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { Routes } from 'domains/shared/constants/Routes';
 import { UniversitiesCards } from 'domains/user/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
-import { useRouter } from 'next/router';
-import { Fragment, useCallback } from 'react';
+import { Fragment } from 'react';
 
 export default function App() {
 	const me = useMeQuery();
-
-	const router = useRouter();
-	const redirectToCreateUniversity = useCallback(() => {
-		router.push(Routes.user.CREATE_UNIVERSITY);
-	}, [router]);
 
 	return (
 		<>
@@ -22,9 +17,9 @@ export default function App() {
 				title="Universities"
 				action={
 					<Tooltip title="Create University">
-						<IconButton onClick={redirectToCreateUniversity}>
+						<IconButtonLink href={Routes.user.CREATE_UNIVERSITY}>
 							<Add />
-						</IconButton>
+						</IconButtonLink>
 					</Tooltip>
 				}
 			/>

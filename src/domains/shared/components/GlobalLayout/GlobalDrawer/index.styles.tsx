@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components';
 import {
-	Divider,
 	Drawer,
 	DrawerProps,
 	IconButton,
 	createStyles,
 	makeStyles,
-	Tooltip
+	Tooltip,
+	Divider
 } from '@material-ui/core';
 import { FC, memo } from 'react';
 import { ChevronLeft } from '@material-ui/icons';

@@ -1,11 +1,16 @@
 import { FC, useEffect } from 'react';
-import { ThemeProvider as MaterialUiProvider } from '@material-ui/core/styles';
+import {
+	makeStyles,
+	ThemeProvider as MaterialUiProvider
+} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {
 	DefaultTheme,
 	ThemeProvider as StyledComponentsProvider
 } from 'styled-components';
 import { createMuiTheme } from '@material-ui/core';
+import { SnackbarProvider } from 'notistack';
+import { SnackbarUtilsConfigurator } from 'domains/shared/utils/snackbar';
 
 const theme: DefaultTheme = createMuiTheme({
 	palette: {
@@ -13,7 +18,16 @@ const theme: DefaultTheme = createMuiTheme({
 	}
 });
 
+const useStyles = makeStyles((theme: DefaultTheme) => ({
+	contentRoot: {
+		background: theme.palette.grey[900],
+		color: theme.palette.getContrastText(theme.palette.grey[900])
+	}
+}));
+
 export const GlobalStylesProvider: FC = ({ children }) => {
+	const classes = useStyles();
+
 	// Material-ui Server-side rendering thing
 	useEffect(() => {
 		// Remove the server-side injected CSS.
@@ -24,11 +38,15 @@ export const GlobalStylesProvider: FC = ({ children }) => {
 	}, []);
 
 	return (
-		<MaterialUiProvider theme={theme}>
-			<CssBaseline />
-			<StyledComponentsProvider theme={theme}>
-				{children}
-			</StyledComponentsProvider>
-		</MaterialUiProvider>
+		<StyledComponentsProvider theme={theme}>
+			<MaterialUiProvider theme={theme}>
+				<CssBaseline />
+				{/* Classes prop not correctly typed at this moment */}
+				<SnackbarProvider classes={classes as any}>
+					<SnackbarUtilsConfigurator />
+					{children}
+				</SnackbarProvider>
+			</MaterialUiProvider>
+		</StyledComponentsProvider>
 	);
 };

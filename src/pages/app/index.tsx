@@ -1,15 +1,21 @@
-import { Box, Tooltip } from '@material-ui/core';
+import { Box, Dialog, IconButton, Tooltip } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { IconButtonLink } from 'domains/shared/components/buttons/IconButtonLink';
+import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
-import { Routes } from 'domains/shared/constants/Routes';
+import { useOpenState } from 'domains/shared/hooks/useOpenState';
+import { CreateUniversityForm } from 'domains/university/components/CreateUniversityForm';
 import { UniversitiesCards } from 'domains/user/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
 import { Fragment } from 'react';
 
 export default function App() {
 	const me = useMeQuery();
+	const [
+		isCreateUniversityDialogOpen,
+		openCreateUniversityDialog,
+		closeCreateUniversityDialog
+	] = useOpenState();
 
 	return (
 		<>
@@ -17,9 +23,9 @@ export default function App() {
 				title="Universities"
 				action={
 					<Tooltip title="Create University">
-						<IconButtonLink href={Routes.user.CREATE_UNIVERSITY}>
+						<IconButton onClick={openCreateUniversityDialog}>
 							<Add />
-						</IconButtonLink>
+						</IconButton>
 					</Tooltip>
 				}
 			/>
@@ -40,6 +46,20 @@ export default function App() {
 					}
 				/>
 			)}
+
+			<Dialog
+				open={isCreateUniversityDialogOpen}
+				onClose={closeCreateUniversityDialog}
+				fullWidth
+				maxWidth="xs"
+			>
+				<Content>
+					<ContentHeader title="Create University" />
+					<CreateUniversityForm
+						onSuccess={closeCreateUniversityDialog}
+					/>
+				</Content>
+			</Dialog>
 		</>
 	);
 }

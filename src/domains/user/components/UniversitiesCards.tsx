@@ -14,7 +14,19 @@ const getRoleName = (role: string) => {
 			return 'Teacher';
 		case UserRole.STUDENT:
 			return 'Student';
+		default:
+			return 'Student';
 	}
+};
+const validRoles = Object.values(UserRole).reduce<Record<string, true>>(
+	(acc, curr) => (acc[curr] ? acc : { ...acc, [curr]: true }),
+	{}
+);
+const rolesPositions: Record<string, number> = {
+	[UserRole.ADMIN_UNIVERSITY]: 0,
+	[UserRole.ADMIN_COLLEGE]: 1,
+	[UserRole.TEACHER]: 2,
+	[UserRole.STUDENT]: 3
 };
 
 interface UniversitiesCardsProps {
@@ -27,21 +39,16 @@ export const UniversitiesCards: FC<UniversitiesCardsProps> = memo(
 			return null;
 		}
 
-		const validRoles = Object.values(UserRole).reduce<Record<string, true>>(
-			(acc, curr) => (acc[curr] ? acc : { ...acc, [curr]: true }),
-			{}
-		);
-		const noUnknownUserRoleGroups = groupedByRoleUniversities.filter(
-			({ role }) => !!validRoles[role]
-		);
-
-		const noEmptyUniversitiesGroups = noUnknownUserRoleGroups.filter(
-			({ universities }) => !!universities.length
-		);
+		const filteredAndSortedUniversitiesGroups = groupedByRoleUniversities
+			.filter(
+				({ role, universities }) =>
+					!!validRoles[role] && !!universities.length
+			)
+			.sort((a, b) => rolesPositions[a.role] - rolesPositions[b.role]);
 
 		return (
 			<>
-				{noEmptyUniversitiesGroups.map(
+				{filteredAndSortedUniversitiesGroups.map(
 					({ role, universities }, roleIndex) => (
 						<Fragment key={role}>
 							<Typography variant="h6" gutterBottom>

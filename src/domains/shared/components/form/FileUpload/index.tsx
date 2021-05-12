@@ -4,7 +4,6 @@ import {
 	DragEventHandler,
 	FC,
 	memo,
-	SetStateAction,
 	useCallback,
 	useMemo,
 	useRef,
@@ -37,12 +36,15 @@ const preventDefault: DragEventHandler<HTMLDivElement> = (e) => {
 
 export interface FileUploadProps {
 	files: Record<string, File>;
-	onChange: Dispatch<SetStateAction<Record<string, File>>>;
+	onChange: Dispatch<
+		(prevState: Record<string, File>) => Record<string, File>
+	>;
 	label?: string;
+	helperText?: string;
 	maxFiles?: number;
 	maxFileSize?: number;
 	maxFileSizeUnit?: FileSizeUnit;
-	acceptedFileTypes?: FileType[];
+	acceptedFileTypes?: Exclude<FileType, FileType.UNKNOWN>[];
 	errorMessage?: string;
 }
 
@@ -50,6 +52,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 	files,
 	onChange,
 	label,
+	helperText,
 	maxFiles,
 	maxFileSize,
 	maxFileSizeUnit = FileSizeUnit.MEGABYTES,
@@ -199,7 +202,14 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 
 	return (
 		<div>
-			{label && <FormLabel htmlFor="file-upload">{label}</FormLabel>}
+			{label && (
+				<Box mb={0.5}>
+					<FormLabel htmlFor="file-upload" error={!!errorMessage}>
+						{label}
+					</FormLabel>
+				</Box>
+			)}
+			{helperText && <FormHelperText>{helperText}</FormHelperText>}
 			<input
 				hidden
 				id="file-upload"
@@ -210,13 +220,6 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				onChange={checkSelectedFiles}
 			/>
 
-			<AdditionalInfo
-				filesArray={filesArray}
-				maxFiles={maxFiles}
-				maxFileSize={maxFileSize}
-				maxFileSizeUnit={maxFileSizeUnit}
-				acceptedFileExtensionsArray={acceptedFileExtensionsArray}
-			/>
 			<Collapse in={maxFiles == null || filesArray.length < maxFiles}>
 				<DragAndDropContainer
 					onDragEnter={enableIsDraggingOver}
@@ -244,6 +247,17 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 						</Grid>
 					</Grid>
 				</DragAndDropContainer>
+				<Box mt={0.5}>
+					<AdditionalInfo
+						filesArray={filesArray}
+						maxFiles={maxFiles}
+						maxFileSize={maxFileSize}
+						maxFileSizeUnit={maxFileSizeUnit}
+						acceptedFileExtensionsArray={
+							acceptedFileExtensionsArray
+						}
+					/>
+				</Box>
 			</Collapse>
 			<Collapse in={!!errorMessage}>
 				<FormHelperText error>{errorMessage}</FormHelperText>

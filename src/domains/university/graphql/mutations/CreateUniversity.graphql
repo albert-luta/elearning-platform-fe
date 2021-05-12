@@ -1,0 +1,7 @@
+mutation CreateUniversity($university: CreateUniversityInput!, $logo: Upload) {
+	createUniversity(university: $university, logo: $logo) {
+		id
+		name
+		logo
+	}
+}

@@ -16,7 +16,8 @@ import {
 import { Routes } from 'domains/shared/constants/Routes';
 import { useLogoutMutation } from 'generated/graphql';
 import { PopupState, bindPopover } from 'material-ui-popup-state/core';
-import { FC, memo, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { FC, memo, useCallback, useEffect } from 'react';
 import { MenuLinkItem } from '../../menu/MenuLinkItem';
 
 interface UserDropDownMenuProps {
@@ -25,11 +26,21 @@ interface UserDropDownMenuProps {
 
 export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 	function UserDropDownMenu({ popupState }) {
+		const router = useRouter();
+
+		useEffect(() => {
+			router.prefetch(Routes.auth.LOGIN_REGISTER.path);
+		}, [router]);
+
 		const [logout] = useLogoutMutation({ fetchPolicy: 'no-cache' });
-		const handleLogout = useCallback(() => {
-			logout().catch(() => null);
-			popupState.close();
-		}, [logout, popupState]);
+		const handleLogout = useCallback(async () => {
+			try {
+				await logout();
+			} catch {
+				popupState.close();
+				router.push(Routes.auth.LOGIN_REGISTER.path);
+			}
+		}, [logout, popupState, router]);
 
 		return (
 			<Popover
@@ -45,7 +56,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 			>
 				<MenuList>
 					<MenuLinkItem
-						href={Routes.user.PROFILE}
+						href={Routes.user.PROFILE.path}
 						onClick={popupState.close}
 					>
 						<ListItemIcon>
@@ -54,7 +65,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						<ListItemText primary="Profile" />
 					</MenuLinkItem>
 					<MenuLinkItem
-						href={Routes.user.GRADES}
+						href={Routes.user.GRADES.path}
 						onClick={popupState.close}
 					>
 						<ListItemIcon>
@@ -63,7 +74,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						<ListItemText primary="Grades" />
 					</MenuLinkItem>
 					<MenuLinkItem
-						href={Routes.user.CALENDAR}
+						href={Routes.user.CALENDAR.path}
 						onClick={popupState.close}
 					>
 						<ListItemIcon>
@@ -72,7 +83,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						<ListItemText primary="Calendar" />
 					</MenuLinkItem>
 					<MenuLinkItem
-						href={Routes.user.SETTINGS}
+						href={Routes.user.SETTINGS.path}
 						onClick={popupState.close}
 					>
 						<ListItemIcon>

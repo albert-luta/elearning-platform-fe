@@ -2,16 +2,20 @@ import { ApolloProvider } from '@apollo/client';
 import { AppProps } from 'next/app';
 import { client } from '../store';
 import { GlobalStylesProvider } from '../styles-provider';
-import { ProtectRoutes } from 'domains/auth/components/ProtectRoutes';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { GlobalLayout } from 'domains/shared/components/GlobalLayout';
 import { FC, memo } from 'react';
 import { useRefreshTokensInterval } from 'domains/auth/hooks/useRefreshTokensInterval';
 import { useKeepSelectedUniversityInSyncWithUrl } from 'domains/university/hooks/useKeepSelectedUniversityInSyncWithUrl';
+import { useKeepRoutesAuthenticated } from 'domains/auth/hooks/useKeepRoutesAuthenticated';
+import { InitialAuth } from 'domains/auth/components/InitialAuth';
+import { useKeepRoutesAuthorized } from 'domains/auth/hooks/useKeepRoutesAuthorized';
 
 const InsideProviders: FC = memo(function InsideProviders() {
-	const finishedInitialRequest = useRefreshTokensInterval();
-	useKeepSelectedUniversityInSyncWithUrl({ skip: !finishedInitialRequest });
+	useKeepRoutesAuthenticated();
+	useKeepRoutesAuthorized();
+	useRefreshTokensInterval();
+	useKeepSelectedUniversityInSyncWithUrl();
 
 	return null;
 });
@@ -30,12 +34,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
 			<ApolloProvider client={client}>
 				<GlobalStylesProvider>
-					<ProtectRoutes>
+					<InitialAuth>
 						<InsideProviders />
+
 						<GlobalLayout>
 							<Component {...pageProps} />
 						</GlobalLayout>
-					</ProtectRoutes>
+					</InitialAuth>
 				</GlobalStylesProvider>
 			</ApolloProvider>
 		</>

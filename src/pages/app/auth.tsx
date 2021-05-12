@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { AppBar, Box, Container, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContent } from 'domains/shared/components/TabContent';
 import { LoginForm } from 'domains/auth/components/LoginForm';
 import { RegisterForm } from 'domains/auth/components/RegisterForm';
 import { Content } from 'domains/shared/components/layout/Content';
+import { useRouter } from 'next/router';
+import { Routes } from 'domains/shared/constants/Routes';
 
 enum AuthTabs {
 	LOGIN,
@@ -12,6 +14,11 @@ enum AuthTabs {
 }
 
 export default function Auth() {
+	const router = useRouter();
+	useEffect(() => {
+		router.prefetch(Routes.user.DASHBOARD.path);
+	}, [router]);
+
 	const [selectedTab, setSelectedTab] = useState(AuthTabs.LOGIN);
 	const handleTabChange = useCallback((_, tab: AuthTabs) => {
 		setSelectedTab(tab);
@@ -39,7 +46,7 @@ export default function Auth() {
 							</Tabs>
 						</AppBar>
 
-						<Box maxHeight="calc(75vh - 50px)" overflow="auto">
+						<Box maxHeight="calc(60vh - 50px)" overflow="auto">
 							<Content>
 								<TabContent
 									value={AuthTabs.LOGIN}

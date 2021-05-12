@@ -1,9 +1,9 @@
 overwrite: true
-schema: "http://localhost:8080/graphql"
-documents: "src/**/*.graphql"
+schema: ${NEXT_PUBLIC_BACKEND_URL}
+documents: 'src/**/*.graphql'
 generates:
-  src/generated/graphql.tsx:
-    plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
+    src/generated/graphql.tsx:
+        plugins:
+            - 'typescript'
+            - 'typescript-operations'
+            - 'typescript-react-apollo'

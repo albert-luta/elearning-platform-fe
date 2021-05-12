@@ -1,9 +1,10 @@
 import { Theme, useMediaQuery } from '@material-ui/core';
-import { RoutesGroups } from 'domains/shared/constants/Routes';
-import { isRouteMatching } from 'domains/shared/utils/isRouteMatching';
+import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
+import { useOpenState } from 'domains/shared/hooks/useOpenState';
+import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { UserRoutesContentLayout } from 'domains/user/components/UserRoutesContentLayout';
 import { useRouter } from 'next/router';
-import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { GlobalAppBar } from './GlobalAppBar';
 import { GlobalDrawer } from './GlobalDrawer';
 import { MainContent } from './MainContent';
@@ -19,21 +20,19 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 		theme.breakpoints.up('lg')
 	);
 
-	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-	const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
-	const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+	const [isDrawerOpen, openDrawer, closeDrawer] = useOpenState();
 
 	useEffect(() => {
 		if (isRouteMatching(pathname, RoutesGroups.NO_DRAWER)) {
 			setHideDrawer(true);
-			setIsDrawerOpen(false);
+			closeDrawer();
 		} else {
 			setHideDrawer(false);
 		}
-	}, [pathname]);
+	}, [pathname, closeDrawer]);
 
 	const content = useMemo(() => {
-		if (isRouteMatching(pathname, RoutesGroups.USER)) {
+		if (isRouteMatching(pathname, Object.values(Routes.user))) {
 			return (
 				<UserRoutesContentLayout>{children}</UserRoutesContentLayout>
 			);

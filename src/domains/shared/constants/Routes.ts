@@ -1,23 +1,41 @@
-export const Routes = {
-	PRESENTATION: '/',
+import { UserRole } from './UserRole';
+
+export interface Route {
+	path: string;
+	universityRoles?: UserRole[];
+}
+
+const inferRoutes = <T>(
+	object: { [D in keyof T]: { [R in keyof T[D]]: Route } }
+) => object;
+export const Routes = inferRoutes({
+	presentation: {
+		LANDING: { path: '/' }
+	},
 	auth: {
-		LOGIN_REGISTER: '/app/auth'
+		LOGIN_REGISTER: { path: '/app/auth' }
 	},
 	user: {
-		DASHBOARD: '/app',
-		PROFILE: '/app/profile',
-		GRADES: '/app/grades',
-		CALENDAR: '/app/calendar',
-		SETTINGS: '/app/settings',
-		CREATE_UNIVERSITY: '/app/create-university'
+		DASHBOARD: { path: '/app' },
+		PROFILE: { path: '/app/profile' },
+		GRADES: { path: '/app/grades' },
+		CALENDAR: { path: '/app/calendar' },
+		SETTINGS: { path: '/app/settings' }
 	},
 	university: {
-		DASHBOARD: '/app/university/:universityId'
+		DASHBOARD: { path: '/app/university/:universityId' }
 	}
-};
+});
 
 export const RoutesGroups = {
-	PUBLIC: [Routes.PRESENTATION, ...Object.values(Routes.auth)],
-	NO_DRAWER: [...Object.values(Routes.user)],
-	USER: [...Object.values(Routes.user)]
+	PUBLIC: [
+		...Object.values(Routes.presentation),
+		...Object.values(Routes.auth)
+	],
+	NO_DRAWER: [...Object.values(Routes.user)]
 };
+
+export const AllRoutesFlatArray = Object.values(Routes).reduce<Route[]>(
+	(acc, domain) => [...acc, ...Object.values(domain)],
+	[]
+);

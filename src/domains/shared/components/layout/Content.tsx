@@ -1,5 +1,5 @@
-import { Container } from '@material-ui/core';
-import { FC, memo } from 'react';
+import { Container, ContainerProps } from '@material-ui/core';
+import { FC, memo, ReactNode } from 'react';
 import styled from 'styled-components';
 
 const ContentContainer = styled(Container)`
@@ -8,7 +8,11 @@ const ContentContainer = styled(Container)`
 	padding-bottom: ${({ theme }) => theme.spacing(2)}px;
 `;
 
-export const Content: FC = memo(function Content({ children }) {
+type ContentProps = Omit<ContainerProps, 'children'> & {
+	children: ReactNode;
+};
+
+export const Content: FC<ContentProps> = memo(function Content({ children }) {
 	return (
 		<ContentContainer>
 			<>{children}</>

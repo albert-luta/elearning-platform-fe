@@ -1,11 +1,12 @@
-import { ApolloLink, HttpLink } from '@apollo/client';
+import { ApolloLink } from '@apollo/client';
 import { accessTokenVar } from 'domains/auth/reactiveVars';
 import { onError } from '@apollo/client/link/error';
 import { resetStore } from 'domains/shared/utils/resetStore';
 import { SnackbarUtils } from 'domains/shared/utils/snackbar';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
+import { createUploadLink } from 'apollo-upload-client';
 
-const httpLink = new HttpLink({
+const uploadLink = createUploadLink({
 	uri: process.env.NEXT_PUBLIC_BACKEND_URL,
 	credentials: 'include'
 });
@@ -83,5 +84,5 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 export const link = logoutLink.concat(
-	authLink.concat(universityLink.concat(httpLink))
+	authLink.concat(universityLink.concat(uploadLink))
 );

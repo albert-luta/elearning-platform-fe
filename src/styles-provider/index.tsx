@@ -42,7 +42,7 @@ export const GlobalStylesProvider: FC = ({ children }) => {
 			<MaterialUiProvider theme={theme}>
 				<CssBaseline />
 				{/* Classes prop not correctly typed at this moment */}
-				<SnackbarProvider classes={classes as any}>
+				<SnackbarProvider classes={classes as any} preventDuplicate>
 					<SnackbarUtilsConfigurator />
 					{children}
 				</SnackbarProvider>

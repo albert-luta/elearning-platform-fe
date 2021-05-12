@@ -1,33 +1,22 @@
 import { NextRouterEvent } from 'domains/shared/constants/NextRouterEvent';
-import { Routes } from 'domains/shared/constants/Routes';
-import { toValidUserRole } from 'domains/shared/utils/toValidUserRole';
+import { findUniversity } from 'domains/shared/utils/findUniversity';
+import { getUniversityIdFromRoute } from 'domains/shared/utils/route/getUniversityIdFromRoute';
 import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import { pathToRegexp } from 'path-to-regexp';
 import { useEffect } from 'react';
 import { selectedUniversityVar } from '../reactiveVars';
 
-interface UseKeepSelectedUniversityInSyncWithUrlProps {
-	skip: boolean;
-}
-
-export const useKeepSelectedUniversityInSyncWithUrl = ({
-	skip
-}: UseKeepSelectedUniversityInSyncWithUrlProps): void => {
+export const useKeepSelectedUniversityInSyncWithUrl = (): void => {
 	const router = useRouter();
-	const me = useMeQuery({ skip });
+	const me = useMeQuery();
 
 	useEffect(() => {
-		const handleRouteChange = (url: string): void => {
-			if (skip) return;
-
-			const universityRouteRegexp = pathToRegexp(
-				Routes.university.DASHBOARD + '/:optional*'
-			);
-			const res = universityRouteRegexp.exec(url);
+		const handleRouteChange = (route: string): void => {
+			if (me.loading || !me.data?.me) return;
 
 			const prevSelectedUniversity = selectedUniversityVar();
-			if (res == null || me.data == null) {
+			const nextUniversityId = getUniversityIdFromRoute(route);
+			if (nextUniversityId == null) {
 				if (prevSelectedUniversity != null) {
 					selectedUniversityVar(null);
 				}
@@ -35,36 +24,23 @@ export const useKeepSelectedUniversityInSyncWithUrl = ({
 				return;
 			}
 
-			const nextUniversityId = res[1];
 			if (prevSelectedUniversity?.id === nextUniversityId) {
 				return;
 			}
-			for (const { role, universities } of me.data.me
-				.groupedByRoleUniversities) {
-				for (const university of universities) {
-					if (university.id === nextUniversityId) {
-						const nextSelectedUniversity = {
-							...university,
-							role: toValidUserRole(role)
-						};
-
-						selectedUniversityVar(nextSelectedUniversity);
-						return;
-					}
-				}
-			}
+			const nextSelectedUniversity = findUniversity(
+				nextUniversityId,
+				me.data.me.groupedByRoleUniversities
+			);
+			selectedUniversityVar(nextSelectedUniversity);
 		};
 
-		router.events.on(
-			NextRouterEvent.ROUTE_CHANGE_COMPLETE,
-			handleRouteChange
-		);
+		router.events.on(NextRouterEvent.ROUTE_CHANGE_START, handleRouteChange);
 
 		return () => {
 			router.events.off(
-				NextRouterEvent.ROUTE_CHANGE_COMPLETE,
+				NextRouterEvent.ROUTE_CHANGE_START,
 				handleRouteChange
 			);
 		};
-	});
+	}, [me.loading, me.data?.me, router.events]);
 };

@@ -19,6 +19,6 @@
 			"generated/*": ["src/generated/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+	"include": ["next-env.d.ts", "next.config.js", ".eslintrc.js", "**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules", ".next"]
 }

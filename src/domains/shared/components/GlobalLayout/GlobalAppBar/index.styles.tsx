@@ -26,6 +26,7 @@ export const EmptyMiddleSpace = styled.div`
 `;
 
 export const AccountImgContainer = styled.span`
+	position: relative;
 	width: 2.1875rem;
 	height: 2.1875rem;
 	border-radius: 50%;

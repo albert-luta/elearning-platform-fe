@@ -1,5 +1,5 @@
-mutation Register($user: RegisterUserInput!) {
-	register(user: $user) {
+mutation Register($user: RegisterUserInput!, $avatar: Upload) {
+	register(user: $user, avatar: $avatar) {
 		...AuthenticationFields
 	}
 }

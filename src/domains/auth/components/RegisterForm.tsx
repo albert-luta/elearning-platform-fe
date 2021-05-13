@@ -144,7 +144,7 @@ export const RegisterForm: FC = memo(function RegisterForm() {
 												'Avatar',
 												'optional'
 											)}
-											helperText="Recommended image size: 35x35px"
+											helperText="Recommended image size: 40x40px"
 											files={value}
 											onChange={(getUpdatedFiles) => {
 												setFieldValue(

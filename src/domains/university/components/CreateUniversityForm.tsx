@@ -94,6 +94,7 @@ export const CreateUniversityForm: FC<CreateUniversityFormProps> = memo(
 													'Logo',
 													'optional'
 												)}
+												helperText="Recommended image size: 40x40px"
 												files={value}
 												onChange={(getUpdatedFiles) => {
 													setFieldValue(

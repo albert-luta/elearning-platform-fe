@@ -2,6 +2,7 @@ import { Box, Dialog, IconButton, Tooltip } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
+import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { useOpenState } from 'domains/shared/hooks/useOpenState';
 import { CreateUniversityForm } from 'domains/university/components/CreateUniversityForm';
@@ -19,6 +20,8 @@ export default function App() {
 
 	return (
 		<>
+			<MyHead title="Dashboard" />
+
 			<ContentHeader
 				title="Universities"
 				action={

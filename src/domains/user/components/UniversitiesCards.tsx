@@ -46,6 +46,14 @@ export const UniversitiesCards: FC<UniversitiesCardsProps> = memo(
 			)
 			.sort((a, b) => rolesPositions[a.role] - rolesPositions[b.role]);
 
+		if (!filteredAndSortedUniversitiesGroups.length) {
+			return (
+				<Typography color="textSecondary" align="center">
+					You are not enrolled in any university
+				</Typography>
+			);
+		}
+
 		return (
 			<>
 				{filteredAndSortedUniversitiesGroups.map(

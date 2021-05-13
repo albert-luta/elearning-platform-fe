@@ -1,4 +1,6 @@
 import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Routes } from 'domains/shared/constants/Routes';
+import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { useRouter } from 'next/router';
 import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useAuthenticateRoute } from '../hooks/useAuthenticateRoute';
@@ -24,11 +26,11 @@ export const InitialAuth: FC = memo(function InitialAuth({ children }) {
 	] = useState(false);
 	useEffect(() => {
 		if (finishedFirstRequest && !finishedFirstRouteAuthentication) {
-			authenticateRoute(router.pathname).then(() => {
+			authenticateRoute(router.asPath).then(() => {
 				setFinishedFirstRouteAuthentication(true);
 			});
 		}
-	}, [finishedFirstRequest, finishedFirstRouteAuthentication, authenticateRoute, router.pathname]);
+	}, [finishedFirstRequest, finishedFirstRouteAuthentication, authenticateRoute, router.asPath]);
 
 	const authorizeRoute = useAuthorizeRoute(!finishedFirstRequest);
 	const [
@@ -42,22 +44,23 @@ export const InitialAuth: FC = memo(function InitialAuth({ children }) {
 			finishedFirstRouteAuthentication &&
 			!finishedFirstRouteAuthorization
 		) {
-			authorizeRoute(router.pathname).then(async (fetchedMe) => {
+			authorizeRoute(router.asPath).then(async (fetchedMe) => {
 				if (fetchedMe === false) {
 					setTimeout(forceUpdate, 100);
 					return;
 				}
 				// If the route was ok, kick in the next router events(useful for useKeepSelectedUniversityInSyncWithUrl hook - initialization)
-				await router.replace(router.pathname);
+				await router.replace(router.asPath);
 				setFinishedFirstRouteAuthorization(true);
 			});
 		}
-	}, [finishedFirstRouteAuthentication, finishedFirstRouteAuthorization, authorizeRoute, router.pathname, forceUpdate, router]);
+	}, [finishedFirstRouteAuthentication, finishedFirstRouteAuthorization, authorizeRoute, router.asPath, forceUpdate, router]);
 
 	if (
-		!finishedFirstRequest ||
-		!finishedFirstRouteAuthentication ||
-		!finishedFirstRouteAuthorization
+		!isRouteMatching(router.asPath, Object.values(Routes.presentation)) &&
+		(!finishedFirstRequest ||
+			!finishedFirstRouteAuthentication ||
+			!finishedFirstRouteAuthorization)
 	) {
 		return (
 			<Box

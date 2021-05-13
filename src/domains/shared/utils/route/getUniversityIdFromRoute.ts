@@ -3,7 +3,7 @@ import { Routes } from '../../constants/Routes';
 
 export const getUniversityIdFromRoute = (route: string): string | null => {
 	const universityRouteRegexp = pathToRegexp(
-		Routes.university.DASHBOARD + '/:optional*'
+		Routes.university.DASHBOARD.path + '/:optional*'
 	);
 	const res = universityRouteRegexp.exec(route);
 

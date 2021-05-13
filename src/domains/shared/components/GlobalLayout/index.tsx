@@ -10,10 +10,10 @@ import { GlobalDrawer } from './GlobalDrawer';
 import { MainContent } from './MainContent';
 
 export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
-	const { pathname } = useRouter();
+	const router = useRouter();
 
 	const [hideDrawer, setHideDrawer] = useState(
-		isRouteMatching(pathname, RoutesGroups.NO_DRAWER)
+		isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)
 	);
 
 	const isDesktopDrawer = useMediaQuery((theme: Theme) =>
@@ -23,25 +23,25 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const [isDrawerOpen, openDrawer, closeDrawer] = useOpenState();
 
 	useEffect(() => {
-		if (isRouteMatching(pathname, RoutesGroups.NO_DRAWER)) {
+		if (isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)) {
 			setHideDrawer(true);
 			closeDrawer();
 		} else {
 			setHideDrawer(false);
 		}
-	}, [pathname, closeDrawer]);
+	}, [router.asPath, closeDrawer]);
 
 	const content = useMemo(() => {
-		if (isRouteMatching(pathname, Object.values(Routes.user))) {
+		if (isRouteMatching(router.asPath, Object.values(Routes.user))) {
 			return (
 				<UserRoutesContentLayout>{children}</UserRoutesContentLayout>
 			);
 		}
 
 		return <>{children}</>;
-	}, [pathname, children]);
+	}, [router.asPath, children]);
 
-	if (isRouteMatching(pathname, RoutesGroups.PUBLIC)) {
+	if (isRouteMatching(router.asPath, RoutesGroups.PUBLIC)) {
 		return <>{children}</>;
 	}
 

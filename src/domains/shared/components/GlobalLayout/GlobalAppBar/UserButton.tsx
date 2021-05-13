@@ -3,11 +3,9 @@ import { Routes } from 'domains/shared/constants/Routes';
 import { useMeQuery } from 'generated/graphql';
 import { Skeleton } from '@material-ui/lab';
 import { ButtonLink, ButtonLinkProps } from '../../buttons/ButtonLink';
-import { AccountImgContainer } from './index.styles';
-import { Hidden, Typography } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
+import { Box, Hidden, Typography } from '@material-ui/core';
 import { useRefreshTokens } from 'domains/auth/hooks/useRefreshTokens';
-import Image from 'next/image';
+import { MyAvatar } from '../../MyAvatar';
 
 type UserButtonProps = Partial<ButtonLinkProps>;
 
@@ -39,24 +37,20 @@ export const UserButton: FC<UserButtonProps> = memo(
 						</Typography>
 					)}
 				</Hidden>
-				<AccountImgContainer>
+				<Box ml={1.5}>
 					{me.loading ? (
 						<Skeleton
 							variant="circle"
 							width="2.1875rem"
 							height="2.1875rem"
 						/>
-					) : me.data?.me.avatar ? (
-						<Image
-							src={me.data?.me.avatar}
-							alt="User Avatar"
-							layout="fill"
-							objectFit="contain"
+					) : me.data ? (
+						<MyAvatar
+							src={me.data.me.avatar}
+							alt={`${me.data.me.firstName} ${me.data.me.lastName}`}
 						/>
-					) : (
-						<AccountCircle fontSize="large" />
-					)}
-				</AccountImgContainer>
+					) : null}
+				</Box>
 			</ButtonLink>
 		);
 	})

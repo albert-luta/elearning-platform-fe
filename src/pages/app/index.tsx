@@ -4,7 +4,7 @@ import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
-import { useOpenState } from 'domains/shared/hooks/useOpenState';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { CreateUniversityForm } from 'domains/university/components/CreateUniversityForm';
 import { UniversitiesCards } from 'domains/user/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
@@ -16,7 +16,7 @@ export default function App() {
 		isCreateUniversityDialogOpen,
 		openCreateUniversityDialog,
 		closeCreateUniversityDialog
-	] = useOpenState();
+	] = useBooleanState();
 
 	return (
 		<>

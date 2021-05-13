@@ -1,5 +1,6 @@
-import { Card, CardHeader, Avatar } from '@material-ui/core';
+import { Card, CardHeader } from '@material-ui/core';
 import { CardActionAreaLink } from 'domains/shared/components/CardActionAreaLink';
+import { MyAvatar } from 'domains/shared/components/MyAvatar';
 import { Routes } from 'domains/shared/constants/Routes';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { UniversityObject } from 'generated/graphql';
@@ -10,7 +11,7 @@ interface UniversityCardProps {
 }
 
 export const UniversityCard: FC<UniversityCardProps> = memo(
-	function UniversityCard({ university: { id, name } }) {
+	function UniversityCard({ university: { id, name, logo } }) {
 		const universityHref = composeDynamicRoute(
 			Routes.university.DASHBOARD.path,
 			{
@@ -21,7 +22,10 @@ export const UniversityCard: FC<UniversityCardProps> = memo(
 		return (
 			<Card>
 				<CardActionAreaLink href={universityHref}>
-					<CardHeader avatar={<Avatar>:)</Avatar>} title={name} />
+					<CardHeader
+						avatar={<MyAvatar src={logo} alt={name} />}
+						title={name}
+					/>
 				</CardActionAreaLink>
 			</Card>
 		);

@@ -24,15 +24,3 @@ export const AppBarStyled = styled(
 export const EmptyMiddleSpace = styled.div`
 	flex: 1 1 auto;
 `;
-
-export const AccountImgContainer = styled.span`
-	position: relative;
-	width: 2.1875rem;
-	height: 2.1875rem;
-	border-radius: 50%;
-	overflow: hidden;
-
-	${({ theme }) => theme.breakpoints.up('sm')} {
-		margin-left: ${({ theme }) => theme.spacing(1.5)}px;
-	}
-`;

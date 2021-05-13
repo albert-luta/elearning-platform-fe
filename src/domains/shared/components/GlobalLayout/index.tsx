@@ -1,6 +1,6 @@
 import { Theme, useMediaQuery } from '@material-ui/core';
 import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
-import { useOpenState } from 'domains/shared/hooks/useOpenState';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { UserRoutesContentLayout } from 'domains/user/components/UserRoutesContentLayout';
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 		theme.breakpoints.up('lg')
 	);
 
-	const [isDrawerOpen, openDrawer, closeDrawer] = useOpenState();
+	const [isDrawerOpen, openDrawer, closeDrawer] = useBooleanState();
 
 	useEffect(() => {
 		if (isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)) {

@@ -1,13 +1,28 @@
-import { Theme, useMediaQuery } from '@material-ui/core';
-import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
+import {
+	Container,
+	ContainerProps,
+	Theme,
+	useMediaQuery
+} from '@material-ui/core';
+import { RoutesGroups } from 'domains/shared/constants/Routes';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
-import { UserRoutesContentLayout } from 'domains/user/components/UserRoutesContentLayout';
 import { useRouter } from 'next/router';
 import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { GlobalAppBar } from './GlobalAppBar';
 import { GlobalDrawer } from './GlobalDrawer';
 import { MainContent } from './MainContent';
+
+const getContainerMaxWidth = (path: string): ContainerProps['maxWidth'] => {
+	let maxWidth: ContainerProps['maxWidth'];
+	if (isRouteMatching(path, RoutesGroups.SMALL_CONTENT_WIDTH)) {
+		maxWidth = 'sm';
+	} else if (isRouteMatching(path, RoutesGroups.MEDIUM_CONTENT_WIDTH)) {
+		maxWidth = 'md';
+	}
+
+	return maxWidth;
+};
 
 export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const router = useRouter();
@@ -32,13 +47,17 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	}, [router.asPath, closeDrawer]);
 
 	const content = useMemo(() => {
-		if (isRouteMatching(router.asPath, Object.values(Routes.user))) {
+		const maxWidth = getContainerMaxWidth(router.asPath);
+
+		if (maxWidth == null) {
+			return <>{children}</>;
+		} else {
 			return (
-				<UserRoutesContentLayout>{children}</UserRoutesContentLayout>
+				<Container maxWidth={maxWidth} disableGutters>
+					<>{children}</>
+				</Container>
 			);
 		}
-
-		return <>{children}</>;
 	}, [router.asPath, children]);
 
 	if (isRouteMatching(router.asPath, RoutesGroups.PUBLIC)) {

@@ -32,7 +32,10 @@ export const RoutesGroups = {
 		...Object.values(Routes.presentation),
 		...Object.values(Routes.auth)
 	],
-	NO_DRAWER: [...Object.values(Routes.user)]
+	// Only for private(not public) routes
+	NO_DRAWER: [...Object.values(Routes.user)],
+	SMALL_CONTENT_WIDTH: [...Object.values(Routes.user)],
+	MEDIUM_CONTENT_WIDTH: [...Object.values(Routes.university)]
 };
 
 export const AllRoutesFlatArray = Object.values(Routes).reduce<Route[]>(

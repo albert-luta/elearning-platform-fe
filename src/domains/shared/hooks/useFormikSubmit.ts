@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import { FormikSubmitFn } from '../types/form';
 import { toFormikErrors } from '../utils/form/toFormikErrors';
 
 type FormikInjectFn<V> = (
@@ -15,7 +16,7 @@ export const useFormikSubmit = <V>(
 	tryFn: FormikInjectFn<V>,
 	catchFn?: FormikCatchFn<V>,
 	finallyFn?: FormikInjectFn<V>
-) => {
+): FormikSubmitFn<V> => {
 	return async (values: V, formikHelpers: FormikHelpers<V>) => {
 		try {
 			await tryFn(values, formikHelpers);

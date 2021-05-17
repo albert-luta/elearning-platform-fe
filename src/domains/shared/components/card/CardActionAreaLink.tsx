@@ -1,6 +1,6 @@
 import { CardActionArea, CardActionAreaProps } from '@material-ui/core';
 import { FC, forwardRef, memo } from 'react';
-import { NextLinkComposed, NextLinkComposedProps } from './NextLinkComposed';
+import { NextLinkComposed, NextLinkComposedProps } from '../NextLinkComposed';
 
 export type CardActionAreaLinkProps = Omit<CardActionAreaProps<'a'>, 'href'> &
 	NextLinkComposedProps;

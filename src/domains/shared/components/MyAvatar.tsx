@@ -26,8 +26,6 @@ export const MyAvatar: FC<MyAvatarProps> = memo(function MyAvatar({
 	] = useBooleanState();
 	useEffect(resetImageNotFound, [src, resetImageNotFound]);
 
-	console.log({ src });
-
 	const fallbackText = alt
 		.split(' ')
 		.slice(0, MAX_AVATAR_LETTERS)

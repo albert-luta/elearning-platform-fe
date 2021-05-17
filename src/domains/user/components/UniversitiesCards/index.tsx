@@ -64,7 +64,10 @@ export const UniversitiesCards: FC<UniversitiesCardsProps> = memo(
 							</Typography>
 							{universities.map((university, universityIndex) => (
 								<Fragment key={university.id}>
-									<UniversityCard university={university} />
+									<UniversityCard
+										role={role as UserRole}
+										university={university}
+									/>
 									{universityIndex !==
 										universities.length - 1 && (
 										<Box pb={1} />

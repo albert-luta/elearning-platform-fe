@@ -9,9 +9,7 @@ query Me {
 		groupedByRoleUniversities {
 			role
 			universities {
-				id
-				logo
-				name
+				...UniversityFields
 			}
 		}
 	}

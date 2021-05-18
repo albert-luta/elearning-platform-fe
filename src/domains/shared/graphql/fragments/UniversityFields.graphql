@@ -1,0 +1,5 @@
+fragment UniversityFields on UniversityObject {
+	id
+	name
+	logo
+}

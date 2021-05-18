@@ -10,16 +10,22 @@ import { MoreVert } from '@material-ui/icons';
 import { AreYouSureDialog } from 'domains/shared/components/AreYouSureDialog';
 import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
+import { SnackbarErrors } from 'domains/shared/constants/SnackbarErrors';
 import { UserRole } from 'domains/shared/constants/UserRole';
+import { removeUniversityUpdate } from 'domains/shared/graphql/updates/removeUniversityUpdate';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { sleep } from 'domains/shared/utils/sleep';
 import { UpdateUniversityForm } from 'domains/university/components/UpdateUniversityForm';
-import { UniversityObject } from 'generated/graphql';
+import {
+	UniversityObject,
+	useLeaveUniversityMutation
+} from 'generated/graphql';
 import {
 	bindMenu,
 	bindTrigger,
 	usePopupState
 } from 'material-ui-popup-state/hooks';
+import { useSnackbar } from 'notistack';
 import { FC, memo, useCallback } from 'react';
 
 interface UniversityCardActionProps {
@@ -33,41 +39,58 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 			variant: 'popover',
 			popupId: 'university-card-action'
 		});
+		const snackbar = useSnackbar();
 
 		const [
 			isUpdateUniversityDialogOpen,
 			openUpdateUniversityDialog,
 			closeUpdateUniversityDialog
 		] = useBooleanState();
-		const handleUpdateUniversityClick = useCallback(() => {
-			openUpdateUniversityDialog();
+		const handleUpdateUniversity = useCallback(() => {
+			closeUpdateUniversityDialog();
 			moreMenuState.close();
-		}, [openUpdateUniversityDialog, moreMenuState]);
+		}, [closeUpdateUniversityDialog, moreMenuState]);
 
 		const [
 			isLeaveDialogOpen,
 			openLeaveDialog,
 			closeLeaveDialog
 		] = useBooleanState();
-		const handleLeaveClick = useCallback(() => {
-			openLeaveDialog();
-			moreMenuState.close();
-		}, [openLeaveDialog, moreMenuState]);
+		const [
+			leaveUniversity,
+			{ loading: leaveUniversityLoading }
+		] = useLeaveUniversityMutation({ update: removeUniversityUpdate });
 		const handleLeaveAnswer = useCallback(
 			async (answer: boolean) => {
 				if (!answer) {
 					closeLeaveDialog();
+					moreMenuState.close();
 					return;
 				}
 
 				try {
-					await sleep(0);
-				} catch (e) {
-				} finally {
-					closeLeaveDialog();
+					if (answer) {
+						const { __typename, ...rest } = university;
+						await leaveUniversity({
+							variables: {
+								university: rest
+							}
+						});
+					}
+				} catch {
+					snackbar.enqueueSnackbar(
+						SnackbarErrors.INTERNAL_SERVER_ERROR,
+						{ variant: 'error' }
+					);
 				}
 			},
-			[closeLeaveDialog]
+			[
+				closeLeaveDialog,
+				leaveUniversity,
+				university,
+				moreMenuState,
+				snackbar
+			]
 		);
 
 		const [
@@ -75,25 +98,22 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 			openDeleteDialog,
 			closeDeleteDialog
 		] = useBooleanState();
-		const handleDeleteClick = useCallback(() => {
-			openDeleteDialog();
-			moreMenuState.close();
-		}, [openDeleteDialog, moreMenuState]);
 		const handleDeleteAnswer = useCallback(
 			async (answer: boolean) => {
 				if (!answer) {
 					closeDeleteDialog();
-					return;
+					moreMenuState.close();
 				}
 
 				try {
-					await sleep(0);
+					if (answer) {
+						await sleep(0);
+					}
 				} catch (e) {
-				} finally {
-					closeDeleteDialog();
+					console.log(e);
 				}
 			},
-			[closeDeleteDialog]
+			[closeDeleteDialog, moreMenuState]
 		);
 
 		return (
@@ -106,15 +126,15 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 
 				<Menu {...bindMenu(moreMenuState)}>
 					{role === UserRole.ADMIN_UNIVERSITY && (
-						<MenuItem onClick={handleUpdateUniversityClick}>
+						<MenuItem onClick={openUpdateUniversityDialog}>
 							<ListItemText primary="Edit" />
 						</MenuItem>
 					)}
-					<MenuItem onClick={handleLeaveClick}>
+					<MenuItem onClick={openLeaveDialog}>
 						<ListItemText primary="Leave" />
 					</MenuItem>
 					{role === UserRole.ADMIN_UNIVERSITY && (
-						<MenuItem onClick={handleDeleteClick}>
+						<MenuItem onClick={openDeleteDialog}>
 							<ListItemText primary="Delete" />
 						</MenuItem>
 					)}
@@ -122,14 +142,14 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 
 				<Dialog
 					open={isUpdateUniversityDialogOpen}
-					onClose={closeUpdateUniversityDialog}
+					onClose={handleUpdateUniversity}
 					fullWidth
 					maxWidth="xs"
 				>
 					<Content>
 						<ContentHeader title="Update University" />
 						<UpdateUniversityForm
-							onSuccess={closeUpdateUniversityDialog}
+							onSuccess={handleUpdateUniversity}
 						/>
 					</Content>
 				</Dialog>
@@ -138,7 +158,7 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					subtitle="You can join later just with an invite"
 					open={isLeaveDialogOpen}
 					onAnswer={handleLeaveAnswer}
-					// loading={leaveUniversity.loading}
+					loading={leaveUniversityLoading}
 				/>
 				<AreYouSureDialog
 					title={`delete ${university.name}`}

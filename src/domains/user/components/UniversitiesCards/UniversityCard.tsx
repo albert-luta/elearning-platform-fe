@@ -6,7 +6,7 @@ import { UserRole } from 'domains/shared/constants/UserRole';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { UniversityObject } from 'generated/graphql';
 import { FC, memo } from 'react';
-import { UniversityCardAction } from './UniversityCardActions';
+import { UniversityCardAction } from './UniversityCardAction';
 
 interface UniversityCardProps {
 	university: UniversityObject;

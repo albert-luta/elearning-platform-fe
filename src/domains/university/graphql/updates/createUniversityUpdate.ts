@@ -32,7 +32,7 @@ export const createUniversityUpdate: MutationUpdaterFn<CreateUniversityMutation>
 			data.createUniversity
 		]
 	};
-	const groupedByRoleUniversities = [
+	const groupedByRoleUniversities: GroupedByRoleUniversitiesObject[] = [
 		...restUniversitiesGroups,
 		newUniversitiesAdmin
 	];

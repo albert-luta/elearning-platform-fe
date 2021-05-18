@@ -5,6 +5,7 @@ import { resetStore } from 'domains/shared/utils/resetStore';
 import { SnackbarUtils } from 'domains/shared/utils/snackbar';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { createUploadLink } from 'apollo-upload-client';
+import { SnackbarErrors } from 'domains/shared/constants/SnackbarErrors';
 
 const uploadLink = createUploadLink({
 	uri: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -66,7 +67,7 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 				});
 			} else if (statusCode === 500) {
 				SnackbarUtils.enqueueSnackbar(
-					'There was an internal server error, please try again later!',
+					SnackbarErrors.INTERNAL_SERVER_ERROR,
 					{
 						variant: 'error'
 					}

@@ -1,0 +1,5 @@
+mutation LeaveUniversity($university: UniversityInput!) {
+	leaveUniversity(university: $university) {
+		...UniversityFields
+	}
+}

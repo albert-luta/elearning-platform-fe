@@ -1,24 +1,22 @@
-import { MutationUpdaterFn } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 import {
 	GroupedByRoleUniversitiesObject,
-	LeaveUniversityMutation,
 	MeDocument,
-	MeQuery
+	MeQuery,
+	UniversityObject
 } from 'generated/graphql';
 
-export const removeUniversityUpdate: MutationUpdaterFn<LeaveUniversityMutation> = (
-	cache,
-	{ data }
+export const removeUniversity = <T>(
+	cache: ApolloCache<T>,
+	university: UniversityObject
 ) => {
 	const me = cache.readQuery<MeQuery>({ query: MeDocument });
-	if (!me || !data) return;
+	if (!me) return;
 
 	const oldUniversitiesGroups = me.me.groupedByRoleUniversities;
 	const universityToRemoveGroup = oldUniversitiesGroups.find(
 		({ universities }) => {
-			return !!universities.find(
-				({ id }) => id === data.leaveUniversity.id
-			);
+			return !!universities.find(({ id }) => id === university.id);
 		}
 	);
 	if (!universityToRemoveGroup) return;
@@ -26,7 +24,7 @@ export const removeUniversityUpdate: MutationUpdaterFn<LeaveUniversityMutation> 
 	const universityToRemoveGroupFiltered: GroupedByRoleUniversitiesObject = {
 		...universityToRemoveGroup,
 		universities: universityToRemoveGroup.universities.filter(
-			({ id }) => id !== data.leaveUniversity.id
+			({ id }) => id !== university.id
 		)
 	};
 	const restGroups = oldUniversitiesGroups.filter(

@@ -1,0 +1,5 @@
+mutation DeleteUniversity($university: UniversityInput!) {
+	deleteUniversity(university: $university) {
+		...UniversityFields
+	}
+}

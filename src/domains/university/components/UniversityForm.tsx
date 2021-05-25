@@ -6,48 +6,66 @@ import {
 import { FormVerticalLayout } from 'domains/shared/components/form/FormVerticalLayout';
 import { FileType } from 'domains/shared/constants/file/FileType';
 import { FormErrors } from 'domains/shared/constants/FormErrors';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { FC, memo } from 'react';
 import * as yup from 'yup';
 import { composeLabel } from 'domains/shared/utils/form/composeLabel';
-import { FormikSubmitFn, FormType } from 'domains/shared/types/form';
+import { FormikSubmitFn } from 'domains/shared/types/form';
+import { yupMap } from 'domains/shared/utils/form/yupMap';
+import { MyFormik } from 'domains/shared/components/form/MyFormik';
 
 export interface UniversityFormValues {
 	name: string;
 	logo: Record<string, File>;
 }
+export type UpdateUniversityFormValues = UniversityFormValues & {
+	inPlus: string;
+};
 
-const initialValues: UniversityFormValues = {
+const createInitialValues: UniversityFormValues = {
 	name: '',
 	logo: {}
 };
 
-const createUniversityValidationSchema = yup.object().shape({
-	name: yup.string().trim().required(FormErrors.REQUIRED),
-	logo: yup.object()
-});
-const updateUniversityValidationSchema = yup.object().shape({
-	name: yup.string().trim(),
-	logo: yup.object()
-});
+const createUniversityValidationSchema: yup.SchemaOf<UniversityFormValues> = yup.object(
+	{
+		name: yup.string().trim().required(FormErrors.REQUIRED),
+		logo: yupMap(yup.mixed<File>().required())
+	}
+);
+const updateUniversityValidationSchema: yup.SchemaOf<UpdateUniversityFormValues> = createUniversityValidationSchema
+	.clone()
+	.shape({
+		inPlus: yup.string().required()
+	});
 
-interface UniversityFormProps {
-	onSubmit: FormikSubmitFn<UniversityFormValues>;
-	type: FormType;
-}
+type UniversityFormProps =
+	| {
+			type: 'create';
+			onSubmit: FormikSubmitFn<UniversityFormValues>;
+	  }
+	| {
+			type: 'update';
+			onSubmit: FormikSubmitFn<UpdateUniversityFormValues>;
+			initialValues: UpdateUniversityFormValues;
+	  };
 
 export const UniversityForm: FC<UniversityFormProps> = memo(
-	function UniversityForm({ onSubmit, type }) {
+	function UniversityForm(props) {
 		return (
-			<Formik
-				initialValues={initialValues}
-				validationSchema={
-					type === 'create'
-						? createUniversityValidationSchema
-						: updateUniversityValidationSchema
-				}
-				onSubmit={onSubmit}
+			<MyFormik
+				type={props.type}
+				createProps={{
+					initialValues: createInitialValues,
+					validationSchema: createUniversityValidationSchema,
+					onSubmit: props.onSubmit
+				}}
+				updateProps={{
+					initialValues: props.initialValues,
+					validationSchema: updateUniversityValidationSchema,
+					onSubmit: props.onSubmit
+				}}
 			>
 				{({ isSubmitting, setFieldValue }) => (
 					<Form>
@@ -58,7 +76,7 @@ export const UniversityForm: FC<UniversityFormProps> = memo(
 										component={TextField}
 										name="name"
 										label={
-											type === 'create'
+											props.type === 'create'
 												? 'Name'
 												: composeLabel(
 														'Name',
@@ -106,13 +124,15 @@ export const UniversityForm: FC<UniversityFormProps> = memo(
 									loading={isSubmitting}
 									type="submit"
 								>
-									{type === 'create' ? 'Create' : 'Update'}
+									{props.type === 'create'
+										? 'Create'
+										: 'Update'}
 								</ButtonWithLoader>
 							}
 						/>
 					</Form>
 				)}
-			</Formik>
+			</MyFormik>
 		);
 	}
 );

@@ -1,0 +1,9 @@
+mutation UpdateUniversity(
+	$id: String!
+	$data: UpdateUniversityInput!
+	$logo: Upload
+) {
+	updateUniversity(id: $id, data: $data, logo: $logo) {
+		...UniversityFields
+	}
+}

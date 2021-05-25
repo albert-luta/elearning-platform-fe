@@ -136,6 +136,7 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					<Content>
 						<ContentHeader title="Update University" />
 						<UpdateUniversityForm
+							id={university.id}
 							onSuccess={handleUpdateUniversity}
 						/>
 					</Content>

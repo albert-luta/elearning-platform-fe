@@ -1,23 +1,33 @@
-import { FormType } from 'domains/shared/types/form';
+import { FormProps } from 'domains/shared/types/form';
 import { Formik, FormikConfig } from 'formik';
-import { memo, ReactNode } from 'react';
 
-interface MyFormikProps<C, U> {
-	type: FormType;
-	createProps: FormikConfig<C>;
-	updateProps: FormikConfig<U>;
-	children: ReactNode;
-}
+type MyFormikProps<C, U> = FormProps<C, U> & {
+	children?: FormikConfig<C | U>['children'];
+	initialValuesCreate: C;
+	validationSchemaCreate: FormikConfig<C>['validationSchema'];
+	validationSchemaUpdate: FormikConfig<U>['validationSchema'];
+};
 
-export const MyFormik = memo(function MyFormik<C, U>({
-	type,
-	createProps,
-	updateProps,
-	children
-}: MyFormikProps<C, U>) {
-	if (type === 'create') {
-		return <Formik {...createProps}>{children}</Formik>;
+export function MyFormik<C, U>(props: MyFormikProps<C, U>) {
+	if (props.type === 'create') {
+		return (
+			<Formik
+				onSubmit={props.onCreate}
+				initialValues={props.initialValuesCreate}
+				validationSchema={props.validationSchemaCreate}
+			>
+				{props.children}
+			</Formik>
+		);
 	}
 
-	return <Formik {...updateProps}>{children}</Formik>;
-});
+	return (
+		<Formik
+			onSubmit={props.onUpdate}
+			initialValues={props.initialValues}
+			validationSchema={props.validationSchemaUpdate}
+		>
+			{props.children}
+		</Formik>
+	);
+}

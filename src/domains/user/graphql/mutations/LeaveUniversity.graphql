@@ -1,5 +1,5 @@
-mutation LeaveUniversity($university: UniversityInput!) {
-	leaveUniversity(university: $university) {
+mutation LeaveUniversity($id: String!) {
+	leaveUniversity(id: $id) {
 		...UniversityFields
 	}
 }

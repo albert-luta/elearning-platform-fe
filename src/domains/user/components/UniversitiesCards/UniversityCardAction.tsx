@@ -66,14 +66,13 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					return;
 				}
 
-				const { __typename, ...rest } = university;
 				await leaveUniversity({
 					variables: {
-						university: rest
+						id: university.id
 					}
 				}).catch(() => null);
 			},
-			[closeLeaveDialog, leaveUniversity, university, moreMenuState]
+			[closeLeaveDialog, leaveUniversity, university.id, moreMenuState]
 		);
 
 		const [
@@ -93,14 +92,13 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					return;
 				}
 
-				const { __typename, ...rest } = university;
 				await deleteUniversity({
 					variables: {
-						university: rest
+						id: university.id
 					}
 				}).catch(() => null);
 			},
-			[closeDeleteDialog, moreMenuState, university, deleteUniversity]
+			[closeDeleteDialog, moreMenuState, university.id, deleteUniversity]
 		);
 
 		return (

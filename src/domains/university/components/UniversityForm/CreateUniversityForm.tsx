@@ -1,11 +1,11 @@
 import { useFormikSubmit } from 'domains/shared/hooks/useFormikSubmit';
 import { useCreateUniversityMutation } from 'generated/graphql';
 import { FC, memo } from 'react';
-import { createUniversityUpdate } from '../graphql/updates/createUniversityUpdate';
+import { createUniversityUpdate } from '../../graphql/updates/createUniversityUpdate';
 import { useRouter } from 'next/router';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { Routes } from 'domains/shared/constants/Routes';
-import { UniversityForm, UniversityFormValues } from './UniversityForm';
+import { UniversityForm, CreateUniversityFormValues } from './UniversityForm';
 
 interface CreateUniversityFormProps {
 	onSuccess: () => void;
@@ -17,7 +17,7 @@ export const CreateUniversityForm: FC<CreateUniversityFormProps> = memo(
 		const [createUniversity] = useCreateUniversityMutation({
 			update: createUniversityUpdate
 		});
-		const handleCreateUniversity = useFormikSubmit<UniversityFormValues>(
+		const handleCreateUniversity = useFormikSubmit<CreateUniversityFormValues>(
 			async ({ name, logo }) => {
 				const res = await createUniversity({
 					variables: {
@@ -39,7 +39,7 @@ export const CreateUniversityForm: FC<CreateUniversityFormProps> = memo(
 		);
 
 		return (
-			<UniversityForm type="create" onSubmit={handleCreateUniversity} />
+			<UniversityForm type="create" onCreate={handleCreateUniversity} />
 		);
 	}
 );

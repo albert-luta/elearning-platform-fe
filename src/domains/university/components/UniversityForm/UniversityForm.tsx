@@ -9,63 +9,44 @@ import { FormErrors } from 'domains/shared/constants/FormErrors';
 import { Field, Form } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { FC, memo } from 'react';
-import * as yup from 'yup';
+import * as Yup from 'yup';
 import { composeLabel } from 'domains/shared/utils/form/composeLabel';
-import { FormikSubmitFn } from 'domains/shared/types/form';
+import { FormProps } from 'domains/shared/types/form';
 import { yupMap } from 'domains/shared/utils/form/yupMap';
 import { MyFormik } from 'domains/shared/components/form/MyFormik';
 
-export interface UniversityFormValues {
+export interface CreateUniversityFormValues {
 	name: string;
 	logo: Record<string, File>;
 }
-export type UpdateUniversityFormValues = UniversityFormValues & {
-	inPlus: string;
-};
+export type UpdateUniversityFormValues = CreateUniversityFormValues;
 
-const createInitialValues: UniversityFormValues = {
+const initialValuesCreate: CreateUniversityFormValues = {
 	name: '',
 	logo: {}
 };
 
-const createUniversityValidationSchema: yup.SchemaOf<UniversityFormValues> = yup.object(
+const createUniversityValidationSchema: Yup.SchemaOf<CreateUniversityFormValues> = Yup.object(
 	{
-		name: yup.string().trim().required(FormErrors.REQUIRED),
-		logo: yupMap(yup.mixed<File>().required())
+		name: Yup.string().trim().required(FormErrors.REQUIRED),
+		logo: yupMap(Yup.mixed<File>().required())
 	}
 );
-const updateUniversityValidationSchema: yup.SchemaOf<UpdateUniversityFormValues> = createUniversityValidationSchema
-	.clone()
-	.shape({
-		inPlus: yup.string().required()
-	});
+const updateUniversityValidationSchema: Yup.SchemaOf<UpdateUniversityFormValues> = createUniversityValidationSchema.clone();
 
-type UniversityFormProps =
-	| {
-			type: 'create';
-			onSubmit: FormikSubmitFn<UniversityFormValues>;
-	  }
-	| {
-			type: 'update';
-			onSubmit: FormikSubmitFn<UpdateUniversityFormValues>;
-			initialValues: UpdateUniversityFormValues;
-	  };
+type UniversityFormProps = FormProps<
+	CreateUniversityFormValues,
+	UpdateUniversityFormValues
+>;
 
 export const UniversityForm: FC<UniversityFormProps> = memo(
 	function UniversityForm(props) {
 		return (
 			<MyFormik
-				type={props.type}
-				createProps={{
-					initialValues: createInitialValues,
-					validationSchema: createUniversityValidationSchema,
-					onSubmit: props.onSubmit
-				}}
-				updateProps={{
-					initialValues: props.initialValues,
-					validationSchema: updateUniversityValidationSchema,
-					onSubmit: props.onSubmit
-				}}
+				{...props}
+				initialValuesCreate={initialValuesCreate}
+				validationSchemaCreate={createUniversityValidationSchema}
+				validationSchemaUpdate={updateUniversityValidationSchema}
 			>
 				{({ isSubmitting, setFieldValue }) => (
 					<Form>

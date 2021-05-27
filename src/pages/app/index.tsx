@@ -5,7 +5,7 @@ import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
-import { CreateUniversityForm } from 'domains/university/components/CreateUniversityForm';
+import { CreateUniversityForm } from 'domains/university/components/UniversityForm/CreateUniversityForm';
 import { UniversitiesCards } from 'domains/user/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
 import { Fragment } from 'react';

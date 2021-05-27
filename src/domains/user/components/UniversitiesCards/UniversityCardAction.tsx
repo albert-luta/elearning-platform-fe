@@ -14,7 +14,7 @@ import { UserRole } from 'domains/shared/constants/UserRole';
 import { deleteUniversityUpdate } from 'domains/shared/graphql/updates/deleteUniversityUpdate';
 import { leaveUniversityUpdate } from 'domains/shared/graphql/updates/leaveUniversityUpdate';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
-import { UpdateUniversityForm } from 'domains/university/components/UpdateUniversityForm';
+import { UpdateUniversityForm } from 'domains/university/components/UniversityForm/UpdateUniversityForm';
 import {
 	UniversityObject,
 	useDeleteUniversityMutation,
@@ -136,7 +136,7 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					<Content>
 						<ContentHeader title="Update University" />
 						<UpdateUniversityForm
-							id={university.id}
+							university={university}
 							onSuccess={handleUpdateUniversity}
 						/>
 					</Content>

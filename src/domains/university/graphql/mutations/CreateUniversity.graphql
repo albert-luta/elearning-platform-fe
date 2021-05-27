@@ -1,5 +1,5 @@
-mutation CreateUniversity($university: CreateUniversityInput!, $logo: Upload) {
-	createUniversity(university: $university, logo: $logo) {
+mutation CreateUniversity($data: CreateUniversityInput!, $logo: Upload) {
+	createUniversity(data: $data, logo: $logo) {
 		...UniversityFields
 	}
 }

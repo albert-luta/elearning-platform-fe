@@ -21,7 +21,7 @@ export const CreateUniversityForm: FC<CreateUniversityFormProps> = memo(
 			async ({ name, logo }) => {
 				const res = await createUniversity({
 					variables: {
-						university: {
+						data: {
 							name
 						},
 						logo: Object.values(logo)[0]

@@ -38,9 +38,8 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 				await logout();
 			} catch {
 				popupState.close();
-				router.push(Routes.auth.LOGIN_REGISTER.path);
 			}
-		}, [logout, popupState, router]);
+		}, [logout, popupState]);
 
 		return (
 			<Popover

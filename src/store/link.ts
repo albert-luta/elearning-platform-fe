@@ -5,6 +5,9 @@ import { resetStore } from 'domains/shared/utils/resetStore';
 import { SnackbarUtils } from 'domains/shared/utils/snackbar';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { createUploadLink } from 'apollo-upload-client';
+import Router from 'next/router';
+import { Routes } from 'domains/shared/constants/Routes';
+import { isBrowser } from 'domains/shared/utils/isBrowser';
 
 const uploadLink = createUploadLink({
 	uri: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -34,18 +37,24 @@ const universityLink = new ApolloLink((operation, forward) => {
 		...prevContext,
 		headers: {
 			...prevContext.headers,
-			...(univeristy != null && { 'x-university': univeristy.id })
+			...(univeristy != null && { 'x-university-id': univeristy.id })
 		}
 	}));
 
 	return forward(operation);
 });
 
-const logoutLink = onError(({ graphQLErrors, networkError }) => {
+const errorLink = onError(({ graphQLErrors, networkError }) => {
 	if (graphQLErrors) {
 		graphQLErrors.forEach(({ statusCode, message }: any) => {
 			if (statusCode === 401) {
 				resetStore();
+				if (
+					isBrowser() &&
+					Router.asPath !== Routes.auth.LOGIN_REGISTER.path
+				) {
+					Router.push(Routes.auth.LOGIN_REGISTER.path);
+				}
 				if (
 					message === 'logout' ||
 					message === 'jwt must be provided'
@@ -65,6 +74,12 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 					variant: 'error'
 				});
 			} else if (statusCode === 403) {
+				if (
+					isBrowser() &&
+					Router.asPath !== Routes.user.DASHBOARD.path
+				) {
+					Router.push(Routes.user.DASHBOARD.path);
+				}
 				SnackbarUtils.enqueueSnackbar(
 					'You are not authorized to access/modify this resource',
 					{
@@ -72,6 +87,12 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 					}
 				);
 			} else if (statusCode === 500) {
+				if (
+					isBrowser() &&
+					Router.asPath !== Routes.user.DASHBOARD.path
+				) {
+					Router.push(Routes.user.DASHBOARD.path);
+				}
 				SnackbarUtils.enqueueSnackbar(
 					'There was an internal server error, please try again later!',
 					{
@@ -83,6 +104,9 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 	}
 
 	if (networkError) {
+		if (isBrowser() && Router.asPath !== Routes.presentation.LANDING.path) {
+			Router.push(Routes.presentation.LANDING.path);
+		}
 		SnackbarUtils.enqueueSnackbar(
 			'There was a network error, please check your connection or try again later!',
 			{ variant: 'error' }
@@ -90,6 +114,6 @@ const logoutLink = onError(({ graphQLErrors, networkError }) => {
 	}
 });
 
-export const link = logoutLink.concat(
+export const link = errorLink.concat(
 	authLink.concat(universityLink.concat(uploadLink))
 );

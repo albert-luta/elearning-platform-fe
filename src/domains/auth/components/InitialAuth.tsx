@@ -1,8 +1,10 @@
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { Routes } from 'domains/shared/constants/Routes';
 import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
+import { useSyncSelectedUniversity } from 'domains/university/hooks/useSyncSelectedUniversity';
+import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { useAuthenticateRoute } from '../hooks/useAuthenticateRoute';
 import { useAuthorizeRoute } from '../hooks/useAuthorizeRoute';
 import { useRefreshTokens } from '../hooks/useRefreshTokens';
@@ -33,28 +35,26 @@ export const InitialAuth: FC = memo(function InitialAuth({ children }) {
 	}, [finishedFirstRequest, finishedFirstRouteAuthentication, authenticateRoute, router.asPath]);
 
 	const authorizeRoute = useAuthorizeRoute(!finishedFirstRequest);
+	const syncSelectedUniversity = useSyncSelectedUniversity(
+		!finishedFirstRequest
+	);
+	const me = useMeQuery({ skip: !finishedFirstRequest });
 	const [
 		finishedFirstRouteAuthorization,
 		setFinishedFirstRouteAuthorization
 	] = useState(false);
-	const [, setFU] = useState({});
-	const forceUpdate = useCallback(() => setFU({}), []);
 	useEffect(() => {
 		if (
+			!me.loading &&
 			finishedFirstRouteAuthentication &&
 			!finishedFirstRouteAuthorization
 		) {
-			authorizeRoute(router.asPath).then(async (fetchedMe) => {
-				if (fetchedMe === false) {
-					setTimeout(forceUpdate, 100);
-					return;
-				}
-				// If the route was ok, kick in the next router events(useful for useKeepSelectedUniversityInSyncWithUrl hook - initialization)
-				await router.replace(router.asPath);
+			authorizeRoute(router.asPath).then(() => {
+				syncSelectedUniversity(router.asPath);
 				setFinishedFirstRouteAuthorization(true);
 			});
 		}
-	}, [finishedFirstRouteAuthentication, finishedFirstRouteAuthorization, authorizeRoute, router.asPath, forceUpdate, router]);
+	}, [me.loading, finishedFirstRouteAuthentication, finishedFirstRouteAuthorization, authorizeRoute, router.asPath, syncSelectedUniversity]);
 
 	if (
 		!isRouteMatching(router.asPath, Object.values(Routes.presentation)) &&

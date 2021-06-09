@@ -18,7 +18,7 @@ import { useLogoutMutation } from 'generated/graphql';
 import { PopupState, bindPopover } from 'material-ui-popup-state/core';
 import { useRouter } from 'next/router';
 import { FC, memo, useCallback, useEffect } from 'react';
-import { MenuLinkItem } from '../../menu/MenuLinkItem';
+import { MenuLinkItem } from '../../list/MenuLinkItem';
 
 interface UserDropDownMenuProps {
 	popupState: PopupState;
@@ -57,6 +57,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					<MenuLinkItem
 						href={Routes.user.PROFILE.path}
 						onClick={popupState.close}
+						button
 					>
 						<ListItemIcon>
 							<Person />
@@ -66,6 +67,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					<MenuLinkItem
 						href={Routes.user.GRADES.path}
 						onClick={popupState.close}
+						button
 					>
 						<ListItemIcon>
 							<EventNote />
@@ -75,6 +77,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					<MenuLinkItem
 						href={Routes.user.CALENDAR.path}
 						onClick={popupState.close}
+						button
 					>
 						<ListItemIcon>
 							<DateRange />
@@ -84,6 +87,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					<MenuLinkItem
 						href={Routes.user.SETTINGS.path}
 						onClick={popupState.close}
+						button
 					>
 						<ListItemIcon>
 							<Settings />
@@ -95,7 +99,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 				<Divider />
 
 				<MenuList>
-					<MenuItem onClick={handleLogout}>
+					<MenuItem button onClick={handleLogout}>
 						<ListItemIcon>
 							<MeetingRoom />
 						</ListItemIcon>

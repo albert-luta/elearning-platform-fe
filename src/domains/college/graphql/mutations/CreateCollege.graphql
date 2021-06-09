@@ -1,0 +1,5 @@
+mutation CreateCollege($data: CreateCollegeInput!) {
+	createCollege(data: $data) {
+		...CollegeFields
+	}
+}

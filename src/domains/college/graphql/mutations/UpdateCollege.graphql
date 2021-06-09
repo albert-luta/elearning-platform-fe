@@ -1,0 +1,5 @@
+mutation UpdateCollege($id: String!, $data: CreateCollegeInput!) {
+	updateCollege(id: $id, data: $data) {
+		...CollegeFields
+	}
+}

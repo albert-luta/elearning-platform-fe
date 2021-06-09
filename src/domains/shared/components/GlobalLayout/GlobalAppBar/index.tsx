@@ -5,6 +5,7 @@ import { usePopupState, bindTrigger } from 'material-ui-popup-state/hooks';
 import { UserDropDownMenu } from './UserDropDownMenu';
 import { AppBarStyled, EmptyMiddleSpace } from './index.styles';
 import { UserButton } from './UserButton';
+import { UniversityButton } from './UniversityButton';
 
 interface GlobalAppBarProps {
 	hideDrawerButton: boolean;
@@ -33,19 +34,22 @@ export const GlobalAppBar: FC<GlobalAppBarProps> = memo(function GlobalAppBar({
 			>
 				<Toolbar>
 					{!hideDrawerButton && !isDrawerOpen && (
-						<Tooltip title="Open Drawer">
+						<Tooltip title="Drawer">
 							<IconButton onClick={onDrawerOpen}>
 								<Menu />
 							</IconButton>
 						</Tooltip>
 					)}
+					<Tooltip title="University Dashboard">
+						<UniversityButton />
+					</Tooltip>
 
 					<EmptyMiddleSpace />
 
-					<Tooltip title="Dashboard">
+					<Tooltip title="User Dashboard">
 						<UserButton />
 					</Tooltip>
-					<Tooltip title="Open Menu">
+					<Tooltip title="Menu">
 						<IconButton {...bindTrigger(userMenuState)}>
 							<ArrowDropDown />
 						</IconButton>

@@ -1,6 +1,6 @@
 mutation UpdateUniversity(
 	$id: String!
-	$data: UpdateUniversityInput!
+	$data: CreateUniversityInput!
 	$logo: Upload
 ) {
 	updateUniversity(id: $id, data: $data, logo: $logo) {

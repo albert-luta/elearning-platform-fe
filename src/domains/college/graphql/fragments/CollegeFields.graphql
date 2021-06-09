@@ -1,0 +1,8 @@
+fragment CollegeFields on CollegeObject {
+	id
+	name
+	courses {
+		id
+		name
+	}
+}

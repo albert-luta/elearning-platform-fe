@@ -18,10 +18,10 @@ export const useAuthorizeRoute = (skip = false) => {
 	const snackbar = useSnackbar();
 
 	const authorizeRoute = useCallback(
-		async (route: string): Promise<false | void> => {
+		async (route: string): Promise<void> => {
 			const isAuthenticated = !!accessTokenVar();
 			if (!isAuthenticated) return;
-			if (me.loading) return false;
+			if (me.loading) return;
 			if (!me.data?.me) return;
 			if (isRouteMatching(route, RoutesGroups.PUBLIC)) return;
 

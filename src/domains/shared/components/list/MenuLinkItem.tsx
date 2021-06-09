@@ -1,28 +1,19 @@
 import { MenuItem, MenuItemProps } from '@material-ui/core';
 import { FC, memo } from 'react';
-import { NextLinkComposed, NextLinkComposedProps } from '../NextLinkComposed';
-import styled from 'styled-components';
+import { NextLinkComposedProps } from '../NextLinkComposed';
+import { NextLinkComposedOverwriteMui } from './NextLinkComposedOverwriteMui';
 
-const NextLinkComposedOverwriteMui = styled(NextLinkComposed)`
-	&& {
-		padding: 0;
-		min-height: 0;
-	}
-`;
-
-type MenuLinkItemProps = Omit<MenuItemProps, 'button'> &
-	NextLinkComposedProps & {
-		button?: true | undefined;
-	};
+type MenuLinkItemProps = MenuItemProps & NextLinkComposedProps;
 
 export const MenuLinkItem: FC<MenuLinkItemProps> = memo(function MenuLinkItem({
 	href,
 	linkProps,
 	children,
+	button,
 	...menuItemProps
 }) {
 	return (
-		<MenuItem {...menuItemProps}>
+		<MenuItem {...menuItemProps} button={button as any}>
 			<NextLinkComposedOverwriteMui
 				linkProps={linkProps}
 				href={href}

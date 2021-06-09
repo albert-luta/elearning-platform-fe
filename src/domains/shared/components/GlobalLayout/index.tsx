@@ -8,7 +8,7 @@ import { RoutesGroups } from 'domains/shared/constants/Routes';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { useRouter } from 'next/router';
-import { FC, memo, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useEffect, useMemo } from 'react';
 import { GlobalAppBar } from './GlobalAppBar';
 import { GlobalDrawer } from './GlobalDrawer';
 import { MainContent } from './MainContent';
@@ -27,7 +27,7 @@ const getContainerMaxWidth = (path: string): ContainerProps['maxWidth'] => {
 export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const router = useRouter();
 
-	const [hideDrawer, setHideDrawer] = useState(
+	const [shouldHideDrawer, hideDrawer, revealDrawer] = useBooleanState(
 		isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)
 	);
 
@@ -39,25 +39,25 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 
 	useEffect(() => {
 		if (isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)) {
-			setHideDrawer(true);
+			hideDrawer();
 			closeDrawer();
 		} else {
-			setHideDrawer(false);
+			revealDrawer();
 		}
-	}, [router.asPath, closeDrawer]);
+	}, [router.asPath, closeDrawer, hideDrawer, revealDrawer]);
 
 	const content = useMemo(() => {
 		const maxWidth = getContainerMaxWidth(router.asPath);
 
 		if (maxWidth == null) {
 			return <>{children}</>;
-		} else {
-			return (
-				<Container maxWidth={maxWidth} disableGutters>
-					<>{children}</>
-				</Container>
-			);
 		}
+
+		return (
+			<Container maxWidth={maxWidth} disableGutters>
+				<>{children}</>
+			</Container>
+		);
 	}, [router.asPath, children]);
 
 	if (isRouteMatching(router.asPath, RoutesGroups.PUBLIC)) {
@@ -67,12 +67,12 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	return (
 		<>
 			<GlobalAppBar
-				hideDrawerButton={hideDrawer}
+				hideDrawerButton={shouldHideDrawer}
 				isDesktopDrawer={isDesktopDrawer}
 				isDrawerOpen={isDrawerOpen}
 				onDrawerOpen={openDrawer}
 			/>
-			{!hideDrawer && (
+			{!shouldHideDrawer && (
 				<GlobalDrawer
 					isDesktopDrawer={isDesktopDrawer}
 					isOpen={isDrawerOpen}

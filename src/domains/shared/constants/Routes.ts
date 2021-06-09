@@ -23,7 +23,12 @@ export const Routes = inferRoutes({
 		SETTINGS: { path: '/app/settings' }
 	},
 	university: {
-		DASHBOARD: { path: '/app/university/:universityId' }
+		DASHBOARD: { path: '/app/:universityId' }
+	},
+	course: {
+		DASHBOARD: {
+			path: '/app/:universityId/:collegeId/:courseId'
+		}
 	}
 });
 
@@ -32,10 +37,14 @@ export const RoutesGroups = {
 		...Object.values(Routes.presentation),
 		...Object.values(Routes.auth)
 	],
-	// Only for private(not public) routes
+	// Drawer
 	NO_DRAWER: [...Object.values(Routes.user)],
+	// Content layout
 	SMALL_CONTENT_WIDTH: [...Object.values(Routes.user)],
-	MEDIUM_CONTENT_WIDTH: [...Object.values(Routes.university)]
+	MEDIUM_CONTENT_WIDTH: [
+		...Object.values(Routes.university),
+		...Object.values(Routes.course)
+	]
 };
 
 export const AllRoutesFlatArray = Object.values(Routes).reduce<Route[]>(

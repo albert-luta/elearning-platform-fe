@@ -6,9 +6,8 @@ import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { CreateUniversityForm } from 'domains/university/components/UniversityForm/CreateUniversityForm';
-import { UniversitiesCards } from 'domains/user/components/UniversitiesCards';
+import { UniversitiesCards } from 'domains/university/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
-import { Fragment } from 'react';
 
 export default function App() {
 	const me = useMeQuery();
@@ -17,6 +16,8 @@ export default function App() {
 		openCreateUniversityDialog,
 		closeCreateUniversityDialog
 	] = useBooleanState();
+
+	console.log(me.networkStatus);
 
 	return (
 		<>
@@ -37,10 +38,9 @@ export default function App() {
 				Array(3)
 					.fill(0)
 					.map((_, i) => (
-						<Fragment key={i}>
+						<Box key={i} pt={i && 1}>
 							<MySkeleton variant="round" height={72} />
-							<Box pt={1} />
-						</Fragment>
+						</Box>
 					))
 			) : (
 				<UniversitiesCards

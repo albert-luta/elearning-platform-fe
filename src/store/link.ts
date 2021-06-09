@@ -86,6 +86,19 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 						variant: 'error'
 					}
 				);
+			} else if (statusCode === 404) {
+				if (
+					isBrowser() &&
+					Router.asPath !== Routes.user.DASHBOARD.path
+				) {
+					Router.push(Routes.user.DASHBOARD.path);
+				}
+				SnackbarUtils.enqueueSnackbar(
+					'Requested resource was not found',
+					{
+						variant: 'error'
+					}
+				);
 			} else if (statusCode === 500) {
 				if (
 					isBrowser() &&

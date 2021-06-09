@@ -13,17 +13,17 @@ export const UserButton: FC<UserButtonProps> = memo(
 	forwardRef<HTMLAnchorElement, UserButtonProps>(({ ...props }, ref) => {
 		const me = useMeQuery();
 		const refreshTokens = useRefreshTokens();
-		const refetchMe = useCallback(() => {
-			me.refetch();
+		const refresh = useCallback((): void => {
 			refreshTokens();
-		}, [me, refreshTokens]);
+			me.refetch();
+		}, [refreshTokens, me]);
 
 		return (
 			<ButtonLink
 				{...props}
 				href={Routes.user.DASHBOARD.path}
 				style={{ textTransform: 'none' }}
-				onClick={refetchMe}
+				onClick={refresh}
 				disabled={me.loading}
 				ref={ref}
 			>

@@ -25,7 +25,7 @@ export const GlobalDrawer: FC<GlobalDrawerProps> = memo(function GlobalDrawer({
 	return (
 		<DrawerStyled open={isOpen} onClose={onClose}>
 			<DrawerHeader />
-			<DrawerContent />
+			<DrawerContent onClose={onClose} />
 		</DrawerStyled>
 	);
 });

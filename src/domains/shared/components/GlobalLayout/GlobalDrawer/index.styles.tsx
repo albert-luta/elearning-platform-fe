@@ -17,9 +17,16 @@ interface DrawerStyledProps {
 }
 export const DrawerStyled = styled(
 	({ desktop, ...props }: DrawerStyledProps & DrawerProps) => (
-		<Drawer {...props} variant={desktop ? 'persistent' : props.variant} />
+		<Drawer
+			{...props}
+			variant={desktop ? 'persistent' : props.variant}
+			ModalProps={{ keepMounted: true }}
+		/>
 	)
 )`
+	display: flex;
+	flex-direction: column;
+
 	${({ desktop, theme }) =>
 		desktop &&
 		css`
@@ -58,7 +65,7 @@ export const DrawerHeader: FC<DrawerHeaderProps> = memo(function DrawerHeader({
 	const classes = useStyles();
 
 	return (
-		<>
+		<div>
 			<div className={classes.drawerHeader}>
 				{onClose && (
 					<Tooltip title="Close Drawer">
@@ -69,6 +76,6 @@ export const DrawerHeader: FC<DrawerHeaderProps> = memo(function DrawerHeader({
 				)}
 			</div>
 			<Divider />
-		</>
+		</div>
 	);
 });

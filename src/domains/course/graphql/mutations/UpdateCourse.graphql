@@ -1,0 +1,5 @@
+mutation UpdateCourse($id: String!, $data: CreateCourseInput!) {
+	updateCourse(id: $id, data: $data) {
+		...CourseFields
+	}
+}

@@ -110,7 +110,7 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 				</Tooltip>
 
 				<Menu {...bindMenu(moreMenuState)}>
-					{role === UserRole.ADMIN_UNIVERSITY && (
+					{role === UserRole.ADMIN && (
 						<MenuItem onClick={openUpdateUniversityDialog}>
 							<ListItemText primary="Edit" />
 						</MenuItem>
@@ -118,7 +118,7 @@ export const UniversityCardAction: FC<UniversityCardActionProps> = memo(
 					<MenuItem onClick={openLeaveDialog}>
 						<ListItemText primary="Leave" />
 					</MenuItem>
-					{role === UserRole.ADMIN_UNIVERSITY && (
+					{role === UserRole.ADMIN && (
 						<MenuItem onClick={openDeleteDialog}>
 							<ListItemText primary="Delete" />
 						</MenuItem>

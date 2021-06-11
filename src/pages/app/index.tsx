@@ -17,8 +17,6 @@ export default function App() {
 		closeCreateUniversityDialog
 	] = useBooleanState();
 
-	console.log(me.networkStatus);
-
 	return (
 		<>
 			<MyHead title="Dashboard" />

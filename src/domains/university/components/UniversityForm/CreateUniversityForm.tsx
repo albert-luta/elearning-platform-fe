@@ -18,12 +18,10 @@ export const CreateUniversityForm: FC<CreateUniversityFormProps> = memo(
 			update: createUniversityUpdate
 		});
 		const handleCreateUniversity = useFormikSubmit<CreateUniversityFormValues>(
-			async ({ name, logo }) => {
+			async ({ logo, ...data }) => {
 				const res = await createUniversity({
 					variables: {
-						data: {
-							name
-						},
+						data,
 						logo: Object.values(logo)[0]
 					}
 				});

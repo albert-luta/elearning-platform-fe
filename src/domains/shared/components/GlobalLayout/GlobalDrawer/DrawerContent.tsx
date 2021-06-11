@@ -1,5 +1,6 @@
 import { Box, List, Typography } from '@material-ui/core';
 import { CollegeDrawerCollapsible } from 'domains/college/components/CollegeDrawerCollapsible';
+import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useCollegesQuery } from 'generated/graphql';
 import { FC, memo } from 'react';
 import { MySkeleton } from '../../MySkeleton';
@@ -10,7 +11,11 @@ interface DrawerContentProps {
 
 export const DrawerContent: FC<DrawerContentProps> = memo(
 	function DrawerContent({ onClose }) {
-		const colleges = useCollegesQuery();
+		const colleges = useCollegesQuery({
+			variables: {
+				universityId: selectedUniversityVar()?.id ?? 'placeholder'
+			}
+		});
 
 		if (colleges.loading) {
 			return (

@@ -15,21 +15,26 @@ type UniversityButtonProps = Partial<ButtonLinkProps>;
 export const UniversityButton: FC<UniversityButtonProps> = memo(
 	forwardRef<HTMLAnchorElement, UniversityButtonProps>(
 		({ ...props }, ref) => {
-			const refreshTokens = useRefreshTokens();
-			const me = useMeQuery();
-			const colleges = useCollegesQuery();
-			const refresh = useCallback((): void => {
-				refreshTokens();
-				me.refetch();
-				colleges.refetch();
-			}, [refreshTokens, me, colleges]);
-
 			const university = useReactiveVar(selectedUniversityVar);
 			const href = university
 				? composeDynamicRoute(Routes.university.DASHBOARD.path, {
 						universityId: university.id
 				  })
 				: Routes.user.DASHBOARD.path;
+
+			const refreshTokens = useRefreshTokens();
+			const me = useMeQuery();
+			const colleges = useCollegesQuery({
+				skip: !university,
+				variables: {
+					universityId: selectedUniversityVar()?.id ?? 'placeholder'
+				}
+			});
+			const refresh = useCallback((): void => {
+				refreshTokens();
+				me.refetch();
+				colleges.refetch();
+			}, [refreshTokens, me, colleges]);
 
 			return (
 				<ButtonLink

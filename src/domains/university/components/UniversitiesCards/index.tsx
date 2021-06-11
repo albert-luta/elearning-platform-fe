@@ -6,10 +6,8 @@ import { UniversityCard } from './UniversityCard';
 
 const getRoleName = (role: string) => {
 	switch (role) {
-		case UserRole.ADMIN_UNIVERSITY:
-			return 'Admin University';
-		case UserRole.ADMIN_COLLEGE:
-			return 'Admin College';
+		case UserRole.ADMIN:
+			return 'Admin';
 		case UserRole.TEACHER:
 			return 'Teacher';
 		case UserRole.STUDENT:
@@ -23,10 +21,9 @@ const validRoles = Object.values(UserRole).reduce<Record<string, true>>(
 	{}
 );
 const rolesPositions: Record<string, number> = {
-	[UserRole.ADMIN_UNIVERSITY]: 0,
-	[UserRole.ADMIN_COLLEGE]: 1,
-	[UserRole.TEACHER]: 2,
-	[UserRole.STUDENT]: 3
+	[UserRole.ADMIN]: 0,
+	[UserRole.TEACHER]: 1,
+	[UserRole.STUDENT]: 2
 };
 
 interface UniversitiesCardsProps {

@@ -16,13 +16,13 @@ export const createUniversityUpdate: MutationUpdaterFn<CreateUniversityMutation>
 
 	const oldUniversitiesGroups = me.me.groupedByRoleUniversities;
 	const restUniversitiesGroups = oldUniversitiesGroups.filter(
-		({ role }) => role !== UserRole.ADMIN_UNIVERSITY
+		({ role }) => role !== UserRole.ADMIN
 	);
 	const oldUniversitiesAdmin: GroupedByRoleUniversitiesObject = oldUniversitiesGroups.find(
-		({ role }) => role === UserRole.ADMIN_UNIVERSITY
+		({ role }) => role === UserRole.ADMIN
 	) ?? {
 		__typename: 'GroupedByRoleUniversitiesObject',
-		role: UserRole.ADMIN_UNIVERSITY,
+		role: UserRole.ADMIN,
 		universities: []
 	};
 	const newUniversitiesAdmin: GroupedByRoleUniversitiesObject = {

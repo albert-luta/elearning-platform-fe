@@ -1,5 +1,5 @@
-query Colleges {
-	colleges {
+query Colleges($universityId: String!) {
+	colleges(universityId: $universityId) {
 		...CollegeFields
 	}
 }

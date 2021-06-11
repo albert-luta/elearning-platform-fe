@@ -56,14 +56,7 @@ export const UniversityForm: FC<UniversityFormProps> = memo(
 									<Field
 										component={TextField}
 										name="name"
-										label={
-											props.type === 'create'
-												? 'Name'
-												: composeLabel(
-														'Name',
-														'optional'
-												  )
-										}
+										label="Name"
 										fullWidth
 									/>
 									<Field name="logo">

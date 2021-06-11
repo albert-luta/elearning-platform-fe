@@ -1,11 +1,18 @@
 import { Box, List, Typography } from '@material-ui/core';
 import { CollegeDashboardCollapsible } from 'domains/college/components/CollegeDashboardCollapsible';
+import { CreateCollegeForm } from 'domains/college/components/CollegeForm/CreateCollegeForm';
+import { AddListItem } from 'domains/shared/components/list/AddListItem';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
+import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useCollegesQuery } from 'generated/graphql';
 
 export default function UniversityDashboard() {
-	const colleges = useCollegesQuery();
+	const colleges = useCollegesQuery({
+		variables: {
+			universityId: selectedUniversityVar()?.id ?? 'placeholder'
+		}
+	});
 
 	return (
 		<>
@@ -32,15 +39,34 @@ export default function UniversityDashboard() {
 				if (!colleges.data?.colleges.length) {
 					return (
 						<Box py={1} px={2}>
-							<Typography color="textSecondary" align="center">
-								There are no colleges created yet
-							</Typography>
+							<Box pb={1}>
+								<Typography
+									color="textSecondary"
+									align="center"
+								>
+									There are no colleges created yet
+								</Typography>
+							</Box>
+							<AddListItem
+								variant="h5"
+								resourceType="College"
+								form={(onSuccess) => (
+									<CreateCollegeForm onSuccess={onSuccess} />
+								)}
+							/>
 						</Box>
 					);
 				}
 
 				return (
 					<List>
+						<AddListItem
+							variant="h5"
+							resourceType="College"
+							form={(onSuccess) => (
+								<CreateCollegeForm onSuccess={onSuccess} />
+							)}
+						/>
 						{colleges.data.colleges.map((college) => (
 							<CollegeDashboardCollapsible
 								key={college.id}

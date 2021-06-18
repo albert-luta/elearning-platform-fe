@@ -38,4 +38,4 @@ yarn-error.log*
 .eslintcache
 
 # generated files
-/src/generated
+# /src/generated

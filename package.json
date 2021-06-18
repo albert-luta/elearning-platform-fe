@@ -4,7 +4,6 @@
 	"private": true,
 	"scripts": {
 		"dev": "concurrently -n next,codegen \"next dev\" \"npm run gen:watch\"",
-		"prebuild": "npm run gen",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",

@@ -1,9 +1,11 @@
+import { useReactiveVar } from '@apollo/client';
 import { Box, List, Typography } from '@material-ui/core';
 import { CollegeDashboardCollapsible } from 'domains/college/components/CollegeDashboardCollapsible';
 import { CreateCollegeForm } from 'domains/college/components/CollegeForm/CreateCollegeForm';
 import { AddListItem } from 'domains/shared/components/list/AddListItem';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
+import { UserRole } from 'domains/shared/constants/UserRole';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useCollegesQuery } from 'generated/graphql';
 
@@ -13,6 +15,7 @@ export default function UniversityDashboard() {
 			universityId: selectedUniversityVar()?.id ?? 'placeholder'
 		}
 	});
+	const university = useReactiveVar(selectedUniversityVar);
 
 	return (
 		<>
@@ -47,6 +50,24 @@ export default function UniversityDashboard() {
 									There are no colleges created yet
 								</Typography>
 							</Box>
+							{university?.role === UserRole.ADMIN && (
+								<AddListItem
+									variant="h5"
+									resourceType="College"
+									form={(onSuccess) => (
+										<CreateCollegeForm
+											onSuccess={onSuccess}
+										/>
+									)}
+								/>
+							)}
+						</Box>
+					);
+				}
+
+				return (
+					<List>
+						{university?.role === UserRole.ADMIN && (
 							<AddListItem
 								variant="h5"
 								resourceType="College"
@@ -54,19 +75,7 @@ export default function UniversityDashboard() {
 									<CreateCollegeForm onSuccess={onSuccess} />
 								)}
 							/>
-						</Box>
-					);
-				}
-
-				return (
-					<List>
-						<AddListItem
-							variant="h5"
-							resourceType="College"
-							form={(onSuccess) => (
-								<CreateCollegeForm onSuccess={onSuccess} />
-							)}
-						/>
+						)}
 						{colleges.data.colleges.map((college) => (
 							<CollegeDashboardCollapsible
 								key={college.id}

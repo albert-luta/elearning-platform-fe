@@ -8,6 +8,11 @@ import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { CreateUniversityForm } from 'domains/university/components/UniversityForm/CreateUniversityForm';
 import { UniversitiesCards } from 'domains/university/components/UniversitiesCards';
 import { useMeQuery } from 'generated/graphql';
+import { useRefreshTokens } from 'domains/auth/hooks/useRefreshTokens';
+import { useCallback } from 'react';
+import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
+import { Routes } from 'domains/shared/constants/Routes';
+import { useRouter } from 'next/router';
 
 export default function App() {
 	const me = useMeQuery();
@@ -16,6 +21,21 @@ export default function App() {
 		openCreateUniversityDialog,
 		closeCreateUniversityDialog
 	] = useBooleanState();
+
+	const router = useRouter();
+	const refreshTokens = useRefreshTokens();
+	const redirectToUniversity = useCallback(
+		async (universityId: string): Promise<void> => {
+			await refreshTokens();
+
+			router.push(
+				composeDynamicRoute(Routes.university.DASHBOARD.path, {
+					universityId
+				})
+			);
+		},
+		[refreshTokens, router]
+	);
 
 	return (
 		<>
@@ -56,9 +76,7 @@ export default function App() {
 			>
 				<Content>
 					<ContentHeader title="Create University" />
-					<CreateUniversityForm
-						onSuccess={closeCreateUniversityDialog}
-					/>
+					<CreateUniversityForm onSuccess={redirectToUniversity} />
 				</Content>
 			</Dialog>
 		</>

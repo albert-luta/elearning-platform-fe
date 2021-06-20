@@ -83,15 +83,17 @@ export const CollegeDashboardCollapsible: FC<CollegeDashboardCollapsibleProps> =
 								gridGap={8}
 								gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
 							>
-								<AddCard
-									resourceType="Course"
-									form={(onSuccess) => (
-										<CreateCourseForm
-											onSuccess={onSuccess}
-											collegeId={college.id}
-										/>
-									)}
-								/>
+								{university?.role === UserRole.ADMIN && (
+									<AddCard
+										resourceType="Course"
+										form={(onSuccess) => (
+											<CreateCourseForm
+												onSuccess={onSuccess}
+												collegeId={college.id}
+											/>
+										)}
+									/>
+								)}
 								{courses.map((course) => (
 									<CourseDashboardCard
 										key={course.id}

@@ -5,6 +5,7 @@ import { deleteCourseUpdate } from 'domains/course/graphql/updates/deleteCourseU
 import { CardActionAreaLink } from 'domains/shared/components/card/CardActionAreaLink';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { Routes } from 'domains/shared/constants/Routes';
+import { UserRole } from 'domains/shared/constants/UserRole';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { CourseObject, useDeleteCourseMutation } from 'generated/graphql';
@@ -53,24 +54,26 @@ export const CourseDashboardCard: FC<CourseDashboardCardProps> = memo(
 							<Typography>{course.name}</Typography>
 						</CardContent>
 					</CardActionAreaLink>
-					<Box alignSelf="center">
-						<ModifyResourceAction
-							// Shared
-							resourceType="Course"
-							resourceName={course.name}
-							// Update
-							updateForm={(onSuccess) => (
-								<UpdateCourseForm
-									collegeId={collegeId}
-									course={course}
-									onSuccess={onSuccess}
-								/>
-							)}
-							// Delete
-							onDelete={handleDeleteCourse}
-							deleteLoading={deleteCourseLoading}
-						/>
-					</Box>
+					{university?.role === UserRole.ADMIN && (
+						<Box alignSelf="center">
+							<ModifyResourceAction
+								// Shared
+								resourceType="Course"
+								resourceName={course.name}
+								// Update
+								updateForm={(onSuccess) => (
+									<UpdateCourseForm
+										collegeId={collegeId}
+										course={course}
+										onSuccess={onSuccess}
+									/>
+								)}
+								// Delete
+								onDelete={handleDeleteCourse}
+								deleteLoading={deleteCourseLoading}
+							/>
+						</Box>
+					)}
 				</Box>
 			</Card>
 		);

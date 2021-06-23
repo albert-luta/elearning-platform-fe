@@ -1,0 +1,7 @@
+fragment SectionFields on SectionObject {
+	id
+	name
+	courseId
+	universityId
+	createdAt
+}

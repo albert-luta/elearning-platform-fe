@@ -1,0 +1,5 @@
+mutation CreateSection($data: CreateSectionInput!) {
+	createSection(data: $data) {
+		...SectionFields
+	}
+}

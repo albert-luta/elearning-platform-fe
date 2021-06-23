@@ -1,0 +1,5 @@
+mutation UpdateSection($id: String!, $data: CreateSectionInput!) {
+	updateSection(id: $id, data: $data) {
+		...SectionFields
+	}
+}

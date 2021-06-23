@@ -1,0 +1,5 @@
+query Sections($courseId: String!) {
+	sections(courseId: $courseId) {
+		...SectionFields
+	}
+}

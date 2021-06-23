@@ -1,0 +1,5 @@
+mutation DeleteSection($id: String!) {
+	deleteSection(id: $id) {
+		...SectionFields
+	}
+}

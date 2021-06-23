@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
@@ -44,6 +46,7 @@ export type Course = {
   collegeId: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  sections?: Maybe<Array<Section>>;
   university: University;
   universityId: Scalars['String'];
 };
@@ -65,9 +68,15 @@ export type CreateCourseInput = {
   name: Scalars['String'];
 };
 
+export type CreateSectionInput = {
+  courseId: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type CreateUniversityInput = {
   name: Scalars['String'];
 };
+
 
 export type GroupedByRoleUniversitiesObject = {
   __typename?: 'GroupedByRoleUniversitiesObject';
@@ -84,9 +93,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createCollege: CollegeObject;
   createCourse: CourseObject;
+  createSection: SectionObject;
   createUniversity: UniversityObject;
   deleteCollege: CollegeObject;
   deleteCourse: CourseObject;
+  deleteSection: SectionObject;
   deleteUniversity: UniversityObject;
   leaveUniversity: UniversityObject;
   login: Authentication;
@@ -95,6 +106,7 @@ export type Mutation = {
   register: Authentication;
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
+  updateSection: SectionObject;
   updateUniversity: UniversityObject;
 };
 
@@ -106,6 +118,11 @@ export type MutationCreateCollegeArgs = {
 
 export type MutationCreateCourseArgs = {
   data: CreateCourseInput;
+};
+
+
+export type MutationCreateSectionArgs = {
+  data: CreateSectionInput;
 };
 
 
@@ -121,6 +138,11 @@ export type MutationDeleteCollegeArgs = {
 
 
 export type MutationDeleteCourseArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteSectionArgs = {
   id: Scalars['String'];
 };
 
@@ -158,6 +180,12 @@ export type MutationUpdateCourseArgs = {
 };
 
 
+export type MutationUpdateSectionArgs = {
+  data: CreateSectionInput;
+  id: Scalars['String'];
+};
+
+
 export type MutationUpdateUniversityArgs = {
   data: CreateUniversityInput;
   id: Scalars['String'];
@@ -168,11 +196,17 @@ export type Query = {
   __typename?: 'Query';
   colleges: Array<CollegeObject>;
   me: UserObject;
+  sections: Array<SectionObject>;
 };
 
 
 export type QueryCollegesArgs = {
   universityId: Scalars['String'];
+};
+
+
+export type QuerySectionsArgs = {
+  courseId: Scalars['String'];
 };
 
 export type RegisterUserInput = {
@@ -198,6 +232,26 @@ export type Scope = {
   roles?: Maybe<Array<Role>>;
 };
 
+export type Section = {
+  __typename?: 'Section';
+  course: Course;
+  courseId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  university: University;
+  universityId: Scalars['String'];
+};
+
+export type SectionObject = {
+  __typename?: 'SectionObject';
+  courseId: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  universityId: Scalars['String'];
+};
+
 export type University = {
   __typename?: 'University';
   colleges?: Maybe<Array<College>>;
@@ -205,6 +259,7 @@ export type University = {
   id: Scalars['ID'];
   logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  sections?: Maybe<Array<Section>>;
   universityUsers?: Maybe<Array<UniversityUser>>;
 };
 
@@ -372,6 +427,11 @@ export type CourseFieldsFragment = (
   & Pick<CourseObject, 'id' | 'name' | 'collegeId' | 'universityId'>
 );
 
+export type SectionFieldsFragment = (
+  { __typename?: 'SectionObject' }
+  & Pick<SectionObject, 'id' | 'name' | 'courseId' | 'universityId' | 'createdAt'>
+);
+
 export type CreateCourseMutationVariables = Exact<{
   data: CreateCourseInput;
 }>;
@@ -382,6 +442,19 @@ export type CreateCourseMutation = (
   & { createCourse: (
     { __typename?: 'CourseObject' }
     & CourseFieldsFragment
+  ) }
+);
+
+export type CreateSectionMutationVariables = Exact<{
+  data: CreateSectionInput;
+}>;
+
+
+export type CreateSectionMutation = (
+  { __typename?: 'Mutation' }
+  & { createSection: (
+    { __typename?: 'SectionObject' }
+    & SectionFieldsFragment
   ) }
 );
 
@@ -398,6 +471,19 @@ export type DeleteCourseMutation = (
   ) }
 );
 
+export type DeleteSectionMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteSectionMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSection: (
+    { __typename?: 'SectionObject' }
+    & SectionFieldsFragment
+  ) }
+);
+
 export type UpdateCourseMutationVariables = Exact<{
   id: Scalars['String'];
   data: CreateCourseInput;
@@ -410,6 +496,33 @@ export type UpdateCourseMutation = (
     { __typename?: 'CourseObject' }
     & CourseFieldsFragment
   ) }
+);
+
+export type UpdateSectionMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: CreateSectionInput;
+}>;
+
+
+export type UpdateSectionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSection: (
+    { __typename?: 'SectionObject' }
+    & SectionFieldsFragment
+  ) }
+);
+
+export type SectionsQueryVariables = Exact<{
+  courseId: Scalars['String'];
+}>;
+
+
+export type SectionsQuery = (
+  { __typename?: 'Query' }
+  & { sections: Array<(
+    { __typename?: 'SectionObject' }
+    & SectionFieldsFragment
+  )> }
 );
 
 export type UniversityFieldsFragment = (
@@ -514,6 +627,15 @@ export const CollegeFieldsFragmentDoc = gql`
   }
 }
     ${CourseFieldsFragmentDoc}`;
+export const SectionFieldsFragmentDoc = gql`
+    fragment SectionFields on SectionObject {
+  id
+  name
+  courseId
+  universityId
+  createdAt
+}
+    `;
 export const UniversityFieldsFragmentDoc = gql`
     fragment UniversityFields on UniversityObject {
   id
@@ -820,6 +942,39 @@ export function useCreateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateCourseMutationHookResult = ReturnType<typeof useCreateCourseMutation>;
 export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<CreateCourseMutation, CreateCourseMutationVariables>;
+export const CreateSectionDocument = gql`
+    mutation CreateSection($data: CreateSectionInput!) {
+  createSection(data: $data) {
+    ...SectionFields
+  }
+}
+    ${SectionFieldsFragmentDoc}`;
+export type CreateSectionMutationFn = Apollo.MutationFunction<CreateSectionMutation, CreateSectionMutationVariables>;
+
+/**
+ * __useCreateSectionMutation__
+ *
+ * To run a mutation, you first call `useCreateSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSectionMutation, { data, loading, error }] = useCreateSectionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateSectionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSectionMutation, CreateSectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSectionMutation, CreateSectionMutationVariables>(CreateSectionDocument, options);
+      }
+export type CreateSectionMutationHookResult = ReturnType<typeof useCreateSectionMutation>;
+export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMutation>;
+export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
 export const DeleteCourseDocument = gql`
     mutation DeleteCourse($id: String!) {
   deleteCourse(id: $id) {
@@ -853,6 +1008,39 @@ export function useDeleteCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteCourseMutationHookResult = ReturnType<typeof useDeleteCourseMutation>;
 export type DeleteCourseMutationResult = Apollo.MutationResult<DeleteCourseMutation>;
 export type DeleteCourseMutationOptions = Apollo.BaseMutationOptions<DeleteCourseMutation, DeleteCourseMutationVariables>;
+export const DeleteSectionDocument = gql`
+    mutation DeleteSection($id: String!) {
+  deleteSection(id: $id) {
+    ...SectionFields
+  }
+}
+    ${SectionFieldsFragmentDoc}`;
+export type DeleteSectionMutationFn = Apollo.MutationFunction<DeleteSectionMutation, DeleteSectionMutationVariables>;
+
+/**
+ * __useDeleteSectionMutation__
+ *
+ * To run a mutation, you first call `useDeleteSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSectionMutation, { data, loading, error }] = useDeleteSectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteSectionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSectionMutation, DeleteSectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSectionMutation, DeleteSectionMutationVariables>(DeleteSectionDocument, options);
+      }
+export type DeleteSectionMutationHookResult = ReturnType<typeof useDeleteSectionMutation>;
+export type DeleteSectionMutationResult = Apollo.MutationResult<DeleteSectionMutation>;
+export type DeleteSectionMutationOptions = Apollo.BaseMutationOptions<DeleteSectionMutation, DeleteSectionMutationVariables>;
 export const UpdateCourseDocument = gql`
     mutation UpdateCourse($id: String!, $data: CreateCourseInput!) {
   updateCourse(id: $id, data: $data) {
@@ -887,6 +1075,75 @@ export function useUpdateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateCourseMutationHookResult = ReturnType<typeof useUpdateCourseMutation>;
 export type UpdateCourseMutationResult = Apollo.MutationResult<UpdateCourseMutation>;
 export type UpdateCourseMutationOptions = Apollo.BaseMutationOptions<UpdateCourseMutation, UpdateCourseMutationVariables>;
+export const UpdateSectionDocument = gql`
+    mutation UpdateSection($id: String!, $data: CreateSectionInput!) {
+  updateSection(id: $id, data: $data) {
+    ...SectionFields
+  }
+}
+    ${SectionFieldsFragmentDoc}`;
+export type UpdateSectionMutationFn = Apollo.MutationFunction<UpdateSectionMutation, UpdateSectionMutationVariables>;
+
+/**
+ * __useUpdateSectionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSectionMutation, { data, loading, error }] = useUpdateSectionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateSectionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSectionMutation, UpdateSectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSectionMutation, UpdateSectionMutationVariables>(UpdateSectionDocument, options);
+      }
+export type UpdateSectionMutationHookResult = ReturnType<typeof useUpdateSectionMutation>;
+export type UpdateSectionMutationResult = Apollo.MutationResult<UpdateSectionMutation>;
+export type UpdateSectionMutationOptions = Apollo.BaseMutationOptions<UpdateSectionMutation, UpdateSectionMutationVariables>;
+export const SectionsDocument = gql`
+    query Sections($courseId: String!) {
+  sections(courseId: $courseId) {
+    ...SectionFields
+  }
+}
+    ${SectionFieldsFragmentDoc}`;
+
+/**
+ * __useSectionsQuery__
+ *
+ * To run a query within a React component, call `useSectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSectionsQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useSectionsQuery(baseOptions: Apollo.QueryHookOptions<SectionsQuery, SectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SectionsQuery, SectionsQueryVariables>(SectionsDocument, options);
+      }
+export function useSectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SectionsQuery, SectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SectionsQuery, SectionsQueryVariables>(SectionsDocument, options);
+        }
+export type SectionsQueryHookResult = ReturnType<typeof useSectionsQuery>;
+export type SectionsLazyQueryHookResult = ReturnType<typeof useSectionsLazyQuery>;
+export type SectionsQueryResult = Apollo.QueryResult<SectionsQuery, SectionsQueryVariables>;
 export const CreateUniversityDocument = gql`
     mutation CreateUniversity($data: CreateUniversityInput!, $logo: Upload) {
   createUniversity(data: $data, logo: $logo) {

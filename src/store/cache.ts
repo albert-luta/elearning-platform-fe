@@ -6,6 +6,9 @@ export const cache = new InMemoryCache({
 			fields: {
 				colleges: {
 					merge: false
+				},
+				sections: {
+					merge: false
 				}
 			}
 		},

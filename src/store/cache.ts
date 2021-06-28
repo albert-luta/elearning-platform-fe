@@ -26,5 +26,12 @@ export const cache = new InMemoryCache({
 				}
 			}
 		}
+	},
+	possibleTypes: {
+		BaseActivityInterface: [
+			'ResourceObject',
+			'AssignmentObject',
+			'QuizObject'
+		]
 	}
 });

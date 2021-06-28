@@ -201,7 +201,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 		acceptedFileExtensions && Object.keys(acceptedFileExtensions);
 
 	return (
-		<div>
+		<Box pt={2}>
 			{label && (
 				<Box mb={0.5}>
 					<FormLabel htmlFor="file-upload" error={!!errorMessage}>
@@ -283,6 +283,6 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 					))}
 				</Box>
 			)}
-		</div>
+		</Box>
 	);
 });

@@ -18,9 +18,63 @@ export type Scalars = {
   Upload: any;
 };
 
+export type Activity = {
+  __typename?: 'Activity';
+  assignments?: Maybe<Array<Assignment>>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files?: Maybe<Array<Scalars['String']>>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  quizes?: Maybe<Array<Quiz>>;
+  resources?: Maybe<Array<Resource>>;
+  section: Section;
+  sectionId: Scalars['String'];
+  type: ActivityType;
+  university: University;
+  universityId: Scalars['String'];
+};
+
+export enum ActivityType {
+  Assignment = 'ASSIGNMENT',
+  Quiz = 'QUIZ',
+  Resource = 'RESOURCE'
+}
+
+export type Assignment = {
+  __typename?: 'Assignment';
+  activity: Activity;
+  activityId: Scalars['ID'];
+  university: University;
+  universityId: Scalars['String'];
+};
+
+export type AssignmentObject = BaseActivityInterface & {
+  __typename?: 'AssignmentObject';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files: Array<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+  type: Scalars['String'];
+  universityId: Scalars['String'];
+};
+
 export type Authentication = {
   __typename?: 'Authentication';
   accessToken: Scalars['String'];
+};
+
+export type BaseActivityInterface = {
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files: Array<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+  type: Scalars['String'];
+  universityId: Scalars['String'];
 };
 
 export type College = {
@@ -59,6 +113,12 @@ export type CourseObject = {
   universityId: Scalars['String'];
 };
 
+export type CreateAssignmentInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+};
+
 export type CreateCollegeInput = {
   name: Scalars['String'];
 };
@@ -66,6 +126,18 @@ export type CreateCollegeInput = {
 export type CreateCourseInput = {
   collegeId: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type CreateQuizInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+};
+
+export type CreateResourceInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
 };
 
 export type CreateSectionInput = {
@@ -91,8 +163,11 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAssignment: BaseActivityInterface;
   createCollege: CollegeObject;
   createCourse: CourseObject;
+  createQuiz: BaseActivityInterface;
+  createResource: BaseActivityInterface;
   createSection: SectionObject;
   createUniversity: UniversityObject;
   deleteCollege: CollegeObject;
@@ -111,6 +186,12 @@ export type Mutation = {
 };
 
 
+export type MutationCreateAssignmentArgs = {
+  data: CreateAssignmentInput;
+  files: Array<Scalars['Upload']>;
+};
+
+
 export type MutationCreateCollegeArgs = {
   data: CreateCollegeInput;
 };
@@ -118,6 +199,18 @@ export type MutationCreateCollegeArgs = {
 
 export type MutationCreateCourseArgs = {
   data: CreateCourseInput;
+};
+
+
+export type MutationCreateQuizArgs = {
+  data: CreateQuizInput;
+  files: Array<Scalars['Upload']>;
+};
+
+
+export type MutationCreateResourceArgs = {
+  data: CreateResourceInput;
+  files: Array<Scalars['Upload']>;
 };
 
 
@@ -194,9 +287,15 @@ export type MutationUpdateUniversityArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  activity: BaseActivityInterface;
   colleges: Array<CollegeObject>;
   me: UserObject;
   sections: Array<SectionObject>;
+};
+
+
+export type QueryActivityArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -209,12 +308,52 @@ export type QuerySectionsArgs = {
   courseId: Scalars['String'];
 };
 
+export type Quiz = {
+  __typename?: 'Quiz';
+  activity: Activity;
+  activityId: Scalars['ID'];
+  university: University;
+  universityId: Scalars['String'];
+};
+
+export type QuizObject = BaseActivityInterface & {
+  __typename?: 'QuizObject';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files: Array<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+  type: Scalars['String'];
+  universityId: Scalars['String'];
+};
+
 export type RegisterUserInput = {
   email: Scalars['String'];
   fatherInitial: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Resource = {
+  __typename?: 'Resource';
+  activity: Activity;
+  activityId: Scalars['ID'];
+  university: University;
+  universityId: Scalars['String'];
+};
+
+export type ResourceObject = BaseActivityInterface & {
+  __typename?: 'ResourceObject';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files: Array<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+  type: Scalars['String'];
+  universityId: Scalars['String'];
 };
 
 export type Role = {
@@ -234,6 +373,7 @@ export type Scope = {
 
 export type Section = {
   __typename?: 'Section';
+  activities?: Maybe<Array<Activity>>;
   course: Course;
   courseId: Scalars['String'];
   createdAt: Scalars['DateTime'];
@@ -245,6 +385,7 @@ export type Section = {
 
 export type SectionObject = {
   __typename?: 'SectionObject';
+  activities: Array<BaseActivityInterface>;
   courseId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -254,11 +395,15 @@ export type SectionObject = {
 
 export type University = {
   __typename?: 'University';
+  activities?: Maybe<Array<Activity>>;
+  assignments?: Maybe<Array<Assignment>>;
   colleges?: Maybe<Array<College>>;
   courses?: Maybe<Array<Course>>;
   id: Scalars['ID'];
   logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  quizes?: Maybe<Array<Quiz>>;
+  resources?: Maybe<Array<Resource>>;
   sections?: Maybe<Array<Section>>;
   universityUsers?: Maybe<Array<UniversityUser>>;
 };
@@ -422,6 +567,23 @@ export type CollegesQuery = (
   )> }
 );
 
+type BaseActivityFields_AssignmentObject_Fragment = (
+  { __typename?: 'AssignmentObject' }
+  & Pick<AssignmentObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
+);
+
+type BaseActivityFields_QuizObject_Fragment = (
+  { __typename?: 'QuizObject' }
+  & Pick<QuizObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
+);
+
+type BaseActivityFields_ResourceObject_Fragment = (
+  { __typename?: 'ResourceObject' }
+  & Pick<ResourceObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
+);
+
+export type BaseActivityFieldsFragment = BaseActivityFields_AssignmentObject_Fragment | BaseActivityFields_QuizObject_Fragment | BaseActivityFields_ResourceObject_Fragment;
+
 export type CourseFieldsFragment = (
   { __typename?: 'CourseObject' }
   & Pick<CourseObject, 'id' | 'name' | 'collegeId' | 'universityId'>
@@ -429,7 +591,37 @@ export type CourseFieldsFragment = (
 
 export type SectionFieldsFragment = (
   { __typename?: 'SectionObject' }
-  & Pick<SectionObject, 'id' | 'name' | 'courseId' | 'universityId' | 'createdAt'>
+  & Pick<SectionObject, 'id' | 'name' | 'universityId' | 'courseId' | 'createdAt'>
+  & { activities: Array<(
+    { __typename?: 'AssignmentObject' }
+    & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & BaseActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & BaseActivityFields_ResourceObject_Fragment
+  )> }
+);
+
+export type CreateAssignmentMutationVariables = Exact<{
+  data: CreateAssignmentInput;
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type CreateAssignmentMutation = (
+  { __typename?: 'Mutation' }
+  & { createAssignment: (
+    { __typename?: 'AssignmentObject' }
+    & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & BaseActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & BaseActivityFields_ResourceObject_Fragment
+  ) }
 );
 
 export type CreateCourseMutationVariables = Exact<{
@@ -442,6 +634,46 @@ export type CreateCourseMutation = (
   & { createCourse: (
     { __typename?: 'CourseObject' }
     & CourseFieldsFragment
+  ) }
+);
+
+export type CreateQuizMutationVariables = Exact<{
+  data: CreateQuizInput;
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type CreateQuizMutation = (
+  { __typename?: 'Mutation' }
+  & { createQuiz: (
+    { __typename?: 'AssignmentObject' }
+    & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & BaseActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & BaseActivityFields_ResourceObject_Fragment
+  ) }
+);
+
+export type CreateResourceMutationVariables = Exact<{
+  data: CreateResourceInput;
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type CreateResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { createResource: (
+    { __typename?: 'AssignmentObject' }
+    & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & BaseActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & BaseActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -627,15 +859,30 @@ export const CollegeFieldsFragmentDoc = gql`
   }
 }
     ${CourseFieldsFragmentDoc}`;
+export const BaseActivityFieldsFragmentDoc = gql`
+    fragment BaseActivityFields on BaseActivityInterface {
+  id
+  name
+  sectionId
+  universityId
+  type
+  description
+  files
+  createdAt
+}
+    `;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
   name
-  courseId
   universityId
+  courseId
   createdAt
+  activities {
+    ...BaseActivityFields
+  }
 }
-    `;
+    ${BaseActivityFieldsFragmentDoc}`;
 export const UniversityFieldsFragmentDoc = gql`
     fragment UniversityFields on UniversityObject {
   id
@@ -909,6 +1156,40 @@ export function useCollegesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CollegesQueryHookResult = ReturnType<typeof useCollegesQuery>;
 export type CollegesLazyQueryHookResult = ReturnType<typeof useCollegesLazyQuery>;
 export type CollegesQueryResult = Apollo.QueryResult<CollegesQuery, CollegesQueryVariables>;
+export const CreateAssignmentDocument = gql`
+    mutation CreateAssignment($data: CreateAssignmentInput!, $files: [Upload!]!) {
+  createAssignment(data: $data, files: $files) {
+    ...BaseActivityFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
+export type CreateAssignmentMutationFn = Apollo.MutationFunction<CreateAssignmentMutation, CreateAssignmentMutationVariables>;
+
+/**
+ * __useCreateAssignmentMutation__
+ *
+ * To run a mutation, you first call `useCreateAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAssignmentMutation, { data, loading, error }] = useCreateAssignmentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      files: // value for 'files'
+ *   },
+ * });
+ */
+export function useCreateAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<CreateAssignmentMutation, CreateAssignmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAssignmentMutation, CreateAssignmentMutationVariables>(CreateAssignmentDocument, options);
+      }
+export type CreateAssignmentMutationHookResult = ReturnType<typeof useCreateAssignmentMutation>;
+export type CreateAssignmentMutationResult = Apollo.MutationResult<CreateAssignmentMutation>;
+export type CreateAssignmentMutationOptions = Apollo.BaseMutationOptions<CreateAssignmentMutation, CreateAssignmentMutationVariables>;
 export const CreateCourseDocument = gql`
     mutation CreateCourse($data: CreateCourseInput!) {
   createCourse(data: $data) {
@@ -942,6 +1223,74 @@ export function useCreateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateCourseMutationHookResult = ReturnType<typeof useCreateCourseMutation>;
 export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<CreateCourseMutation, CreateCourseMutationVariables>;
+export const CreateQuizDocument = gql`
+    mutation CreateQuiz($data: CreateQuizInput!, $files: [Upload!]!) {
+  createQuiz(data: $data, files: $files) {
+    ...BaseActivityFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
+export type CreateQuizMutationFn = Apollo.MutationFunction<CreateQuizMutation, CreateQuizMutationVariables>;
+
+/**
+ * __useCreateQuizMutation__
+ *
+ * To run a mutation, you first call `useCreateQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuizMutation, { data, loading, error }] = useCreateQuizMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      files: // value for 'files'
+ *   },
+ * });
+ */
+export function useCreateQuizMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuizMutation, CreateQuizMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuizMutation, CreateQuizMutationVariables>(CreateQuizDocument, options);
+      }
+export type CreateQuizMutationHookResult = ReturnType<typeof useCreateQuizMutation>;
+export type CreateQuizMutationResult = Apollo.MutationResult<CreateQuizMutation>;
+export type CreateQuizMutationOptions = Apollo.BaseMutationOptions<CreateQuizMutation, CreateQuizMutationVariables>;
+export const CreateResourceDocument = gql`
+    mutation CreateResource($data: CreateResourceInput!, $files: [Upload!]!) {
+  createResource(data: $data, files: $files) {
+    ...BaseActivityFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
+export type CreateResourceMutationFn = Apollo.MutationFunction<CreateResourceMutation, CreateResourceMutationVariables>;
+
+/**
+ * __useCreateResourceMutation__
+ *
+ * To run a mutation, you first call `useCreateResourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateResourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createResourceMutation, { data, loading, error }] = useCreateResourceMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      files: // value for 'files'
+ *   },
+ * });
+ */
+export function useCreateResourceMutation(baseOptions?: Apollo.MutationHookOptions<CreateResourceMutation, CreateResourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateResourceMutation, CreateResourceMutationVariables>(CreateResourceDocument, options);
+      }
+export type CreateResourceMutationHookResult = ReturnType<typeof useCreateResourceMutation>;
+export type CreateResourceMutationResult = Apollo.MutationResult<CreateResourceMutation>;
+export type CreateResourceMutationOptions = Apollo.BaseMutationOptions<CreateResourceMutation, CreateResourceMutationVariables>;
 export const CreateSectionDocument = gql`
     mutation CreateSection($data: CreateSectionInput!) {
   createSection(data: $data) {

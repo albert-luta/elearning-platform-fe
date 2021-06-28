@@ -1,0 +1,5 @@
+mutation CreateResource($data: CreateResourceInput!, $files: [Upload!]!) {
+	createResource(data: $data, files: $files) {
+		...BaseActivityFields
+	}
+}

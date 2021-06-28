@@ -1,0 +1,5 @@
+mutation CreateQuiz($data: CreateQuizInput!, $files: [Upload!]!) {
+	createQuiz(data: $data, files: $files) {
+		...BaseActivityFields
+	}
+}

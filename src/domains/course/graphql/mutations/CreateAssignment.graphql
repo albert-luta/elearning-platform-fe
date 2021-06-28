@@ -1,0 +1,5 @@
+mutation CreateAssignment($data: CreateAssignmentInput!, $files: [Upload!]!) {
+	createAssignment(data: $data, files: $files) {
+		...BaseActivityFields
+	}
+}

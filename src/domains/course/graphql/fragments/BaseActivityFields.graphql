@@ -1,0 +1,10 @@
+fragment BaseActivityFields on BaseActivityInterface {
+	id
+	name
+	sectionId
+	universityId
+	type
+	description
+	files
+	createdAt
+}

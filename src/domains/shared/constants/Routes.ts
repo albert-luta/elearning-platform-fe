@@ -29,6 +29,11 @@ export const Routes = inferRoutes({
 		DASHBOARD: {
 			path: '/app/:universityId/:collegeId/:courseId'
 		}
+	},
+	activity: {
+		DASHBOARD: {
+			path: '/app/:universityId/:collegeId/:courseId/:activityId'
+		}
 	}
 });
 

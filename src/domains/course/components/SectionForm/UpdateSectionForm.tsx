@@ -31,6 +31,7 @@ export const UpdateSectionForm: FC<UpdateSectionFormProps> = memo(
 
 		const {
 			createdAt,
+			activities,
 			...normalizedInitialValues
 		} = normalizeUpdateFormInitialValues(section);
 

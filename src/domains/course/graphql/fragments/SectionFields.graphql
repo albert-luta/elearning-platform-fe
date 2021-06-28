@@ -1,7 +1,10 @@
 fragment SectionFields on SectionObject {
 	id
 	name
-	courseId
 	universityId
+	courseId
 	createdAt
+	activities {
+		...BaseActivityFields
+	}
 }

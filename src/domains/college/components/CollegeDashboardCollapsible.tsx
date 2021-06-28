@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { CreateCourseForm } from 'domains/course/components/CourseForm/CreateCourseForm';
-import { AddCard } from 'domains/shared/components/form/AddCard';
+import { AddCard } from 'domains/shared/components/card/AddCard';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { UserRole } from 'domains/shared/constants/UserRole';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';

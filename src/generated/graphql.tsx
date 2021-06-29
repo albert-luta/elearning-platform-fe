@@ -170,6 +170,7 @@ export type Mutation = {
   createResource: BaseActivityInterface;
   createSection: SectionObject;
   createUniversity: UniversityObject;
+  deleteActivity: BaseActivityInterface;
   deleteCollege: CollegeObject;
   deleteCourse: CourseObject;
   deleteSection: SectionObject;
@@ -222,6 +223,12 @@ export type MutationCreateSectionArgs = {
 export type MutationCreateUniversityArgs = {
   data: CreateUniversityInput;
   logo?: Maybe<Scalars['Upload']>;
+};
+
+
+export type MutationDeleteActivityArgs = {
+  id: Scalars['String'];
+  type: ActivityType;
 };
 
 
@@ -687,6 +694,26 @@ export type CreateSectionMutation = (
   & { createSection: (
     { __typename?: 'SectionObject' }
     & SectionFieldsFragment
+  ) }
+);
+
+export type DeleteActivityMutationVariables = Exact<{
+  id: Scalars['String'];
+  type: ActivityType;
+}>;
+
+
+export type DeleteActivityMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteActivity: (
+    { __typename?: 'AssignmentObject' }
+    & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & BaseActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & BaseActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -1324,6 +1351,40 @@ export function useCreateSectionMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateSectionMutationHookResult = ReturnType<typeof useCreateSectionMutation>;
 export type CreateSectionMutationResult = Apollo.MutationResult<CreateSectionMutation>;
 export type CreateSectionMutationOptions = Apollo.BaseMutationOptions<CreateSectionMutation, CreateSectionMutationVariables>;
+export const DeleteActivityDocument = gql`
+    mutation DeleteActivity($id: String!, $type: ActivityType!) {
+  deleteActivity(id: $id, type: $type) {
+    ...BaseActivityFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
+export type DeleteActivityMutationFn = Apollo.MutationFunction<DeleteActivityMutation, DeleteActivityMutationVariables>;
+
+/**
+ * __useDeleteActivityMutation__
+ *
+ * To run a mutation, you first call `useDeleteActivityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteActivityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteActivityMutation, { data, loading, error }] = useDeleteActivityMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useDeleteActivityMutation(baseOptions?: Apollo.MutationHookOptions<DeleteActivityMutation, DeleteActivityMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteActivityMutation, DeleteActivityMutationVariables>(DeleteActivityDocument, options);
+      }
+export type DeleteActivityMutationHookResult = ReturnType<typeof useDeleteActivityMutation>;
+export type DeleteActivityMutationResult = Apollo.MutationResult<DeleteActivityMutation>;
+export type DeleteActivityMutationOptions = Apollo.BaseMutationOptions<DeleteActivityMutation, DeleteActivityMutationVariables>;
 export const DeleteCourseDocument = gql`
     mutation DeleteCourse($id: String!) {
   deleteCourse(id: $id) {

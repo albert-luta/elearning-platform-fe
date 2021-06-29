@@ -1,0 +1,5 @@
+mutation DeleteActivity($id: String!, $type: ActivityType!) {
+	deleteActivity(id: $id, type: $type) {
+		...BaseActivityFields
+	}
+}

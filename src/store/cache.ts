@@ -25,6 +25,13 @@ export const cache = new InMemoryCache({
 					merge: false
 				}
 			}
+		},
+		SectionObject: {
+			fields: {
+				activities: {
+					merge: false
+				}
+			}
 		}
 	},
 	possibleTypes: {

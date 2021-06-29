@@ -16,9 +16,15 @@ import { UserRole } from 'domains/shared/constants/UserRole';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
-import { SectionObject, useDeleteSectionMutation } from 'generated/graphql';
+import {
+	ActivityType,
+	SectionObject,
+	useDeleteActivityMutation,
+	useDeleteSectionMutation
+} from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { FC, memo, useCallback } from 'react';
+import { deleteActivityUpdate } from '../graphql/updates/deleteActivityUpdate';
 import { deleteSectionUpdate } from '../graphql/updates/deleteSectionUpdate';
 import { CreateActivityForm } from './ActivityForm/CreateActivityForm';
 import { ActivityIcon } from './ActivityIcon';
@@ -53,6 +59,13 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 			UserRole.ADMIN,
 			UserRole.TEACHER
 		].includes(university?.role ?? UserRole.STUDENT);
+
+		const [
+			deleteActivity,
+			{ loading: deleteActivityLoading }
+		] = useDeleteActivityMutation({
+			update: deleteActivityUpdate(courseId)
+		});
 
 		return (
 			<>
@@ -104,7 +117,12 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 						)}
 						{activities.length ? (
 							activities.map((activity, i) => (
-								<Box key={activity.id} mt={i && 0.5}>
+								<Box
+									key={activity.id}
+									mt={i && 0.5}
+									display="flex"
+									alignItems="center"
+								>
 									<ButtonLink
 										style={{ textTransform: 'none' }}
 										href={composeDynamicRoute(
@@ -143,6 +161,32 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 											</Typography>
 										</Box>
 									</ButtonLink>
+									{haveManipulationPermissions && (
+										<ModifyResourceAction
+											// Shared
+											resourceName={activity.name}
+											resourceType="Activity"
+											// Update
+											// TODO: Implement update activity form
+											updateForm={(onSuccess) => (
+												<div onClick={onSuccess}>
+													update activity
+												</div>
+											)}
+											// Delete
+											onDelete={() => {
+												deleteActivity({
+													variables: {
+														id: activity.id,
+														type: activity.type as ActivityType
+													}
+												}).catch(() => null);
+											}}
+											deleteLoading={
+												deleteActivityLoading
+											}
+										/>
+									)}
 								</Box>
 							))
 						) : (

@@ -42,7 +42,7 @@ const validationSchema = yup.object().shape({
 	fatherInitial: yup
 		.string()
 		.trim()
-		.matches(ValidationRegexp.ALPHA, FormErrors.ALPHA)
+		.matches(ValidationRegexp.ALPHA, FormErrors.ONLY_ALPHA)
 		.required(FormErrors.REQUIRED),
 	email: yup
 		.string()

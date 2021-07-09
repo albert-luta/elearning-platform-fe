@@ -114,8 +114,10 @@ export type CourseObject = {
 };
 
 export type CreateAssignmentInput = {
+  deadline: Scalars['DateTime'];
   description: Scalars['String'];
   name: Scalars['String'];
+  points: Scalars['Float'];
   sectionId: Scalars['String'];
 };
 

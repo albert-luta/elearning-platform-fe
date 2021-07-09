@@ -45,6 +45,8 @@ export type Assignment = {
   __typename?: 'Assignment';
   activity: Activity;
   activityId: Scalars['ID'];
+  deadline: Scalars['DateTime'];
+  points: Scalars['Float'];
   university: University;
   universityId: Scalars['String'];
 };

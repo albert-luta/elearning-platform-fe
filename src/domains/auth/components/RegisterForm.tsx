@@ -136,7 +136,7 @@ export const RegisterForm: FC = memo(function RegisterForm() {
 										field: { value }
 									}: {
 										field: {
-											value: FileUploadProps['files'];
+											value: FileUploadProps['newFiles'];
 										};
 									}) => (
 										<FileUpload
@@ -145,8 +145,10 @@ export const RegisterForm: FC = memo(function RegisterForm() {
 												'optional'
 											)}
 											helperText="Recommended image size: 40x40px"
-											files={value}
-											onChange={(getUpdatedFiles) => {
+											newFiles={value}
+											onNewFilesUpdate={(
+												getUpdatedFiles
+											) => {
 												setFieldValue(
 													'avatar',
 													getUpdatedFiles(value)

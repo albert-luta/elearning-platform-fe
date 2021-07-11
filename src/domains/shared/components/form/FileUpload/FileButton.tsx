@@ -1,18 +1,22 @@
 import { Box, Button, Grid, Typography } from '@material-ui/core';
 import { Clear } from '@material-ui/icons';
+import { getFileNameFromUrl } from 'domains/shared/utils/file/getFileNameFromUrl';
 import fileSize from 'filesize';
-import { FC, memo } from 'react';
 import { FileIcon } from '../../FileIcon';
 
-interface FileButtonProps {
-	file: File;
-	onRemoveFile: (file: File) => void;
+interface FileButtonProps<TFile extends File | string> {
+	file: TFile;
+	onRemoveFile: (file: TFile) => void;
 }
 
-export const FileButton: FC<FileButtonProps> = memo(function FileButton({
+export function FileButton<TFile extends File | string>({
 	file,
 	onRemoveFile
-}) {
+}: FileButtonProps<TFile>) {
+	const name =
+		file instanceof File ? file.name : getFileNameFromUrl(file as string);
+	const size = file instanceof File ? file.size : undefined;
+
 	return (
 		<Button
 			fullWidth
@@ -25,13 +29,13 @@ export const FileButton: FC<FileButtonProps> = memo(function FileButton({
 						<FileIcon file={file} />
 					</Box>
 					<Typography noWrap>
-						{file.name}{' '}
+						{name}{' '}
 						<Typography
 							variant="subtitle2"
 							component="span"
 							color="textSecondary"
 						>
-							({fileSize(file.size)})
+							{size != null && `(${fileSize(size)})`}
 						</Typography>
 					</Typography>
 				</Grid>
@@ -47,4 +51,4 @@ export const FileButton: FC<FileButtonProps> = memo(function FileButton({
 			</Grid>
 		</Button>
 	);
-});
+}

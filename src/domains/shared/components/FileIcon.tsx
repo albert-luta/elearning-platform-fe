@@ -29,7 +29,7 @@ const Icons: Record<FileType, IconType> = {
 };
 
 interface FileIconProps {
-	file: File;
+	file: File | string;
 }
 
 export const FileIcon: FC<FileIconProps> = memo(function FileIcon({ file }) {

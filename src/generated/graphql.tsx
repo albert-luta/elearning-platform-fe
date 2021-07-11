@@ -184,8 +184,11 @@ export type Mutation = {
   logout?: Maybe<Authentication>;
   refreshTokens: Authentication;
   register: Authentication;
+  updateAssignment: BaseActivityInterface;
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
+  updateQuiz: BaseActivityInterface;
+  updateResource: BaseActivityInterface;
   updateSection: SectionObject;
   updateUniversity: UniversityObject;
 };
@@ -272,6 +275,13 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateAssignmentArgs = {
+  data: UpdateAssignmentInput;
+  id: Scalars['String'];
+  newFiles: Array<Scalars['Upload']>;
+};
+
+
 export type MutationUpdateCollegeArgs = {
   data: CreateCollegeInput;
   id: Scalars['String'];
@@ -281,6 +291,20 @@ export type MutationUpdateCollegeArgs = {
 export type MutationUpdateCourseArgs = {
   data: CreateCourseInput;
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateQuizArgs = {
+  data: UpdateQuizInput;
+  id: Scalars['String'];
+  newFiles: Array<Scalars['Upload']>;
+};
+
+
+export type MutationUpdateResourceArgs = {
+  data: UpdateResourceInput;
+  id: Scalars['String'];
+  newFiles: Array<Scalars['Upload']>;
 };
 
 
@@ -434,6 +458,32 @@ export type UniversityUser = {
   universityId: Scalars['String'];
   user: User;
   userId: Scalars['String'];
+};
+
+export type UpdateAssignmentInput = {
+  deadline: Scalars['DateTime'];
+  description: Scalars['String'];
+  filesToDelete: Array<Scalars['String']>;
+  name: Scalars['String'];
+  oldFiles: Array<Scalars['String']>;
+  points: Scalars['Float'];
+  sectionId: Scalars['String'];
+};
+
+export type UpdateQuizInput = {
+  description: Scalars['String'];
+  filesToDelete: Array<Scalars['String']>;
+  name: Scalars['String'];
+  oldFiles: Array<Scalars['String']>;
+  sectionId: Scalars['String'];
+};
+
+export type UpdateResourceInput = {
+  description: Scalars['String'];
+  filesToDelete: Array<Scalars['String']>;
+  name: Scalars['String'];
+  oldFiles: Array<Scalars['String']>;
+  sectionId: Scalars['String'];
 };
 
 

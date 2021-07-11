@@ -69,13 +69,13 @@ export const BaseActivityFormFields: FC<BaseActivityFormFieldsProps> = memo(
 						field: { value }
 					}: {
 						field: {
-							value: FileUploadProps['files'];
+							value: FileUploadProps['newFiles'];
 						};
 					}) => (
 						<FileUpload
 							label={composeLabel('Files', 'optional')}
-							files={value}
-							onChange={(getUpdatedFiles) => {
+							newFiles={value}
+							onNewFilesUpdate={(getUpdatedFiles) => {
 								setFieldValue('files', getUpdatedFiles(value));
 							}}
 						/>

@@ -29,14 +29,15 @@ import { FileButton } from './FileButton';
 import { AdditionalInfo } from './AdditionalInfo';
 import { FileType } from 'domains/shared/constants/file/FileType';
 import { FileTypeExtensions } from 'domains/shared/constants/file/FileTypeExtensions';
+import { getFileNameFromUrl } from 'domains/shared/utils/file/getFileNameFromUrl';
 
 const preventDefault: DragEventHandler<HTMLDivElement> = (e) => {
 	e.preventDefault();
 };
 
 export interface FileUploadProps {
-	files: Record<string, File>;
-	onChange: Dispatch<
+	newFiles: Record<string, File>;
+	onNewFilesUpdate: Dispatch<
 		(prevState: Record<string, File>) => Record<string, File>
 	>;
 	label?: string;
@@ -46,20 +47,32 @@ export interface FileUploadProps {
 	maxFileSizeUnit?: FileSizeUnit;
 	acceptedFileTypes?: Exclude<FileType, FileType.UNKNOWN>[];
 	errorMessage?: string;
+	oldFiles?: string[];
+	filesToDelete?: Record<string, true>;
+	onFilesToDeleteUpdate?: Dispatch<
+		(prevState: Record<string, true>) => Record<string, true>
+	>;
 }
 
 export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
-	files,
-	onChange,
+	newFiles,
+	onNewFilesUpdate,
 	label,
 	helperText,
 	maxFiles,
 	maxFileSize,
 	maxFileSizeUnit = FileSizeUnit.MEGABYTES,
 	acceptedFileTypes,
-	errorMessage
+	errorMessage,
+	oldFiles = [],
+	filesToDelete = {},
+	onFilesToDeleteUpdate
 }) {
-	const filesArray = useMemo(() => Object.values(files), [files]);
+	const remainingOldFilesArray = useMemo(
+		() => oldFiles.filter((file) => !filesToDelete[file]),
+		[oldFiles, filesToDelete]
+	);
+	const newFilesArray = useMemo(() => Object.values(newFiles), [newFiles]);
 	const acceptedFileExtensions = useMemo(() => {
 		if (!acceptedFileTypes) return;
 
@@ -98,7 +111,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 		// Check the maximum number of files permitted(if it exists)
 		if (
 			maxFiles != null &&
-			Object.keys(files).length + selectedFiles.length > maxFiles
+			Object.keys(newFiles).length + selectedFiles.length > maxFiles
 		) {
 			snackbar.enqueueSnackbar(
 				`You can attach maximum ${maxFiles} file(s) in ${
@@ -151,7 +164,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 			}
 		}
 
-		onChange((prevFiles) => ({
+		onNewFilesUpdate((prevFiles) => ({
 			...prevFiles,
 			...selectedFiles.reduce<Record<string, File>>(
 				(acc, curr) => ({ ...acc, [curr.name]: curr }),
@@ -171,8 +184,8 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 
 		checkFiles(e.dataTransfer.files);
 	};
-	const removeFile = (file: File): void => {
-		onChange((prevFiles) => {
+	const removeNewFile = (file: File): void => {
+		onNewFilesUpdate((prevFiles) => {
 			const updatedFiles = { ...prevFiles };
 			delete updatedFiles[file.name];
 			return updatedFiles;
@@ -182,7 +195,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				return (
 					<Button
 						onClick={() => {
-							onChange((prevFiles) => ({
+							onNewFilesUpdate((prevFiles) => ({
 								...prevFiles,
 								[file.name]: file
 							}));
@@ -195,6 +208,34 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				);
 			}
 		});
+	};
+	const removeOldFile = (file: string): void => {
+		onFilesToDeleteUpdate?.((prevFiles) => ({
+			...prevFiles,
+			[file]: true
+		}));
+		snackbar.enqueueSnackbar(
+			`A file has been deleted: ${getFileNameFromUrl(file)}`,
+			{
+				action: function UndoRemoveFileSnackbar(key) {
+					return (
+						<Button
+							onClick={() => {
+								onFilesToDeleteUpdate?.((prevFiles) => {
+									const updatedFiles = { ...prevFiles };
+									delete updatedFiles[file];
+									return updatedFiles;
+								});
+								snackbar.closeSnackbar(key);
+							}}
+							color="primary"
+						>
+							Undo
+						</Button>
+					);
+				}
+			}
+		);
 	};
 
 	const acceptedFileExtensionsArray =
@@ -220,7 +261,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				onChange={checkSelectedFiles}
 			/>
 
-			<Collapse in={maxFiles == null || filesArray.length < maxFiles}>
+			<Collapse in={maxFiles == null || newFilesArray.length < maxFiles}>
 				<DragAndDropContainer
 					onDragEnter={enableIsDraggingOver}
 					onDragOver={preventDefault}
@@ -249,7 +290,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				</DragAndDropContainer>
 				<Box mt={0.5}>
 					<AdditionalInfo
-						filesArray={filesArray}
+						filesArray={newFilesArray}
 						maxFiles={maxFiles}
 						maxFileSize={maxFileSize}
 						maxFileSizeUnit={maxFileSizeUnit}
@@ -263,7 +304,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				<FormHelperText error>{errorMessage}</FormHelperText>
 			</Collapse>
 
-			{filesArray.length > 0 && (
+			{remainingOldFilesArray.length + newFilesArray.length > 0 && (
 				<Box
 					py={1}
 					style={{
@@ -271,12 +312,28 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 						maxHeight: 200
 					}}
 				>
-					{filesArray.map((file, i) => (
-						<Grow key={file.name} in>
-							<Box mt={i > 0 ? 1 : 0}>
+					{remainingOldFilesArray.map((file, i) => (
+						<Grow key={file} in>
+							<Box mt={i > 1 ? 1 : 0}>
 								<FileButton
 									file={file}
-									onRemoveFile={removeFile}
+									onRemoveFile={removeOldFile}
+								/>
+							</Box>
+						</Grow>
+					))}
+					{newFilesArray.map((file, i) => (
+						<Grow key={file.name} in>
+							<Box
+								mt={
+									!remainingOldFilesArray.length && i > 0
+										? 1
+										: 0
+								}
+							>
+								<FileButton
+									file={file}
+									onRemoveFile={removeNewFile}
 								/>
 							</Box>
 						</Grow>

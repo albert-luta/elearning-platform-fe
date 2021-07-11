@@ -64,7 +64,7 @@ export const UniversityForm: FC<UniversityFormProps> = memo(
 											field: { value }
 										}: {
 											field: {
-												value: FileUploadProps['files'];
+												value: FileUploadProps['newFiles'];
 											};
 										}) => (
 											<FileUpload
@@ -73,8 +73,10 @@ export const UniversityForm: FC<UniversityFormProps> = memo(
 													'optional'
 												)}
 												helperText="Recommended image size: 40x40px"
-												files={value}
-												onChange={(getUpdatedFiles) => {
+												newFiles={value}
+												onNewFilesUpdate={(
+													getUpdatedFiles
+												) => {
 													setFieldValue(
 														'logo',
 														getUpdatedFiles(value)

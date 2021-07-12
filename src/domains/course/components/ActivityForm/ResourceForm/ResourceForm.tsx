@@ -9,18 +9,21 @@ import {
 	BaseActivityFormFields,
 	baseActivityInitialValuesCreate,
 	CreateBaseActivityFormValues,
-	createBaseActivityValidationSchema
+	createBaseActivityValidationSchema,
+	UpdateBaseActivityFormValues,
+	updateBaseActivityValidationSchema
 } from '../BaseActivityForm';
 
 export type CreateResourceFormValues = CreateBaseActivityFormValues;
-export type UpdateResourceFormValues = CreateResourceFormValues;
+export type UpdateResourceFormValues = CreateResourceFormValues &
+	Omit<UpdateBaseActivityFormValues, keyof CreateResourceFormValues>;
 
 const initialValuesCreate: CreateResourceFormValues = {
 	...baseActivityInitialValuesCreate
 };
 
 const createResourceValidationSchema: Yup.SchemaOf<CreateResourceFormValues> = createBaseActivityValidationSchema.clone();
-const updateResourceValidationSchema: Yup.SchemaOf<UpdateResourceFormValues> = createResourceValidationSchema.clone();
+const updateResourceValidationSchema: Yup.SchemaOf<UpdateResourceFormValues> = updateBaseActivityValidationSchema.clone();
 
 type ResourceFormProps = FormProps<
 	CreateResourceFormValues,
@@ -37,14 +40,12 @@ export const ResourceForm: FC<ResourceFormProps> = memo(function ResourceForm(
 			validationSchemaCreate={createResourceValidationSchema}
 			validationSchemaUpdate={updateResourceValidationSchema}
 		>
-			{({ isSubmitting, setFieldValue }) => (
+			{({ isSubmitting }) => (
 				<Form>
 					<FormVerticalLayout
 						fields={
 							<>
-								<BaseActivityFormFields
-									setFieldValue={setFieldValue}
-								/>
+								<BaseActivityFormFields />
 							</>
 						}
 						actions={

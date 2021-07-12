@@ -18,6 +18,7 @@ import { useBooleanState } from '../hooks/useBooleanState';
 import { ContentHeader } from './layout/ContentHeader';
 import { Content } from './layout/Content';
 import { AreYouSureDialog } from './AreYouSureDialog';
+import { capitalize } from '../utils/capitalize';
 
 interface ModifyResourceActionProps {
 	// Shared
@@ -99,7 +100,9 @@ export const ModifyResourceAction: FC<ModifyResourceActionProps> = memo(
 					maxWidth={updateDialogMaxWidth}
 				>
 					<Content>
-						<ContentHeader title={`Update ${resourceType}`} />
+						<ContentHeader
+							title={`Update ${capitalize(resourceType)}`}
+						/>
 						{updateForm(handleUpdateUniversity)}
 					</Content>
 				</Dialog>

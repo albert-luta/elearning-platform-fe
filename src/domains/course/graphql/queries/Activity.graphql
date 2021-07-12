@@ -1,0 +1,5 @@
+query Activity($id: String!) {
+	activity(id: $id) {
+		...ActivityFields
+	}
+}

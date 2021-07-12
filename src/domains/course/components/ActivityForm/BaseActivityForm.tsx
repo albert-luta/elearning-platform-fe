@@ -11,13 +11,18 @@ import { FC, memo } from 'react';
 import * as Yup from 'yup';
 import { DefinedStringSchema } from 'yup/lib/string';
 import { Box } from '@material-ui/core';
+import { BaseActivityInterface } from 'generated/graphql';
 
 export interface CreateBaseActivityFormValues {
 	name: string;
 	description: string;
 	files: Record<string, File>;
 }
-export type UpdateBaseActivityFormValues = CreateBaseActivityFormValues;
+export interface UpdateBaseActivityFormValues
+	extends CreateBaseActivityFormValues {
+	oldFiles: string[];
+	filesToDelete: Record<string, true>;
+}
 
 export const baseActivityInitialValuesCreate: CreateBaseActivityFormValues = {
 	name: '',
@@ -32,19 +37,25 @@ export const createBaseActivityValidationSchema: Yup.SchemaOf<CreateBaseActivity
 		files: yupMap(Yup.mixed<File>().required())
 	}
 );
-export const updateBaseActivityValidationSchema: Yup.SchemaOf<UpdateBaseActivityFormValues> = createBaseActivityValidationSchema.clone();
+export const updateBaseActivityValidationSchema: Yup.SchemaOf<UpdateBaseActivityFormValues> = createBaseActivityValidationSchema
+	.clone()
+	.shape({
+		oldFiles: Yup.array().of(Yup.string().trim().required()).required(),
+		filesToDelete: yupMap(Yup.boolean().required())
+	});
 
 export interface CreateActivityProps {
 	courseId: string;
 	sectionId: string;
 	onSuccess: () => void;
 }
-
-interface BaseActivityFormFieldsProps {
-	setFieldValue: (field: string, value: any) => void;
+export interface UpdateActivityProps {
+	activity: BaseActivityInterface;
+	onSuccess: () => void;
 }
-export const BaseActivityFormFields: FC<BaseActivityFormFieldsProps> = memo(
-	function BaseActivityFormFields({ setFieldValue }) {
+
+export const BaseActivityFormFields: FC = memo(
+	function BaseActivityFormFields() {
 		return (
 			<>
 				<Box pb={2}>
@@ -66,10 +77,18 @@ export const BaseActivityFormFields: FC<BaseActivityFormFieldsProps> = memo(
 				</Box>
 				<Field name="files">
 					{({
-						field: { value }
+						field: { value },
+						form: {
+							values: { oldFiles, filesToDelete },
+							setFieldValue
+						}
 					}: {
 						field: {
 							value: FileUploadProps['newFiles'];
+						};
+						form: {
+							values: { [key: string]: any };
+							setFieldValue: (field: string, value: any) => void;
 						};
 					}) => (
 						<FileUpload
@@ -77,6 +96,14 @@ export const BaseActivityFormFields: FC<BaseActivityFormFieldsProps> = memo(
 							newFiles={value}
 							onNewFilesUpdate={(getUpdatedFiles) => {
 								setFieldValue('files', getUpdatedFiles(value));
+							}}
+							oldFiles={oldFiles}
+							filesToDelete={filesToDelete}
+							onFilesToDeleteUpdate={(getUpdatedFiles) => {
+								setFieldValue(
+									'filesToDelete',
+									getUpdatedFiles(filesToDelete)
+								);
 							}}
 						/>
 					)}

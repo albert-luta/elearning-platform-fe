@@ -2,16 +2,11 @@ import { Box, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { ActivityType } from 'generated/graphql';
 import { ChangeEvent, FC, memo, useCallback, useState } from 'react';
 import { CreateAssignmentForm } from './AssignmentForm/CreateAssignmentForm';
+import { CreateActivityProps } from './BaseActivityForm';
 import { CreateQuizForm } from './QuizForm/CreateQuizForm';
 import { CreateResourceForm } from './ResourceForm/CreateResourceForm';
 
-interface CreateActivityFormProps {
-	courseId: string;
-	sectionId: string;
-	onSuccess: () => void;
-}
-
-export const CreateActivityForm: FC<CreateActivityFormProps> = memo(
+export const CreateActivityForm: FC<CreateActivityProps> = memo(
 	function CreateActivityForm({ courseId, sectionId, onSuccess }) {
 		const [type, setType] = useState(ActivityType.Resource);
 		const changeType = useCallback((e: ChangeEvent<{ value: unknown }>) => {

@@ -1,0 +1,9 @@
+mutation UpdateResource(
+	$id: String!
+	$data: UpdateResourceInput!
+	$newFiles: [Upload!]!
+) {
+	updateResource(id: $id, data: $data, newFiles: $newFiles) {
+		...ActivityFields
+	}
+}

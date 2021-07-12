@@ -27,6 +27,7 @@ import { FC, memo, useCallback } from 'react';
 import { deleteActivityUpdate } from '../graphql/updates/deleteActivityUpdate';
 import { deleteSectionUpdate } from '../graphql/updates/deleteSectionUpdate';
 import { CreateActivityForm } from './ActivityForm/CreateActivityForm';
+import { UpdateActivityForm } from './ActivityForm/UpdateActivityForm';
 import { ActivityIcon } from './ActivityIcon';
 import { UpdateSectionForm } from './SectionForm/UpdateSectionForm';
 
@@ -165,13 +166,13 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 										<ModifyResourceAction
 											// Shared
 											resourceName={activity.name}
-											resourceType="Activity"
+											resourceType={activity.type}
 											// Update
-											// TODO: Implement update activity form
 											updateForm={(onSuccess) => (
-												<div onClick={onSuccess}>
-													update activity
-												</div>
+												<UpdateActivityForm
+													activity={activity}
+													onSuccess={onSuccess}
+												/>
 											)}
 											// Delete
 											onDelete={() => {

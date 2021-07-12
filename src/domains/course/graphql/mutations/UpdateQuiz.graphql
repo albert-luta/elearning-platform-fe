@@ -1,0 +1,9 @@
+mutation UpdateQuiz(
+	$id: String!
+	$data: UpdateQuizInput!
+	$newFiles: [Upload!]!
+) {
+	updateQuiz(id: $id, data: $data, newFiles: $newFiles) {
+		...ActivityFields
+	}
+}

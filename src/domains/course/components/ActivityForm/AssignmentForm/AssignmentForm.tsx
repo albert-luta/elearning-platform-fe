@@ -11,16 +11,19 @@ import {
 	BaseActivityFormFields,
 	baseActivityInitialValuesCreate,
 	CreateBaseActivityFormValues,
-	createBaseActivityValidationSchema
+	createBaseActivityValidationSchema,
+	UpdateBaseActivityFormValues,
+	updateBaseActivityValidationSchema
 } from '../BaseActivityForm';
-import { InputLabel } from '@material-ui/core';
+import { DateTimePicker } from 'formik-material-ui-pickers';
 
 export interface CreateAssignmentFormValues
 	extends CreateBaseActivityFormValues {
 	deadline: Date;
 	points: number;
 }
-export type UpdateAssignmentFormValues = CreateAssignmentFormValues;
+export type UpdateAssignmentFormValues = CreateAssignmentFormValues &
+	Omit<UpdateBaseActivityFormValues, keyof CreateAssignmentFormValues>;
 
 const initialValuesCreate: CreateAssignmentFormValues = {
 	...baseActivityInitialValuesCreate,
@@ -28,22 +31,25 @@ const initialValuesCreate: CreateAssignmentFormValues = {
 	points: 0
 };
 
+const createAdditions = {
+	deadline: Yup.date()
+		.min(
+			new Date(),
+			({ min }) => FormErrors.MIN_DATE + (min as Date).toLocaleString()
+		)
+		.required(FormErrors.REQUIRED),
+	points: Yup.number()
+		.min(0, ({ min }) => FormErrors.MIN_NUMBER + min)
+		.required(FormErrors.REQUIRED)
+};
 const createAssignmentValidationSchema: Yup.SchemaOf<CreateAssignmentFormValues> = createBaseActivityValidationSchema
 	.clone()
-	.shape({
-		deadline: Yup.date()
-			.min(
-				new Date(),
-				({ min }) =>
-					FormErrors.MIN_DATE + (min as Date).toLocaleDateString()
-			)
-			.required(FormErrors.REQUIRED),
-		points: Yup.number()
-			.min(0, ({ min }) => FormErrors.MIN_NUMBER + min)
-			.required(FormErrors.REQUIRED)
-	})
+	.shape(createAdditions)
 	.defined();
-const updateAssignmentValidationSchema: Yup.SchemaOf<UpdateAssignmentFormValues> = createAssignmentValidationSchema.clone();
+const updateAssignmentValidationSchema: Yup.SchemaOf<UpdateAssignmentFormValues> = updateBaseActivityValidationSchema
+	.clone()
+	.shape(createAdditions)
+	.defined();
 
 type AssignmentFormProps = FormProps<
 	CreateAssignmentFormValues,
@@ -59,14 +65,12 @@ export const AssignmentForm: FC<AssignmentFormProps> = memo(
 				validationSchemaCreate={createAssignmentValidationSchema}
 				validationSchemaUpdate={updateAssignmentValidationSchema}
 			>
-				{({ isSubmitting, setFieldValue }) => (
+				{({ isSubmitting }) => (
 					<Form>
 						<FormVerticalLayout
 							fields={
 								<>
-									<BaseActivityFormFields
-										setFieldValue={setFieldValue}
-									/>
+									<BaseActivityFormFields />
 									<Field
 										component={TextField}
 										name="points"
@@ -74,18 +78,14 @@ export const AssignmentForm: FC<AssignmentFormProps> = memo(
 										type="number"
 										fullWidth
 									/>
-									<>
-										<InputLabel htmlFor="deadline" shrink>
-											Deadline
-										</InputLabel>
-										<Field
-											component={TextField}
-											name="deadline"
-											id="deadline"
-											type="date"
-											fullWidth
-										/>
-									</>
+									<Field
+										component={DateTimePicker}
+										name="deadline"
+										label="Deadline"
+										ampm={false}
+										disablePast
+										fullWidth
+									/>
 								</>
 							}
 							actions={

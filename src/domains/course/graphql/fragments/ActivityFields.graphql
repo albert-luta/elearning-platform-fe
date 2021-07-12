@@ -1,0 +1,7 @@
+fragment ActivityFields on BaseActivityInterface {
+	...BaseActivityFields
+	... on AssignmentObject {
+		deadline
+		points
+	}
+}

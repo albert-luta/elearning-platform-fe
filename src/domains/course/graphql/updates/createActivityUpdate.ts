@@ -1,11 +1,8 @@
 import { ApolloCache } from '@apollo/client';
 import {
-	AssignmentObject,
 	CreateAssignmentMutation,
 	CreateQuizMutation,
 	CreateResourceMutation,
-	QuizObject,
-	ResourceObject,
 	SectionsDocument,
 	SectionsQuery
 } from 'generated/graphql';
@@ -17,7 +14,10 @@ export const createActivityUpdate = <
 		| CreateQuizMutation
 >(
 	cache: ApolloCache<T>,
-	activity: ResourceObject | AssignmentObject | QuizObject,
+	activity:
+		| CreateResourceMutation['createResource']
+		| CreateAssignmentMutation['createAssignment']
+		| CreateQuizMutation['createQuiz'],
 	courseId: string
 ) => {
 	const prevSections = cache.readQuery<SectionsQuery>({

@@ -11,6 +11,8 @@ import {
 import { createMuiTheme } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from 'domains/shared/utils/snackbar';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import dateFnsUtils from '@date-io/date-fns';
 
 const theme: DefaultTheme = createMuiTheme({
 	palette: {
@@ -41,11 +43,13 @@ export const GlobalStylesProvider: FC = ({ children }) => {
 		<StyledComponentsProvider theme={theme}>
 			<MaterialUiProvider theme={theme}>
 				<CssBaseline />
-				{/* Classes prop not correctly typed at this moment */}
-				<SnackbarProvider classes={classes as any} preventDuplicate>
-					<SnackbarUtilsConfigurator />
-					{children}
-				</SnackbarProvider>
+				<MuiPickersUtilsProvider utils={dateFnsUtils}>
+					{/* Classes prop not correctly typed at this moment */}
+					<SnackbarProvider classes={classes as any} preventDuplicate>
+						<SnackbarUtilsConfigurator />
+						{children}
+					</SnackbarProvider>
+				</MuiPickersUtilsProvider>
 			</MaterialUiProvider>
 		</StyledComponentsProvider>
 	);

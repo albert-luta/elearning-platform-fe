@@ -1,0 +1,9 @@
+mutation UpdateAssignment(
+	$id: String!
+	$data: UpdateAssignmentInput!
+	$newFiles: [Upload!]!
+) {
+	updateAssignment(id: $id, data: $data, newFiles: $newFiles) {
+		...ActivityFields
+	}
+}

@@ -54,10 +54,12 @@ export type Assignment = {
 export type AssignmentObject = BaseActivityInterface & {
   __typename?: 'AssignmentObject';
   createdAt: Scalars['DateTime'];
+  deadline: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  points: Scalars['Float'];
   sectionId: Scalars['String'];
   type: Scalars['String'];
   universityId: Scalars['String'];
@@ -628,6 +630,24 @@ export type CollegesQuery = (
   )> }
 );
 
+type ActivityFields_AssignmentObject_Fragment = (
+  { __typename?: 'AssignmentObject' }
+  & Pick<AssignmentObject, 'deadline' | 'points'>
+  & BaseActivityFields_AssignmentObject_Fragment
+);
+
+type ActivityFields_QuizObject_Fragment = (
+  { __typename?: 'QuizObject' }
+  & BaseActivityFields_QuizObject_Fragment
+);
+
+type ActivityFields_ResourceObject_Fragment = (
+  { __typename?: 'ResourceObject' }
+  & BaseActivityFields_ResourceObject_Fragment
+);
+
+export type ActivityFieldsFragment = ActivityFields_AssignmentObject_Fragment | ActivityFields_QuizObject_Fragment | ActivityFields_ResourceObject_Fragment;
+
 type BaseActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
   & Pick<AssignmentObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
@@ -797,6 +817,27 @@ export type DeleteSectionMutation = (
   ) }
 );
 
+export type UpdateAssignmentMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateAssignmentInput;
+  newFiles: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UpdateAssignmentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateAssignment: (
+    { __typename?: 'AssignmentObject' }
+    & ActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & ActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & ActivityFields_ResourceObject_Fragment
+  ) }
+);
+
 export type UpdateCourseMutationVariables = Exact<{
   id: Scalars['String'];
   data: CreateCourseInput;
@@ -811,6 +852,48 @@ export type UpdateCourseMutation = (
   ) }
 );
 
+export type UpdateQuizMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateQuizInput;
+  newFiles: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UpdateQuizMutation = (
+  { __typename?: 'Mutation' }
+  & { updateQuiz: (
+    { __typename?: 'AssignmentObject' }
+    & ActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & ActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & ActivityFields_ResourceObject_Fragment
+  ) }
+);
+
+export type UpdateResourceMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateResourceInput;
+  newFiles: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UpdateResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { updateResource: (
+    { __typename?: 'AssignmentObject' }
+    & ActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & ActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & ActivityFields_ResourceObject_Fragment
+  ) }
+);
+
 export type UpdateSectionMutationVariables = Exact<{
   id: Scalars['String'];
   data: CreateSectionInput;
@@ -822,6 +905,25 @@ export type UpdateSectionMutation = (
   & { updateSection: (
     { __typename?: 'SectionObject' }
     & SectionFieldsFragment
+  ) }
+);
+
+export type ActivityQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ActivityQuery = (
+  { __typename?: 'Query' }
+  & { activity: (
+    { __typename?: 'AssignmentObject' }
+    & ActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & ActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & ActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -952,6 +1054,15 @@ export const BaseActivityFieldsFragmentDoc = gql`
   createdAt
 }
     `;
+export const ActivityFieldsFragmentDoc = gql`
+    fragment ActivityFields on BaseActivityInterface {
+  ...BaseActivityFields
+  ... on AssignmentObject {
+    deadline
+    points
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
@@ -1505,6 +1616,41 @@ export function useDeleteSectionMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteSectionMutationHookResult = ReturnType<typeof useDeleteSectionMutation>;
 export type DeleteSectionMutationResult = Apollo.MutationResult<DeleteSectionMutation>;
 export type DeleteSectionMutationOptions = Apollo.BaseMutationOptions<DeleteSectionMutation, DeleteSectionMutationVariables>;
+export const UpdateAssignmentDocument = gql`
+    mutation UpdateAssignment($id: String!, $data: UpdateAssignmentInput!, $newFiles: [Upload!]!) {
+  updateAssignment(id: $id, data: $data, newFiles: $newFiles) {
+    ...ActivityFields
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
+export type UpdateAssignmentMutationFn = Apollo.MutationFunction<UpdateAssignmentMutation, UpdateAssignmentMutationVariables>;
+
+/**
+ * __useUpdateAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAssignmentMutation, { data, loading, error }] = useUpdateAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *      newFiles: // value for 'newFiles'
+ *   },
+ * });
+ */
+export function useUpdateAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAssignmentMutation, UpdateAssignmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAssignmentMutation, UpdateAssignmentMutationVariables>(UpdateAssignmentDocument, options);
+      }
+export type UpdateAssignmentMutationHookResult = ReturnType<typeof useUpdateAssignmentMutation>;
+export type UpdateAssignmentMutationResult = Apollo.MutationResult<UpdateAssignmentMutation>;
+export type UpdateAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateAssignmentMutation, UpdateAssignmentMutationVariables>;
 export const UpdateCourseDocument = gql`
     mutation UpdateCourse($id: String!, $data: CreateCourseInput!) {
   updateCourse(id: $id, data: $data) {
@@ -1539,6 +1685,76 @@ export function useUpdateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateCourseMutationHookResult = ReturnType<typeof useUpdateCourseMutation>;
 export type UpdateCourseMutationResult = Apollo.MutationResult<UpdateCourseMutation>;
 export type UpdateCourseMutationOptions = Apollo.BaseMutationOptions<UpdateCourseMutation, UpdateCourseMutationVariables>;
+export const UpdateQuizDocument = gql`
+    mutation UpdateQuiz($id: String!, $data: UpdateQuizInput!, $newFiles: [Upload!]!) {
+  updateQuiz(id: $id, data: $data, newFiles: $newFiles) {
+    ...ActivityFields
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
+export type UpdateQuizMutationFn = Apollo.MutationFunction<UpdateQuizMutation, UpdateQuizMutationVariables>;
+
+/**
+ * __useUpdateQuizMutation__
+ *
+ * To run a mutation, you first call `useUpdateQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQuizMutation, { data, loading, error }] = useUpdateQuizMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *      newFiles: // value for 'newFiles'
+ *   },
+ * });
+ */
+export function useUpdateQuizMutation(baseOptions?: Apollo.MutationHookOptions<UpdateQuizMutation, UpdateQuizMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateQuizMutation, UpdateQuizMutationVariables>(UpdateQuizDocument, options);
+      }
+export type UpdateQuizMutationHookResult = ReturnType<typeof useUpdateQuizMutation>;
+export type UpdateQuizMutationResult = Apollo.MutationResult<UpdateQuizMutation>;
+export type UpdateQuizMutationOptions = Apollo.BaseMutationOptions<UpdateQuizMutation, UpdateQuizMutationVariables>;
+export const UpdateResourceDocument = gql`
+    mutation UpdateResource($id: String!, $data: UpdateResourceInput!, $newFiles: [Upload!]!) {
+  updateResource(id: $id, data: $data, newFiles: $newFiles) {
+    ...ActivityFields
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
+export type UpdateResourceMutationFn = Apollo.MutationFunction<UpdateResourceMutation, UpdateResourceMutationVariables>;
+
+/**
+ * __useUpdateResourceMutation__
+ *
+ * To run a mutation, you first call `useUpdateResourceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateResourceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateResourceMutation, { data, loading, error }] = useUpdateResourceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *      newFiles: // value for 'newFiles'
+ *   },
+ * });
+ */
+export function useUpdateResourceMutation(baseOptions?: Apollo.MutationHookOptions<UpdateResourceMutation, UpdateResourceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateResourceMutation, UpdateResourceMutationVariables>(UpdateResourceDocument, options);
+      }
+export type UpdateResourceMutationHookResult = ReturnType<typeof useUpdateResourceMutation>;
+export type UpdateResourceMutationResult = Apollo.MutationResult<UpdateResourceMutation>;
+export type UpdateResourceMutationOptions = Apollo.BaseMutationOptions<UpdateResourceMutation, UpdateResourceMutationVariables>;
 export const UpdateSectionDocument = gql`
     mutation UpdateSection($id: String!, $data: CreateSectionInput!) {
   updateSection(id: $id, data: $data) {
@@ -1573,6 +1789,41 @@ export function useUpdateSectionMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateSectionMutationHookResult = ReturnType<typeof useUpdateSectionMutation>;
 export type UpdateSectionMutationResult = Apollo.MutationResult<UpdateSectionMutation>;
 export type UpdateSectionMutationOptions = Apollo.BaseMutationOptions<UpdateSectionMutation, UpdateSectionMutationVariables>;
+export const ActivityDocument = gql`
+    query Activity($id: String!) {
+  activity(id: $id) {
+    ...ActivityFields
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
+
+/**
+ * __useActivityQuery__
+ *
+ * To run a query within a React component, call `useActivityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivityQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useActivityQuery(baseOptions: Apollo.QueryHookOptions<ActivityQuery, ActivityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivityQuery, ActivityQueryVariables>(ActivityDocument, options);
+      }
+export function useActivityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityQuery, ActivityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivityQuery, ActivityQueryVariables>(ActivityDocument, options);
+        }
+export type ActivityQueryHookResult = ReturnType<typeof useActivityQuery>;
+export type ActivityLazyQueryHookResult = ReturnType<typeof useActivityLazyQuery>;
+export type ActivityQueryResult = Apollo.QueryResult<ActivityQuery, ActivityQueryVariables>;
 export const SectionsDocument = gql`
     query Sections($courseId: String!) {
   sections(courseId: $courseId) {

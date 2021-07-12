@@ -9,18 +9,21 @@ import {
 	BaseActivityFormFields,
 	baseActivityInitialValuesCreate,
 	CreateBaseActivityFormValues,
-	createBaseActivityValidationSchema
+	createBaseActivityValidationSchema,
+	UpdateBaseActivityFormValues,
+	updateBaseActivityValidationSchema
 } from '../BaseActivityForm';
 
 export type CreateQuizFormValues = CreateBaseActivityFormValues;
-export type UpdateQuizFormValues = CreateQuizFormValues;
+export type UpdateQuizFormValues = CreateQuizFormValues &
+	Omit<UpdateBaseActivityFormValues, keyof CreateQuizFormValues>;
 
 const initialValuesCreate: CreateQuizFormValues = {
 	...baseActivityInitialValuesCreate
 };
 
 const createQuizValidationSchema: Yup.SchemaOf<CreateQuizFormValues> = createBaseActivityValidationSchema.clone();
-const updateQuizValidationSchema: Yup.SchemaOf<UpdateQuizFormValues> = createQuizValidationSchema.clone();
+const updateQuizValidationSchema: Yup.SchemaOf<UpdateQuizFormValues> = updateBaseActivityValidationSchema.clone();
 
 type QuizFormProps = FormProps<CreateQuizFormValues, UpdateQuizFormValues>;
 
@@ -32,14 +35,12 @@ export const QuizForm: FC<QuizFormProps> = memo(function QuizForm(props) {
 			validationSchemaCreate={createQuizValidationSchema}
 			validationSchemaUpdate={updateQuizValidationSchema}
 		>
-			{({ isSubmitting, setFieldValue }) => (
+			{({ isSubmitting }) => (
 				<Form>
 					<FormVerticalLayout
 						fields={
 							<>
-								<BaseActivityFormFields
-									setFieldValue={setFieldValue}
-								/>
+								<BaseActivityFormFields />
 							</>
 						}
 						actions={

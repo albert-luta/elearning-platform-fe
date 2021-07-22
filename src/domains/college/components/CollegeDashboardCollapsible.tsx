@@ -103,9 +103,27 @@ export const CollegeDashboardCollapsible: FC<CollegeDashboardCollapsibleProps> =
 								))}
 							</Box>
 						) : (
-							<Typography color="textSecondary" align="center">
-								There are no courses created yet
-							</Typography>
+							<>
+								{university?.role === UserRole.ADMIN && (
+									<Box mb={2}>
+										<AddCard
+											resourceType="Course"
+											form={(onSuccess) => (
+												<CreateCourseForm
+													onSuccess={onSuccess}
+													collegeId={college.id}
+												/>
+											)}
+										/>
+									</Box>
+								)}
+								<Typography
+									color="textSecondary"
+									align="center"
+								>
+									There are no courses created yet
+								</Typography>
+							</>
 						)}
 					</Box>
 				</Collapse>

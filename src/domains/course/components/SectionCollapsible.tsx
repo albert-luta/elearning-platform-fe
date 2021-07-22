@@ -120,7 +120,11 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 							activities.map((activity, i) => (
 								<Box
 									key={activity.id}
-									mt={i && 0.5}
+									mt={
+										haveManipulationPermissions
+											? 0
+											: i && 0.5
+									}
 									display="flex"
 									alignItems="center"
 								>

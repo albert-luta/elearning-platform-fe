@@ -25,7 +25,7 @@ import { DragAndDropContainer } from './index.styles';
 import { useSnackbar } from 'notistack';
 import { convertToBytes } from 'domains/shared/utils/file/convertToBytes';
 import { getFileExtension } from 'domains/shared/utils/file/getFileExtension';
-import { FileButton } from './FileButton';
+import { FileButton } from '../../buttons/FileButton';
 import { AdditionalInfo } from './AdditionalInfo';
 import { FileType } from 'domains/shared/constants/file/FileType';
 import { FileTypeExtensions } from 'domains/shared/constants/file/FileTypeExtensions';

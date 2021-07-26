@@ -3,7 +3,7 @@ import { Clear } from '@material-ui/icons';
 import { getFileNameFromUrl } from 'domains/shared/utils/file/getFileNameFromUrl';
 import fileSize from 'filesize';
 import { FC } from 'react';
-import { FileIcon } from '../../FileIcon';
+import { FileIcon } from '../FileIcon';
 
 const Content: FC<{ file: File | string; download?: boolean }> = ({
 	file,

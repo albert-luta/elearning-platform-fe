@@ -83,6 +83,7 @@ export type BaseActivityInterface = {
 
 export type College = {
   __typename?: 'College';
+  collegeUsers?: Maybe<Array<CollegeUser>>;
   courses?: Maybe<Array<Course>>;
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -98,10 +99,21 @@ export type CollegeObject = {
   universityId: Scalars['String'];
 };
 
+export type CollegeUser = {
+  __typename?: 'CollegeUser';
+  college: College;
+  collegeId: Scalars['String'];
+  courseUsers?: Maybe<Array<CourseUser>>;
+  id: Scalars['ID'];
+  universityUser: UniversityUser;
+  universityUserId: Scalars['String'];
+};
+
 export type Course = {
   __typename?: 'Course';
   college: College;
   collegeId: Scalars['String'];
+  courseUsers?: Maybe<Array<CourseUser>>;
   id: Scalars['ID'];
   name: Scalars['String'];
   sections?: Maybe<Array<Section>>;
@@ -115,6 +127,15 @@ export type CourseObject = {
   id: Scalars['ID'];
   name: Scalars['String'];
   universityId: Scalars['String'];
+};
+
+export type CourseUser = {
+  __typename?: 'CourseUser';
+  collegeUser: CollegeUser;
+  collegeUserId: Scalars['String'];
+  course: Course;
+  courseId: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type CreateAssignmentInput = {
@@ -454,6 +475,8 @@ export type UniversityObject = {
 
 export type UniversityUser = {
   __typename?: 'UniversityUser';
+  collegeUsers?: Maybe<Array<CollegeUser>>;
+  id: Scalars['ID'];
   role: Role;
   roleId: Scalars['String'];
   university: University;

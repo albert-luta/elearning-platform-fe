@@ -71,7 +71,7 @@
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx}": [
 			"eslint --cache --fix",
-			"bash -c tsc --noemit"
+			"bash -c tsc --noEmit"
 		]
 	}
 }

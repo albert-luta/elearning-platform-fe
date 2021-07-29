@@ -20,7 +20,7 @@ import { DateTimePicker } from 'formik-material-ui-pickers';
 export interface CreateAssignmentFormValues
 	extends CreateBaseActivityFormValues {
 	deadline: Date;
-	points: number;
+	maxGrade: number;
 }
 export type UpdateAssignmentFormValues = CreateAssignmentFormValues &
 	Omit<UpdateBaseActivityFormValues, keyof CreateAssignmentFormValues>;
@@ -28,7 +28,7 @@ export type UpdateAssignmentFormValues = CreateAssignmentFormValues &
 const initialValuesCreate: CreateAssignmentFormValues = {
 	...baseActivityInitialValuesCreate,
 	deadline: new Date(),
-	points: 0
+	maxGrade: 0
 };
 
 const createAdditions = {
@@ -38,7 +38,7 @@ const createAdditions = {
 			({ min }) => FormErrors.MIN_DATE + (min as Date).toLocaleString()
 		)
 		.required(FormErrors.REQUIRED),
-	points: Yup.number()
+	maxGrade: Yup.number()
 		.min(0, ({ min }) => FormErrors.MIN_NUMBER + min)
 		.required(FormErrors.REQUIRED)
 };
@@ -73,8 +73,8 @@ export const AssignmentForm: FC<AssignmentFormProps> = memo(
 									<BaseActivityFormFields />
 									<Field
 										component={TextField}
-										name="points"
-										label="Points"
+										name="maxGrade"
+										label="Max Grade"
 										type="number"
 										fullWidth
 									/>

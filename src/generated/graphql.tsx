@@ -46,9 +46,10 @@ export type Assignment = {
   activity: Activity;
   activityId: Scalars['ID'];
   deadline: Scalars['DateTime'];
-  points: Scalars['Float'];
+  maxGrade: Scalars['Float'];
   university: University;
   universityId: Scalars['String'];
+  userAssignments?: Maybe<Array<UserAssignment>>;
 };
 
 export type AssignmentObject = BaseActivityInterface & {
@@ -58,8 +59,8 @@ export type AssignmentObject = BaseActivityInterface & {
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
   id: Scalars['String'];
+  maxGrade: Scalars['Float'];
   name: Scalars['String'];
-  points: Scalars['Float'];
   sectionId: Scalars['String'];
   type: Scalars['String'];
   universityId: Scalars['String'];
@@ -141,8 +142,8 @@ export type CourseUser = {
 export type CreateAssignmentInput = {
   deadline: Scalars['DateTime'];
   description: Scalars['String'];
+  maxGrade: Scalars['Float'];
   name: Scalars['String'];
-  points: Scalars['Float'];
   sectionId: Scalars['String'];
 };
 
@@ -348,7 +349,9 @@ export type Query = {
   activity: BaseActivityInterface;
   colleges: Array<CollegeObject>;
   me: UserObject;
+  myAssignment: UserAssignmentObject;
   sections: Array<SectionObject>;
+  userAssignments: Array<UserAssignmentObject>;
 };
 
 
@@ -362,8 +365,18 @@ export type QueryCollegesArgs = {
 };
 
 
+export type QueryMyAssignmentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QuerySectionsArgs = {
   courseId: Scalars['String'];
+};
+
+
+export type QueryUserAssignmentsArgs = {
+  id: Scalars['String'];
 };
 
 export type Quiz = {
@@ -489,9 +502,9 @@ export type UpdateAssignmentInput = {
   deadline: Scalars['DateTime'];
   description: Scalars['String'];
   filesToDelete: Array<Scalars['String']>;
+  maxGrade: Scalars['Float'];
   name: Scalars['String'];
   oldFiles: Array<Scalars['String']>;
-  points: Scalars['Float'];
   sectionId: Scalars['String'];
 };
 
@@ -523,6 +536,29 @@ export type User = {
   lastName: Scalars['String'];
   password: Scalars['String'];
   universityUsers?: Maybe<Array<UniversityUser>>;
+  userAssignments?: Maybe<Array<UserAssignment>>;
+};
+
+export type UserAssignment = {
+  __typename?: 'UserAssignment';
+  assignment: Assignment;
+  assignmentId: Scalars['String'];
+  files?: Maybe<Array<Scalars['String']>>;
+  grade?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+};
+
+export type UserAssignmentObject = {
+  __typename?: 'UserAssignmentObject';
+  assignmentId: Scalars['String'];
+  files?: Maybe<Array<Scalars['String']>>;
+  grade?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  updatedAt: Scalars['DateTime'];
+  userId: Scalars['String'];
 };
 
 export type UserObject = {
@@ -536,6 +572,37 @@ export type UserObject = {
   id: Scalars['ID'];
   lastName: Scalars['String'];
 };
+
+export type UserAssignmentFieldsFragment = (
+  { __typename?: 'UserAssignmentObject' }
+  & Pick<UserAssignmentObject, 'id' | 'userId' | 'assignmentId' | 'grade' | 'files' | 'updatedAt'>
+);
+
+export type MyAssignmentQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MyAssignmentQuery = (
+  { __typename?: 'Query' }
+  & { myAssignment: (
+    { __typename?: 'UserAssignmentObject' }
+    & UserAssignmentFieldsFragment
+  ) }
+);
+
+export type UserAssignmentsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type UserAssignmentsQuery = (
+  { __typename?: 'Query' }
+  & { userAssignments: Array<(
+    { __typename?: 'UserAssignmentObject' }
+    & UserAssignmentFieldsFragment
+  )> }
+);
 
 export type AuthenticationFieldsFragment = (
   { __typename?: 'Authentication' }
@@ -655,7 +722,7 @@ export type CollegesQuery = (
 
 type ActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
-  & Pick<AssignmentObject, 'deadline' | 'points'>
+  & Pick<AssignmentObject, 'deadline' | 'maxGrade'>
   & BaseActivityFields_AssignmentObject_Fragment
 );
 
@@ -1042,6 +1109,16 @@ export type MeQuery = (
   ) }
 );
 
+export const UserAssignmentFieldsFragmentDoc = gql`
+    fragment UserAssignmentFields on UserAssignmentObject {
+  id
+  userId
+  assignmentId
+  grade
+  files
+  updatedAt
+}
+    `;
 export const AuthenticationFieldsFragmentDoc = gql`
     fragment AuthenticationFields on Authentication {
   accessToken
@@ -1082,7 +1159,7 @@ export const ActivityFieldsFragmentDoc = gql`
   ...BaseActivityFields
   ... on AssignmentObject {
     deadline
-    points
+    maxGrade
   }
 }
     ${BaseActivityFieldsFragmentDoc}`;
@@ -1105,6 +1182,76 @@ export const UniversityFieldsFragmentDoc = gql`
   logo
 }
     `;
+export const MyAssignmentDocument = gql`
+    query MyAssignment($id: String!) {
+  myAssignment(id: $id) {
+    ...UserAssignmentFields
+  }
+}
+    ${UserAssignmentFieldsFragmentDoc}`;
+
+/**
+ * __useMyAssignmentQuery__
+ *
+ * To run a query within a React component, call `useMyAssignmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyAssignmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyAssignmentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMyAssignmentQuery(baseOptions: Apollo.QueryHookOptions<MyAssignmentQuery, MyAssignmentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyAssignmentQuery, MyAssignmentQueryVariables>(MyAssignmentDocument, options);
+      }
+export function useMyAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyAssignmentQuery, MyAssignmentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyAssignmentQuery, MyAssignmentQueryVariables>(MyAssignmentDocument, options);
+        }
+export type MyAssignmentQueryHookResult = ReturnType<typeof useMyAssignmentQuery>;
+export type MyAssignmentLazyQueryHookResult = ReturnType<typeof useMyAssignmentLazyQuery>;
+export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAssignmentQueryVariables>;
+export const UserAssignmentsDocument = gql`
+    query UserAssignments($id: String!) {
+  userAssignments(id: $id) {
+    ...UserAssignmentFields
+  }
+}
+    ${UserAssignmentFieldsFragmentDoc}`;
+
+/**
+ * __useUserAssignmentsQuery__
+ *
+ * To run a query within a React component, call `useUserAssignmentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAssignmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAssignmentsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserAssignmentsQuery(baseOptions: Apollo.QueryHookOptions<UserAssignmentsQuery, UserAssignmentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserAssignmentsQuery, UserAssignmentsQueryVariables>(UserAssignmentsDocument, options);
+      }
+export function useUserAssignmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAssignmentsQuery, UserAssignmentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserAssignmentsQuery, UserAssignmentsQueryVariables>(UserAssignmentsDocument, options);
+        }
+export type UserAssignmentsQueryHookResult = ReturnType<typeof useUserAssignmentsQuery>;
+export type UserAssignmentsLazyQueryHookResult = ReturnType<typeof useUserAssignmentsLazyQuery>;
+export type UserAssignmentsQueryResult = Apollo.QueryResult<UserAssignmentsQuery, UserAssignmentsQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($user: LoginUserInput!) {
   login(user: $user) {

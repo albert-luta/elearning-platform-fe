@@ -1,0 +1,9 @@
+mutation UpdateMyAssignment(
+	$id: String!
+	$data: UpdateMyAssignmentInput!
+	$newFiles: [Upload!]!
+) {
+	updateMyAssignment(id: $id, data: $data, newFiles: $newFiles) {
+		...UserAssignmentFields
+	}
+}

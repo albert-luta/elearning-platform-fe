@@ -314,7 +314,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 				>
 					{remainingOldFilesArray.map((file, i) => (
 						<Grow key={file} in>
-							<Box mt={i > 1 ? 1 : 0}>
+							<Box mt={i && 1}>
 								<FileButton
 									file={file}
 									onRemoveFile={removeOldFile}

@@ -1,0 +1,5 @@
+query MyAssignment($id: String!) {
+	myAssignment(id: $id) {
+		...UserAssignmentFields
+	}
+}

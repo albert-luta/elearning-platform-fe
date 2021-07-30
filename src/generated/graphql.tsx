@@ -211,6 +211,7 @@ export type Mutation = {
   updateAssignment: BaseActivityInterface;
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
+  updateMyAssignment: UserAssignmentObject;
   updateQuiz: BaseActivityInterface;
   updateResource: BaseActivityInterface;
   updateSection: SectionObject;
@@ -318,6 +319,13 @@ export type MutationUpdateCourseArgs = {
 };
 
 
+export type MutationUpdateMyAssignmentArgs = {
+  data: UpdateMyAssignmentInput;
+  id: Scalars['String'];
+  newFiles: Array<Scalars['Upload']>;
+};
+
+
 export type MutationUpdateQuizArgs = {
   data: UpdateQuizInput;
   id: Scalars['String'];
@@ -349,7 +357,7 @@ export type Query = {
   activity: BaseActivityInterface;
   colleges: Array<CollegeObject>;
   me: UserObject;
-  myAssignment: UserAssignmentObject;
+  myAssignment?: Maybe<UserAssignmentObject>;
   sections: Array<SectionObject>;
   userAssignments: Array<UserAssignmentObject>;
 };
@@ -508,6 +516,11 @@ export type UpdateAssignmentInput = {
   sectionId: Scalars['String'];
 };
 
+export type UpdateMyAssignmentInput = {
+  filesToDelete: Array<Scalars['String']>;
+  oldFiles: Array<Scalars['String']>;
+};
+
 export type UpdateQuizInput = {
   description: Scalars['String'];
   filesToDelete: Array<Scalars['String']>;
@@ -578,6 +591,21 @@ export type UserAssignmentFieldsFragment = (
   & Pick<UserAssignmentObject, 'id' | 'userId' | 'assignmentId' | 'grade' | 'files' | 'updatedAt'>
 );
 
+export type UpdateMyAssignmentMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateMyAssignmentInput;
+  newFiles: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UpdateMyAssignmentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMyAssignment: (
+    { __typename?: 'UserAssignmentObject' }
+    & UserAssignmentFieldsFragment
+  ) }
+);
+
 export type MyAssignmentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -585,10 +613,10 @@ export type MyAssignmentQueryVariables = Exact<{
 
 export type MyAssignmentQuery = (
   { __typename?: 'Query' }
-  & { myAssignment: (
+  & { myAssignment?: Maybe<(
     { __typename?: 'UserAssignmentObject' }
     & UserAssignmentFieldsFragment
-  ) }
+  )> }
 );
 
 export type UserAssignmentsQueryVariables = Exact<{
@@ -1182,6 +1210,41 @@ export const UniversityFieldsFragmentDoc = gql`
   logo
 }
     `;
+export const UpdateMyAssignmentDocument = gql`
+    mutation UpdateMyAssignment($id: String!, $data: UpdateMyAssignmentInput!, $newFiles: [Upload!]!) {
+  updateMyAssignment(id: $id, data: $data, newFiles: $newFiles) {
+    ...UserAssignmentFields
+  }
+}
+    ${UserAssignmentFieldsFragmentDoc}`;
+export type UpdateMyAssignmentMutationFn = Apollo.MutationFunction<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>;
+
+/**
+ * __useUpdateMyAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyAssignmentMutation, { data, loading, error }] = useUpdateMyAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *      newFiles: // value for 'newFiles'
+ *   },
+ * });
+ */
+export function useUpdateMyAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>(UpdateMyAssignmentDocument, options);
+      }
+export type UpdateMyAssignmentMutationHookResult = ReturnType<typeof useUpdateMyAssignmentMutation>;
+export type UpdateMyAssignmentMutationResult = Apollo.MutationResult<UpdateMyAssignmentMutation>;
+export type UpdateMyAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>;
 export const MyAssignmentDocument = gql`
     query MyAssignment($id: String!) {
   myAssignment(id: $id) {

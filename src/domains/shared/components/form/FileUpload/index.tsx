@@ -313,7 +313,7 @@ export const FileUpload: FC<FileUploadProps> = memo(function FileUpload({
 					}}
 				>
 					{remainingOldFilesArray.map((file, i) => (
-						<Grow key={file} in>
+						<Grow key={file + i} in>
 							<Box mt={i && 1}>
 								<FileButton
 									file={file}

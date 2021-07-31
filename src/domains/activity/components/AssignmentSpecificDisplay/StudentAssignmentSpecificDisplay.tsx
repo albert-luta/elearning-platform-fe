@@ -79,6 +79,7 @@ export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDispl
 				Object.values(filesToDelete).length > 0,
 			[newFiles, filesToDelete]
 		);
+
 		if (myAssignment.loading || !myAssignment.data) {
 			return (
 				<Box display="flex" justifyContent="center">
@@ -141,7 +142,7 @@ export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDispl
 					>
 						{myAssignment.data.myAssignment?.files?.map(
 							(file, i) => (
-								<Box key={file} mt={i && 1}>
+								<Box key={i} mt={i && 1}>
 									<FileButton file={file} download />
 								</Box>
 							)

@@ -18,7 +18,7 @@ export const useAuthenticateRoute = () => {
 				isRouteMatching(route, Object.values(Routes.auth))
 			) {
 				snackbar.enqueueSnackbar(
-					'You are already authenticated, you cannot access the auth pages',
+					'You are already authenticated, you will be redirected',
 					{
 						variant: 'info'
 					}
@@ -29,7 +29,7 @@ export const useAuthenticateRoute = () => {
 				!isRouteMatching(route, RoutesGroups.PUBLIC)
 			) {
 				snackbar.enqueueSnackbar(
-					'You are not authenticated, you cannot access private pages',
+					'You are not authenticated, you will be redirected',
 					{ variant: 'error' }
 				);
 				await router.replace(Routes.auth.LOGIN_REGISTER.path);

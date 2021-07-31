@@ -65,10 +65,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 				let snackbarMessage: string;
 				if (message === 'jwt expired') {
 					snackbarMessage =
-						"You didn't login in a long time, so you were disconnected!";
+						"You didn't login in a long time, you were disconnected!";
 				} else {
 					snackbarMessage =
-						'There was a security issue, so you were disconnected!';
+						'There was a security issue, you were disconnected!';
 				}
 				SnackbarUtils.enqueueSnackbar(snackbarMessage, {
 					variant: 'error'

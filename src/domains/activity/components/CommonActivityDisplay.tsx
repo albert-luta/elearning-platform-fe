@@ -20,7 +20,7 @@ export const CommonActivityDisplay: FC<CommonActivityDisplayProps> = memo(
 					<Box mt={2}>
 						{activity.files.map((file, i) => (
 							<Box
-								key={file + i}
+								key={file}
 								mb={i !== activity.files.length - 1 ? 1 : 0}
 							>
 								<FileButton file={file} download />

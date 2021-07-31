@@ -142,7 +142,7 @@ export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDispl
 					>
 						{myAssignment.data.myAssignment?.files?.map(
 							(file, i) => (
-								<Box key={i} mt={i && 1}>
+								<Box key={file} mt={i && 1}>
 									<FileButton file={file} download />
 								</Box>
 							)

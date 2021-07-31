@@ -1,11 +1,6 @@
 query Me {
 	me {
-		id
-		email
-		fatherInitial
-		firstName
-		lastName
-		avatar
+		...BaseUserFields
 		groupedByRoleUniversities {
 			role
 			universities {

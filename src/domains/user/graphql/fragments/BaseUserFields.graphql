@@ -1,0 +1,8 @@
+fragment BaseUserFields on UserObject {
+	id
+	email
+	fatherInitial
+	firstName
+	lastName
+	avatar
+}

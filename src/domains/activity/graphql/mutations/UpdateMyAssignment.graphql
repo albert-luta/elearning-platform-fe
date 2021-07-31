@@ -4,6 +4,6 @@ mutation UpdateMyAssignment(
 	$newFiles: [Upload!]!
 ) {
 	updateMyAssignment(id: $id, data: $data, newFiles: $newFiles) {
-		...UserAssignmentFields
+		...BaseUserAssignmentFields
 	}
 }

@@ -1,8 +1,0 @@
-fragment UserAssignmentFields on UserAssignmentObject {
-	id
-	userId
-	assignmentId
-	grade
-	files
-	updatedAt
-}

@@ -571,6 +571,7 @@ export type UserAssignmentObject = {
   grade?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   updatedAt: Scalars['DateTime'];
+  user: UserObject;
   userId: Scalars['String'];
 };
 
@@ -586,7 +587,7 @@ export type UserObject = {
   lastName: Scalars['String'];
 };
 
-export type UserAssignmentFieldsFragment = (
+export type BaseUserAssignmentFieldsFragment = (
   { __typename?: 'UserAssignmentObject' }
   & Pick<UserAssignmentObject, 'id' | 'userId' | 'assignmentId' | 'grade' | 'files' | 'updatedAt'>
 );
@@ -602,7 +603,7 @@ export type UpdateMyAssignmentMutation = (
   { __typename?: 'Mutation' }
   & { updateMyAssignment: (
     { __typename?: 'UserAssignmentObject' }
-    & UserAssignmentFieldsFragment
+    & BaseUserAssignmentFieldsFragment
   ) }
 );
 
@@ -615,7 +616,7 @@ export type MyAssignmentQuery = (
   { __typename?: 'Query' }
   & { myAssignment?: Maybe<(
     { __typename?: 'UserAssignmentObject' }
-    & UserAssignmentFieldsFragment
+    & BaseUserAssignmentFieldsFragment
   )> }
 );
 
@@ -628,7 +629,11 @@ export type UserAssignmentsQuery = (
   { __typename?: 'Query' }
   & { userAssignments: Array<(
     { __typename?: 'UserAssignmentObject' }
-    & UserAssignmentFieldsFragment
+    & { user: (
+      { __typename?: 'UserObject' }
+      & BaseUserFieldsFragment
+    ) }
+    & BaseUserAssignmentFieldsFragment
   )> }
 );
 
@@ -1092,6 +1097,11 @@ export type UpdateUniversityMutation = (
   ) }
 );
 
+export type BaseUserFieldsFragment = (
+  { __typename?: 'UserObject' }
+  & Pick<UserObject, 'id' | 'email' | 'fatherInitial' | 'firstName' | 'lastName' | 'avatar'>
+);
+
 export type DeleteUniversityMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1125,7 +1135,6 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'UserObject' }
-    & Pick<UserObject, 'id' | 'email' | 'fatherInitial' | 'firstName' | 'lastName' | 'avatar'>
     & { groupedByRoleUniversities: Array<(
       { __typename?: 'GroupedByRoleUniversitiesObject' }
       & Pick<GroupedByRoleUniversitiesObject, 'role'>
@@ -1134,11 +1143,12 @@ export type MeQuery = (
         & UniversityFieldsFragment
       )> }
     )> }
+    & BaseUserFieldsFragment
   ) }
 );
 
-export const UserAssignmentFieldsFragmentDoc = gql`
-    fragment UserAssignmentFields on UserAssignmentObject {
+export const BaseUserAssignmentFieldsFragmentDoc = gql`
+    fragment BaseUserAssignmentFields on UserAssignmentObject {
   id
   userId
   assignmentId
@@ -1210,13 +1220,23 @@ export const UniversityFieldsFragmentDoc = gql`
   logo
 }
     `;
+export const BaseUserFieldsFragmentDoc = gql`
+    fragment BaseUserFields on UserObject {
+  id
+  email
+  fatherInitial
+  firstName
+  lastName
+  avatar
+}
+    `;
 export const UpdateMyAssignmentDocument = gql`
     mutation UpdateMyAssignment($id: String!, $data: UpdateMyAssignmentInput!, $newFiles: [Upload!]!) {
   updateMyAssignment(id: $id, data: $data, newFiles: $newFiles) {
-    ...UserAssignmentFields
+    ...BaseUserAssignmentFields
   }
 }
-    ${UserAssignmentFieldsFragmentDoc}`;
+    ${BaseUserAssignmentFieldsFragmentDoc}`;
 export type UpdateMyAssignmentMutationFn = Apollo.MutationFunction<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>;
 
 /**
@@ -1248,10 +1268,10 @@ export type UpdateMyAssignmentMutationOptions = Apollo.BaseMutationOptions<Updat
 export const MyAssignmentDocument = gql`
     query MyAssignment($id: String!) {
   myAssignment(id: $id) {
-    ...UserAssignmentFields
+    ...BaseUserAssignmentFields
   }
 }
-    ${UserAssignmentFieldsFragmentDoc}`;
+    ${BaseUserAssignmentFieldsFragmentDoc}`;
 
 /**
  * __useMyAssignmentQuery__
@@ -1283,10 +1303,14 @@ export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAs
 export const UserAssignmentsDocument = gql`
     query UserAssignments($id: String!) {
   userAssignments(id: $id) {
-    ...UserAssignmentFields
+    ...BaseUserAssignmentFields
+    user {
+      ...BaseUserFields
+    }
   }
 }
-    ${UserAssignmentFieldsFragmentDoc}`;
+    ${BaseUserAssignmentFieldsFragmentDoc}
+${BaseUserFieldsFragmentDoc}`;
 
 /**
  * __useUserAssignmentsQuery__
@@ -2230,12 +2254,7 @@ export type LeaveUniversityMutationOptions = Apollo.BaseMutationOptions<LeaveUni
 export const MeDocument = gql`
     query Me {
   me {
-    id
-    email
-    fatherInitial
-    firstName
-    lastName
-    avatar
+    ...BaseUserFields
     groupedByRoleUniversities {
       role
       universities {
@@ -2244,7 +2263,8 @@ export const MeDocument = gql`
     }
   }
 }
-    ${UniversityFieldsFragmentDoc}`;
+    ${BaseUserFieldsFragmentDoc}
+${UniversityFieldsFragmentDoc}`;
 
 /**
  * __useMeQuery__

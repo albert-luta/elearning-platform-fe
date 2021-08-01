@@ -1,5 +1,5 @@
-query UserAssignments($id: String!) {
-	userAssignments(id: $id) {
+query UserAssignments($assignmentId: String!) {
+	userAssignments(assignmentId: $assignmentId) {
 		...BaseUserAssignmentFields
 		user {
 			...BaseUserFields

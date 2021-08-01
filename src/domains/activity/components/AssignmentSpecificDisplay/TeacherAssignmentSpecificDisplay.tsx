@@ -15,7 +15,7 @@ export const TeacherAssignmentSpecificDisplay: FC<TeacherAssignmentSpecificDispl
 	function TeacherAssignmentSpecificDisplay({ activity }) {
 		const router = useRouter();
 		const userAssignments = useUserAssignmentsQuery({
-			variables: { id: activity.id }
+			variables: { assignmentId: activity.id }
 		});
 
 		if (userAssignments.loading || !userAssignments.data) {

@@ -384,7 +384,7 @@ export type QuerySectionsArgs = {
 
 
 export type QueryUserAssignmentsArgs = {
-  id: Scalars['String'];
+  assignmentId: Scalars['String'];
 };
 
 export type Quiz = {
@@ -621,7 +621,7 @@ export type MyAssignmentQuery = (
 );
 
 export type UserAssignmentsQueryVariables = Exact<{
-  id: Scalars['String'];
+  assignmentId: Scalars['String'];
 }>;
 
 
@@ -1301,8 +1301,8 @@ export type MyAssignmentQueryHookResult = ReturnType<typeof useMyAssignmentQuery
 export type MyAssignmentLazyQueryHookResult = ReturnType<typeof useMyAssignmentLazyQuery>;
 export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAssignmentQueryVariables>;
 export const UserAssignmentsDocument = gql`
-    query UserAssignments($id: String!) {
-  userAssignments(id: $id) {
+    query UserAssignments($assignmentId: String!) {
+  userAssignments(assignmentId: $assignmentId) {
     ...BaseUserAssignmentFields
     user {
       ...BaseUserFields
@@ -1324,7 +1324,7 @@ ${BaseUserFieldsFragmentDoc}`;
  * @example
  * const { data, loading, error } = useUserAssignmentsQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      assignmentId: // value for 'assignmentId'
  *   },
  * });
  */

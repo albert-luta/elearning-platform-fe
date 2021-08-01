@@ -39,11 +39,11 @@ export const Routes = inferRoutes({
 			path:
 				'/app/:universityId/:collegeId/:courseId/:activityId/assignment'
 		},
-		// ASSIGNMENT_REVIEW: {
-		// 	path:
-		// 		'/app/:universityId/:collegeId/:courseId/:activityId/assignment/userAssignments/:userAssignmentId',
-		// 	universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
-		// },
+		ASSIGNMENT_REVIEW: {
+			path:
+				'/app/:universityId/:collegeId/:courseId/:activityId/assignment/userAssignments/:userAssignmentId',
+			universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
+		},
 
 		QUIZ_DASHBOARD: {
 			path: '/app/:universityId/:collegeId/:courseId/:activityId/quiz'

@@ -31,6 +31,18 @@ import { UpdateActivityForm } from './ActivityForm/UpdateActivityForm';
 import { ActivityIcon } from './ActivityIcon';
 import { UpdateSectionForm } from './SectionForm/UpdateSectionForm';
 
+const getActivityRoute = (type: string): keyof typeof Routes.activity => {
+	switch (type) {
+		case ActivityType.Resource:
+			return 'RESOURCE_DASHBOARD';
+		case ActivityType.Assignment:
+			return 'ASSIGNMENT_DASHBOARD';
+		case ActivityType.Quiz:
+		default:
+			return 'QUIZ_DASHBOARD';
+	}
+};
+
 interface SectionCollapsibleProps {
 	section: SectionObject;
 }
@@ -131,7 +143,9 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 									<ButtonLink
 										style={{ textTransform: 'none' }}
 										href={composeDynamicRoute(
-											Routes.activity.DASHBOARD.path,
+											Routes.activity[
+												getActivityRoute(activity.type)
+											].path,
 											{
 												universityId: String(
 													router.query.universityId

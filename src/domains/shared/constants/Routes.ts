@@ -31,9 +31,31 @@ export const Routes = inferRoutes({
 		}
 	},
 	activity: {
-		DASHBOARD: {
-			path: '/app/:universityId/:collegeId/:courseId/:activityId'
-		}
+		RESOURCE_DASHBOARD: {
+			path: '/app/:universityId/:collegeId/:courseId/:activityId/resource'
+		},
+
+		ASSIGNMENT_DASHBOARD: {
+			path:
+				'/app/:universityId/:collegeId/:courseId/:activityId/assignment'
+		},
+		// ASSIGNMENT_REVIEW: {
+		// 	path:
+		// 		'/app/:universityId/:collegeId/:courseId/:activityId/assignment/userAssignments/:userAssignmentId',
+		// 	universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
+		// },
+
+		QUIZ_DASHBOARD: {
+			path: '/app/:universityId/:collegeId/:courseId/:activityId/quiz'
+		} // ,
+		// QUIZ_ACTIVE: {
+		// 	path:
+		// 		'/app/:universityId/:collegeId/:courseId/:activityId/quiz/active'
+		// },
+		// QUIZ_REVIEW: {
+		// 	path:
+		// 		'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizeId'
+		// }
 	}
 });
 

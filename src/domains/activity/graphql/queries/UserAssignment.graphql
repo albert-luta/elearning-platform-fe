@@ -1,0 +1,8 @@
+query UserAssignment($id: String!) {
+	userAssignment(id: $id) {
+		...BaseUserAssignmentFields
+		user {
+			...BaseUserFields
+		}
+	}
+}

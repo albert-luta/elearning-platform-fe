@@ -38,7 +38,7 @@ export default function QuizDashboard() {
 							activity={activityQuery.data.activity}
 						/>
 
-						<Box mt={4}>
+						<Box mt={2}>
 							<Typography variant="h5">Quiz status</Typography>
 
 							<Box mt={2}>

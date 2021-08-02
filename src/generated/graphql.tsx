@@ -359,6 +359,7 @@ export type Query = {
   me: UserObject;
   myAssignment?: Maybe<UserAssignmentObject>;
   sections: Array<SectionObject>;
+  userAssignment?: Maybe<UserAssignmentObject>;
   userAssignments: Array<UserAssignmentObject>;
 };
 
@@ -380,6 +381,11 @@ export type QueryMyAssignmentArgs = {
 
 export type QuerySectionsArgs = {
   courseId: Scalars['String'];
+};
+
+
+export type QueryUserAssignmentArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -616,6 +622,23 @@ export type MyAssignmentQuery = (
   { __typename?: 'Query' }
   & { myAssignment?: Maybe<(
     { __typename?: 'UserAssignmentObject' }
+    & BaseUserAssignmentFieldsFragment
+  )> }
+);
+
+export type UserAssignmentQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type UserAssignmentQuery = (
+  { __typename?: 'Query' }
+  & { userAssignment?: Maybe<(
+    { __typename?: 'UserAssignmentObject' }
+    & { user: (
+      { __typename?: 'UserObject' }
+      & BaseUserFieldsFragment
+    ) }
     & BaseUserAssignmentFieldsFragment
   )> }
 );
@@ -1300,6 +1323,45 @@ export function useMyAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MyAssignmentQueryHookResult = ReturnType<typeof useMyAssignmentQuery>;
 export type MyAssignmentLazyQueryHookResult = ReturnType<typeof useMyAssignmentLazyQuery>;
 export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAssignmentQueryVariables>;
+export const UserAssignmentDocument = gql`
+    query UserAssignment($id: String!) {
+  userAssignment(id: $id) {
+    ...BaseUserAssignmentFields
+    user {
+      ...BaseUserFields
+    }
+  }
+}
+    ${BaseUserAssignmentFieldsFragmentDoc}
+${BaseUserFieldsFragmentDoc}`;
+
+/**
+ * __useUserAssignmentQuery__
+ *
+ * To run a query within a React component, call `useUserAssignmentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAssignmentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAssignmentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserAssignmentQuery(baseOptions: Apollo.QueryHookOptions<UserAssignmentQuery, UserAssignmentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserAssignmentQuery, UserAssignmentQueryVariables>(UserAssignmentDocument, options);
+      }
+export function useUserAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAssignmentQuery, UserAssignmentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserAssignmentQuery, UserAssignmentQueryVariables>(UserAssignmentDocument, options);
+        }
+export type UserAssignmentQueryHookResult = ReturnType<typeof useUserAssignmentQuery>;
+export type UserAssignmentLazyQueryHookResult = ReturnType<typeof useUserAssignmentLazyQuery>;
+export type UserAssignmentQueryResult = Apollo.QueryResult<UserAssignmentQuery, UserAssignmentQueryVariables>;
 export const UserAssignmentsDocument = gql`
     query UserAssignments($assignmentId: String!) {
   userAssignments(assignmentId: $assignmentId) {

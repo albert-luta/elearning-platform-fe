@@ -1,24 +1,15 @@
 import { FC, memo, useCallback, useMemo, useState } from 'react';
-import {
-	Table,
-	TableCell,
-	TableContainer,
-	TableRow,
-	TableBody,
-	CircularProgress,
-	Box,
-	Collapse
-} from '@material-ui/core';
+import { CircularProgress, Box, Collapse, Typography } from '@material-ui/core';
 import {
 	AssignmentObject,
 	useMyAssignmentQuery,
 	useUpdateMyAssignmentMutation
 } from 'generated/graphql';
-import { formatDuration } from 'domains/shared/utils/formatDuration';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
 import { FileUpload } from 'domains/shared/components/form/FileUpload';
 import { ButtonWithLoader } from 'domains/shared/components/buttons/ButtonWithLoader';
 import { FileButton } from 'domains/shared/components/buttons/FileButton';
+import { AssignmentStatus } from '../AssignmentStatus';
 
 interface StudentAssignmentSpecificDisplayProps {
 	activity: AssignmentObject;
@@ -90,55 +81,28 @@ export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDispl
 
 		return (
 			<>
-				<TableContainer>
-					<Table>
-						<TableBody>
-							<TableRow>
-								<TableCell>Grade</TableCell>
-								<TableCell>
-									{myAssignment.data.myAssignment?.grade ??
-										'Not graded yet'}{' '}
-									/ {activity.maxGrade}
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Deadline</TableCell>
-								<TableCell>
-									{deadline.toLocaleString()} -{' '}
-									{deadlineCountdown.hasCompleted
-										? 'No time'
-										: formatDuration(
-												deadlineCountdown.duration
-										  )}{' '}
-									remaining
-								</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Last time updated</TableCell>
-								<TableCell>
-									{updatedAt
-										? `${updatedAt.toLocaleString()} - ${formatDuration(
-												updatedAtCountdown.duration
-										  )} ago`
-										: 'Not updated yet'}
-								</TableCell>
-							</TableRow>
-						</TableBody>
-					</Table>
-				</TableContainer>
+				<Typography variant="h5">Assignment status</Typography>
+				<Box mt={2}>
+					<AssignmentStatus
+						type="specific"
+						maxGrade={activity.maxGrade}
+						deadline={deadline}
+						deadlineCountdown={deadlineCountdown}
+						grade={myAssignment.data.myAssignment?.grade}
+						updatedAt={updatedAt}
+						updatedAtCountdown={updatedAtCountdown}
+					/>
+				</Box>
 
-				<Collapse
-					in={
-						deadlineCountdown.hasCompleted &&
-						!!myAssignment.data.myAssignment?.files?.length
-					}
-				>
-					<Box
-						mt={2}
-						style={{
-							overflowY: 'auto',
-							maxHeight: 200
-						}}
+				<Box mt={2}>
+					<Typography variant="h5">Uploads</Typography>
+				</Box>
+				<Box mt={2}>
+					<Collapse
+						in={
+							deadlineCountdown.hasCompleted &&
+							!!myAssignment.data.myAssignment?.files?.length
+						}
 					>
 						{myAssignment.data.myAssignment?.files?.map(
 							(file, i) => (
@@ -147,32 +111,33 @@ export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDispl
 								</Box>
 							)
 						)}
-					</Box>
-				</Collapse>
-				<Collapse in={!deadlineCountdown.hasCompleted}>
-					<FileUpload
-						newFiles={newFiles}
-						onNewFilesUpdate={setNewFiles}
-						filesToDelete={filesToDelete}
-						onFilesToDeleteUpdate={setFilesToDelete}
-						oldFiles={
-							myAssignment.data.myAssignment?.files ?? undefined
-						}
-					/>
-
-					<Collapse in={showUploadButton}>
-						<Box mt={1} display="flex" justifyContent="end">
-							<ButtonWithLoader
-								variant="contained"
-								color="primary"
-								loading={updateFilesLoading}
-								onClick={updateFiles}
-							>
-								Update
-							</ButtonWithLoader>
-						</Box>
 					</Collapse>
-				</Collapse>
+					<Collapse in={!deadlineCountdown.hasCompleted}>
+						<FileUpload
+							newFiles={newFiles}
+							onNewFilesUpdate={setNewFiles}
+							filesToDelete={filesToDelete}
+							onFilesToDeleteUpdate={setFilesToDelete}
+							oldFiles={
+								myAssignment.data.myAssignment?.files ??
+								undefined
+							}
+						/>
+
+						<Collapse in={showUploadButton}>
+							<Box mt={1} display="flex" justifyContent="end">
+								<ButtonWithLoader
+									variant="contained"
+									color="primary"
+									loading={updateFilesLoading}
+									onClick={updateFiles}
+								>
+									Update
+								</ButtonWithLoader>
+							</Box>
+						</Collapse>
+					</Collapse>
+				</Box>
 			</>
 		);
 	}

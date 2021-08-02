@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const useCountdown = (
-	deadline: number,
-	overtime = false
-): { duration: number; hasCompleted: boolean } => {
+export interface Countdown {
+	duration: number;
+	hasCompleted: boolean;
+}
+
+export const useCountdown = (deadline: number, overtime = false): Countdown => {
 	const interval = useRef<NodeJS.Timeout | null>(null);
 	const [duration, setDuration] = useState(deadline - Date.now());
 	const [hasCompleted, setHasCompleted] = useState(false);

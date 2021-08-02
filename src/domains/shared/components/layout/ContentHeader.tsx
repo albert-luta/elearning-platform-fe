@@ -5,12 +5,13 @@ interface ContentHeaderProps {
 	title: string;
 	action?: ReactNode;
 	align?: TypographyProps['align'];
+	disableGutters?: boolean;
 }
 
 export const ContentHeader: FC<ContentHeaderProps> = memo(
-	function ContentHeader({ title, action, align }) {
+	function ContentHeader({ title, action, align, disableGutters = false }) {
 		return (
-			<Box mb={2}>
+			<Box mb={disableGutters ? 0 : 2}>
 				<Grid container alignItems="center">
 					<Grid item xs>
 						<Typography variant="h4" align={align}>

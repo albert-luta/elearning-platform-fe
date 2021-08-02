@@ -12,7 +12,12 @@ export const CommonActivityDisplay: FC<CommonActivityDisplayProps> = memo(
 	function CommonActivityDisplay({ activity }) {
 		return (
 			<>
-				<ContentHeader title={activity.name} />
+				<ContentHeader
+					title={activity.name}
+					disableGutters={
+						!activity.description || !!activity.files.length
+					}
+				/>
 				{activity.description && (
 					<Typography>{activity.description}</Typography>
 				)}

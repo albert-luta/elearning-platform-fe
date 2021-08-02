@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { ActivityLoadingOrError } from 'domains/activity/components/ActivityLoadingOrError';
 import { AssignmentSpecificDisplay } from 'domains/activity/components/AssignmentSpecificDisplay';
 import { CommonActivityDisplay } from 'domains/activity/components/CommonActivityDisplay';
@@ -38,17 +38,10 @@ export default function AssignmentDashboard() {
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>
-
-						<Box mt={4}>
-							<Typography variant="h5">
-								Assignment status
-							</Typography>
-
-							<Box mt={2}>
-								<AssignmentSpecificDisplay
-									activity={activityQuery.data.activity}
-								/>
-							</Box>
+						<Box mt={2}>
+							<AssignmentSpecificDisplay
+								activity={activityQuery.data.activity}
+							/>
 						</Box>
 					</>
 				);

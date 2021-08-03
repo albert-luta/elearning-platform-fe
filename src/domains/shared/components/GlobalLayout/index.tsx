@@ -9,11 +9,14 @@ import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { useRouter } from 'next/router';
 import { FC, memo, useEffect, useMemo } from 'react';
-import { GlobalAppBar } from './GlobalAppBar';
-import { GlobalDrawer } from './GlobalDrawer';
+import { ExtraContentDrawer } from './ExtraContentDrawer';
+import { AppBar } from './AppBar';
+import { MenuDrawer } from './MenuDrawer';
 import { MainContent } from './MainContent';
 
-const getContainerMaxWidth = (path: string): ContainerProps['maxWidth'] => {
+const getContainerMaxWidth = (
+	path: string
+): ContainerProps['maxWidth'] | undefined => {
 	let maxWidth: ContainerProps['maxWidth'];
 	if (isRouteMatching(path, RoutesGroups.SMALL_CONTENT_WIDTH)) {
 		maxWidth = 'sm';
@@ -27,24 +30,63 @@ const getContainerMaxWidth = (path: string): ContainerProps['maxWidth'] => {
 export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 	const router = useRouter();
 
-	const [shouldHideDrawer, hideDrawer, revealDrawer] = useBooleanState(
-		isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)
+	const [
+		shouldHideMenuDrawer,
+		hideMenuDrawer,
+		showMenuDrawer
+	] = useBooleanState(
+		isRouteMatching(router.asPath, RoutesGroups.MENU_DRAWER_NOT_VISIBLE)
 	);
-
-	const isDesktopDrawer = useMediaQuery((theme: Theme) =>
+	const isMenuDrawerDesktop = useMediaQuery((theme: Theme) =>
 		theme.breakpoints.up('lg')
 	);
-
-	const [isDrawerOpen, openDrawer, closeDrawer] = useBooleanState();
-
+	const [
+		isMenuDrawerOpen,
+		openMenuDrawer,
+		closeMenuDrawer
+	] = useBooleanState();
 	useEffect(() => {
-		if (isRouteMatching(router.asPath, RoutesGroups.NO_DRAWER)) {
-			hideDrawer();
-			closeDrawer();
+		if (
+			isRouteMatching(router.asPath, RoutesGroups.MENU_DRAWER_NOT_VISIBLE)
+		) {
+			hideMenuDrawer();
+			closeMenuDrawer();
 		} else {
-			revealDrawer();
+			showMenuDrawer();
 		}
-	}, [router.asPath, closeDrawer, hideDrawer, revealDrawer]);
+	}, [router.asPath, closeMenuDrawer, hideMenuDrawer, showMenuDrawer]);
+
+	const [
+		shouldShowExtraContentDrawer,
+		showExtraContentDrawer,
+		hideExtraContentDrawer
+	] = useBooleanState(
+		isRouteMatching(
+			router.asPath,
+			RoutesGroups.EXTRA_CONTENT_DRAWER_VISIBLE
+		)
+	);
+	const isExtraContentDrawerDesktop = useMediaQuery((theme: Theme) =>
+		theme.breakpoints.up('lg')
+	);
+	const [
+		isExtraContentDrawerOpen,
+		openExtraContentDrawer,
+		closeExtraContentDrawer
+	] = useBooleanState();
+	useEffect(() => {
+		if (
+			isRouteMatching(
+				router.asPath,
+				RoutesGroups.EXTRA_CONTENT_DRAWER_VISIBLE
+			)
+		) {
+			showExtraContentDrawer();
+		} else {
+			hideExtraContentDrawer();
+			closeExtraContentDrawer();
+		}
+	}, [router.asPath, closeExtraContentDrawer, hideExtraContentDrawer, showExtraContentDrawer]);
 
 	const content = useMemo(() => {
 		const maxWidth = getContainerMaxWidth(router.asPath);
@@ -66,25 +108,42 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 
 	return (
 		<>
-			<GlobalAppBar
-				hideDrawerButton={shouldHideDrawer}
-				isDesktopDrawer={isDesktopDrawer}
-				isDrawerOpen={isDrawerOpen}
-				onDrawerOpen={openDrawer}
+			<AppBar
+				// Menu
+				hideMenuDrawerButton={shouldHideMenuDrawer}
+				isMenuDrawerDesktop={isMenuDrawerDesktop}
+				isMenuDrawerOpen={isMenuDrawerOpen}
+				onMenuDrawerOpen={openMenuDrawer}
+				// Extra content
+				showExtraContentDrawerButton={shouldShowExtraContentDrawer}
+				isExtraContentDrawerDesktop={isExtraContentDrawerDesktop}
+				isExtraContentDrawerOpen={isExtraContentDrawerOpen}
+				onExtraContentDrawerOpen={openExtraContentDrawer}
 			/>
-			{!shouldHideDrawer && (
-				<GlobalDrawer
-					isDesktopDrawer={isDesktopDrawer}
-					isOpen={isDrawerOpen}
-					onClose={closeDrawer}
+			{!shouldHideMenuDrawer && (
+				<MenuDrawer
+					isDesktopDrawer={isMenuDrawerDesktop}
+					isOpen={isMenuDrawerOpen}
+					onClose={closeMenuDrawer}
 				/>
 			)}
 			<MainContent
-				isDrawerOpen={isDrawerOpen}
-				isDesktopDrawer={isDesktopDrawer}
+				// Menu
+				isMenuDrawerOpen={isMenuDrawerOpen}
+				isMenuDrawerDesktop={isMenuDrawerDesktop}
+				// Extra content
+				isExtraContentDrawerOpen={isExtraContentDrawerOpen}
+				isExtraContentDrawerDesktop={isExtraContentDrawerDesktop}
 			>
 				{content}
 			</MainContent>
+			{shouldShowExtraContentDrawer && (
+				<ExtraContentDrawer
+					isDesktopDrawer={isExtraContentDrawerDesktop}
+					isOpen={isExtraContentDrawerOpen}
+					onClose={closeExtraContentDrawer}
+				/>
+			)}
 		</>
 	);
 });

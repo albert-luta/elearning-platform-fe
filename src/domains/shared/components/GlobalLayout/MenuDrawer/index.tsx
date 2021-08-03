@@ -1,14 +1,14 @@
 import { FC, memo } from 'react';
+import { DrawerHeader, DrawerStyled } from '../index.styles';
 import { DrawerContent } from './DrawerContent';
-import { DrawerStyled, DrawerHeader } from './index.styles';
 
-interface GlobalDrawerProps {
+interface MenuDrawerProps {
 	isDesktopDrawer: boolean;
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-export const GlobalDrawer: FC<GlobalDrawerProps> = memo(function GlobalDrawer({
+export const MenuDrawer: FC<MenuDrawerProps> = memo(function MenuDrawer({
 	isDesktopDrawer,
 	isOpen,
 	onClose

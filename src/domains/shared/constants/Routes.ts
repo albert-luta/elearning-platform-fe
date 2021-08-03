@@ -47,15 +47,15 @@ export const Routes = inferRoutes({
 
 		QUIZ_DASHBOARD: {
 			path: '/app/:universityId/:collegeId/:courseId/:activityId/quiz'
-		} // ,
-		// QUIZ_ACTIVE: {
-		// 	path:
-		// 		'/app/:universityId/:collegeId/:courseId/:activityId/quiz/active'
-		// },
-		// QUIZ_REVIEW: {
-		// 	path:
-		// 		'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizeId'
-		// }
+		},
+		QUIZ_ACTIVE: {
+			path:
+				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/active'
+		},
+		QUIZ_REVIEW: {
+			path:
+				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizeId'
+		}
 	}
 });
 
@@ -64,8 +64,13 @@ export const RoutesGroups = {
 		...Object.values(Routes.presentation),
 		...Object.values(Routes.auth)
 	],
-	// Drawer
-	NO_DRAWER: [...Object.values(Routes.user)],
+	// Drawers
+	MENU_DRAWER_NOT_VISIBLE: [...Object.values(Routes.user)],
+	EXTRA_CONTENT_DRAWER_VISIBLE: [
+		Routes.activity.ASSIGNMENT_REVIEW,
+		Routes.activity.QUIZ_ACTIVE,
+		Routes.activity.QUIZ_REVIEW
+	],
 	// Content layout
 	SMALL_CONTENT_WIDTH: [...Object.values(Routes.user)],
 	MEDIUM_CONTENT_WIDTH: [

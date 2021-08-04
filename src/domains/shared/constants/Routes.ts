@@ -21,9 +21,13 @@ export const Routes = inferRoutes({
 		SETTINGS: { path: '/app/settings' }
 	},
 	userUniversity: {
-		CALENDAR: { path: '/app/:universityId/calendar' },
+		UPCOMING_ACTIVITIES: { path: '/app/:universityId/upcoming-activities' },
 		GRADES: { path: '/app/:universityId/grades' },
-		FORUM: { path: '/app/:universityId/forum' }
+		FORUM: { path: '/app/:universityId/forum' },
+		QUESTION_BANK: {
+			path: '/app/:universityId/question-bank',
+			universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
+		}
 	},
 	university: {
 		DASHBOARD: { path: '/app/:universityId' }

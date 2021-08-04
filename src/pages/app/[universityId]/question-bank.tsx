@@ -1,12 +1,12 @@
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
 
-export default function Calendar() {
+export default function QuestionBank() {
 	return (
 		<>
-			<MyHead title="Calendar" />
+			<MyHead title="Question Bank" />
 
-			<ContentHeader title="Calendar" />
+			<ContentHeader title="Question Bank" />
 		</>
 	);
 }

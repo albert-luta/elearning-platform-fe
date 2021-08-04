@@ -1,5 +1,3 @@
-/* import { Box, Typography } from '@material-ui/core'; */
-/* import { MyAvatar } from 'domains/shared/components/MyAvatar'; */
 import { Box, Typography } from '@material-ui/core';
 import { MyAvatar } from 'domains/shared/components/MyAvatar';
 import { BaseUserFieldsFragment } from 'generated/graphql';

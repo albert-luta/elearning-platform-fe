@@ -3,5 +3,6 @@ export const FormErrors = {
 	REQUIRED: 'This field is required',
 	ONLY_ALPHA: 'Only letters are allowed',
 	MIN_NUMBER: 'The minimum value allowed is ',
-	MIN_DATE: 'The minimum date allowed is '
+	MIN_DATE: 'The minimum date allowed is ',
+	ONLY_NUMBER: 'This field must be a number'
 };

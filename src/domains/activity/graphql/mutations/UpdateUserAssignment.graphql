@@ -1,0 +1,5 @@
+mutation UpdateUserAssignment($id: String!, $data: UpdateUserAssignmentInput!) {
+	updateUserAssignment(id: $id, data: $data) {
+		...BaseUserAssignmentFields
+	}
+}

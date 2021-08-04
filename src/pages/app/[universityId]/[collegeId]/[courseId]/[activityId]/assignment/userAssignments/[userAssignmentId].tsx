@@ -68,12 +68,6 @@ export default function AssignmentReview() {
 
 				return (
 					<>
-						{/* TODO: put an 'update' form at the right of the page */}
-						{/* TODO: add the grade input and the update button */}
-						{/* <UserActivityReviewInfo
-							user={userAssignment.data.userAssignment.user}
-						/> */}
-
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>

@@ -82,11 +82,12 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 			)
 		) {
 			showExtraContentDrawer();
+			openExtraContentDrawer();
 		} else {
 			hideExtraContentDrawer();
 			closeExtraContentDrawer();
 		}
-	}, [router.asPath, closeExtraContentDrawer, hideExtraContentDrawer, showExtraContentDrawer]);
+	}, [router.asPath, closeExtraContentDrawer, hideExtraContentDrawer, showExtraContentDrawer, openExtraContentDrawer]);
 
 	const content = useMemo(() => {
 		const maxWidth = getContainerMaxWidth(router.asPath);

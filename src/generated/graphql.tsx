@@ -216,6 +216,7 @@ export type Mutation = {
   updateResource: BaseActivityInterface;
   updateSection: SectionObject;
   updateUniversity: UniversityObject;
+  updateUserAssignment: UserAssignmentObject;
 };
 
 
@@ -350,6 +351,12 @@ export type MutationUpdateUniversityArgs = {
   data: CreateUniversityInput;
   id: Scalars['String'];
   logo?: Maybe<Scalars['Upload']>;
+};
+
+
+export type MutationUpdateUserAssignmentArgs = {
+  data: UpdateUserAssignmentInput;
+  id: Scalars['String'];
 };
 
 export type Query = {
@@ -543,6 +550,11 @@ export type UpdateResourceInput = {
   sectionId: Scalars['String'];
 };
 
+export type UpdateUserAssignmentInput = {
+  grade?: Maybe<Scalars['Float']>;
+  updatedAt: Scalars['DateTime'];
+};
+
 
 export type User = {
   __typename?: 'User';
@@ -608,6 +620,20 @@ export type UpdateMyAssignmentMutationVariables = Exact<{
 export type UpdateMyAssignmentMutation = (
   { __typename?: 'Mutation' }
   & { updateMyAssignment: (
+    { __typename?: 'UserAssignmentObject' }
+    & BaseUserAssignmentFieldsFragment
+  ) }
+);
+
+export type UpdateUserAssignmentMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateUserAssignmentInput;
+}>;
+
+
+export type UpdateUserAssignmentMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserAssignment: (
     { __typename?: 'UserAssignmentObject' }
     & BaseUserAssignmentFieldsFragment
   ) }
@@ -1288,6 +1314,40 @@ export function useUpdateMyAssignmentMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateMyAssignmentMutationHookResult = ReturnType<typeof useUpdateMyAssignmentMutation>;
 export type UpdateMyAssignmentMutationResult = Apollo.MutationResult<UpdateMyAssignmentMutation>;
 export type UpdateMyAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>;
+export const UpdateUserAssignmentDocument = gql`
+    mutation UpdateUserAssignment($id: String!, $data: UpdateUserAssignmentInput!) {
+  updateUserAssignment(id: $id, data: $data) {
+    ...BaseUserAssignmentFields
+  }
+}
+    ${BaseUserAssignmentFieldsFragmentDoc}`;
+export type UpdateUserAssignmentMutationFn = Apollo.MutationFunction<UpdateUserAssignmentMutation, UpdateUserAssignmentMutationVariables>;
+
+/**
+ * __useUpdateUserAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserAssignmentMutation, { data, loading, error }] = useUpdateUserAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserAssignmentMutation, UpdateUserAssignmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserAssignmentMutation, UpdateUserAssignmentMutationVariables>(UpdateUserAssignmentDocument, options);
+      }
+export type UpdateUserAssignmentMutationHookResult = ReturnType<typeof useUpdateUserAssignmentMutation>;
+export type UpdateUserAssignmentMutationResult = Apollo.MutationResult<UpdateUserAssignmentMutation>;
+export type UpdateUserAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateUserAssignmentMutation, UpdateUserAssignmentMutationVariables>;
 export const MyAssignmentDocument = gql`
     query MyAssignment($id: String!) {
   myAssignment(id: $id) {

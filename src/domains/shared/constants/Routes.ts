@@ -18,9 +18,12 @@ export const Routes = inferRoutes({
 	user: {
 		DASHBOARD: { path: '/app' },
 		PROFILE: { path: '/app/profile' },
-		GRADES: { path: '/app/grades' },
-		CALENDAR: { path: '/app/calendar' },
 		SETTINGS: { path: '/app/settings' }
+	},
+	userUniversity: {
+		CALENDAR: { path: '/app/:universityId/calendar' },
+		GRADES: { path: '/app/:universityId/grades' },
+		FORUM: { path: '/app/:universityId/forum' }
 	},
 	university: {
 		DASHBOARD: { path: '/app/:universityId' }
@@ -63,6 +66,11 @@ export const RoutesGroups = {
 	PUBLIC: [
 		...Object.values(Routes.presentation),
 		...Object.values(Routes.auth)
+	],
+	OUTSIDE_UNIVERSITY: [
+		...Object.values(Routes.presentation),
+		...Object.values(Routes.auth),
+		...Object.values(Routes.user)
 	],
 	// Drawers
 	MENU_DRAWER_NOT_VISIBLE: [...Object.values(Routes.user)],

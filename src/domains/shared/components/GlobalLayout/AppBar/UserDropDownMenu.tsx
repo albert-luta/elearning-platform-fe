@@ -11,9 +11,13 @@ import {
 	MeetingRoom,
 	EventNote,
 	DateRange,
-	Person
+	Person,
+	Forum
 } from '@material-ui/icons';
-import { Routes } from 'domains/shared/constants/Routes';
+import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
+import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
+import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { useLogoutMutation } from 'generated/graphql';
 import { PopupState, bindPopover } from 'material-ui-popup-state/core';
 import { useRouter } from 'next/router';
@@ -41,6 +45,25 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 			}
 		}, [logout, popupState]);
 
+		const [
+			shouldShowUserUniversitySpecificButtons,
+			showUserUniversitySpecificButtons,
+			hideUserUniversitySpecificButtons
+		] = useBooleanState();
+		useEffect(() => {
+			if (
+				isRouteMatching(router.asPath, RoutesGroups.OUTSIDE_UNIVERSITY)
+			) {
+				hideUserUniversitySpecificButtons();
+			} else {
+				showUserUniversitySpecificButtons();
+			}
+		}, [
+			router.asPath,
+			showUserUniversitySpecificButtons,
+			hideUserUniversitySpecificButtons
+		]);
+
 		return (
 			<Popover
 				{...bindPopover(popupState)}
@@ -65,26 +88,6 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						<ListItemText primary="Profile" />
 					</MenuLinkItem>
 					<MenuLinkItem
-						href={Routes.user.GRADES.path}
-						onClick={popupState.close}
-						button
-					>
-						<ListItemIcon>
-							<EventNote />
-						</ListItemIcon>
-						<ListItemText primary="Grades" />
-					</MenuLinkItem>
-					<MenuLinkItem
-						href={Routes.user.CALENDAR.path}
-						onClick={popupState.close}
-						button
-					>
-						<ListItemIcon>
-							<DateRange />
-						</ListItemIcon>
-						<ListItemText primary="Calendar" />
-					</MenuLinkItem>
-					<MenuLinkItem
 						href={Routes.user.SETTINGS.path}
 						onClick={popupState.close}
 						button
@@ -95,6 +98,66 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 						<ListItemText primary="Settings" />
 					</MenuLinkItem>
 				</MenuList>
+
+				{shouldShowUserUniversitySpecificButtons && (
+					<>
+						<Divider />
+
+						<MenuList>
+							<MenuLinkItem
+								href={composeDynamicRoute(
+									Routes.userUniversity.CALENDAR.path,
+									{
+										universityId: String(
+											router.query.universityId
+										)
+									}
+								)}
+								onClick={popupState.close}
+								button
+							>
+								<ListItemIcon>
+									<DateRange />
+								</ListItemIcon>
+								<ListItemText primary="Calendar" />
+							</MenuLinkItem>
+							<MenuLinkItem
+								href={composeDynamicRoute(
+									Routes.userUniversity.GRADES.path,
+									{
+										universityId: String(
+											router.query.universityId
+										)
+									}
+								)}
+								onClick={popupState.close}
+								button
+							>
+								<ListItemIcon>
+									<EventNote />
+								</ListItemIcon>
+								<ListItemText primary="Grades" />
+							</MenuLinkItem>
+							<MenuLinkItem
+								href={composeDynamicRoute(
+									Routes.userUniversity.FORUM.path,
+									{
+										universityId: String(
+											router.query.universityId
+										)
+									}
+								)}
+								onClick={popupState.close}
+								button
+							>
+								<ListItemIcon>
+									<Forum />
+								</ListItemIcon>
+								<ListItemText primary="Forum" />
+							</MenuLinkItem>
+						</MenuList>
+					</>
+				)}
 
 				<Divider />
 

@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { QuestionCategoryCollapsible } from 'domains/activity/components/QuestionCategoryCollapsible';
+import { CreateQuestionCategoryForm } from 'domains/activity/components/QuestionCategoryForm/CreateQuestionCategoryForm';
 import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
@@ -77,7 +78,9 @@ export default function QuestionBank() {
 			>
 				<Content>
 					<ContentHeader title="Create Question Category" />
-					{/* CreateQuestionCategoryForm */}
+					<CreateQuestionCategoryForm
+						onSuccess={closeCreateQuestionCategoryDialog}
+					/>
 				</Content>
 			</Dialog>
 		</>

@@ -1,0 +1,5 @@
+mutation CreateQuestionCategory($data: CreateQuestionCategoryInput!) {
+	createQuestionCategory(data: $data) {
+		...QuestionCategoryBaseFields
+	}
+}

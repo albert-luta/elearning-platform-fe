@@ -1,0 +1,4 @@
+fragment QuestionCategoryBaseFields on QuestionCategoryObject {
+	id
+	name
+}

@@ -1,7 +1,6 @@
 query QuestionBank {
 	questionBank {
-		id
-		name
+		...QuestionCategoryBaseFields
 		questions {
 			id
 			name

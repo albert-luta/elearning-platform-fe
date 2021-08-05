@@ -1,11 +1,21 @@
 import { useReactiveVar } from '@apollo/client';
-import { Box, List, Typography } from '@material-ui/core';
+import {
+	Box,
+	IconButton,
+	List,
+	Tooltip,
+	Typography,
+	Dialog
+} from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import { CollegeDashboardCollapsible } from 'domains/college/components/CollegeDashboardCollapsible';
 import { CreateCollegeForm } from 'domains/college/components/CollegeForm/CreateCollegeForm';
-import { AddListItem } from 'domains/shared/components/list/AddListItem';
+import { Content } from 'domains/shared/components/layout/Content';
+import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { UserRole } from 'domains/shared/constants/UserRole';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useCollegesQuery } from 'generated/graphql';
 
@@ -17,9 +27,27 @@ export default function UniversityDashboard() {
 	});
 	const university = useReactiveVar(selectedUniversityVar);
 
+	const [
+		isCreateCollegeDialogOpen,
+		openCreateCollegeDialog,
+		closeCreateCollegeDialog
+	] = useBooleanState();
+
 	return (
 		<>
 			<MyHead title="University" />
+			<ContentHeader
+				title="Colleges"
+				action={
+					university?.role === UserRole.ADMIN && (
+						<Tooltip title="Create College">
+							<IconButton onClick={openCreateCollegeDialog}>
+								<Add />
+							</IconButton>
+						</Tooltip>
+					)
+				}
+			/>
 
 			{(() => {
 				if (colleges.loading) {
@@ -42,40 +70,15 @@ export default function UniversityDashboard() {
 				if (!colleges.data?.colleges.length) {
 					return (
 						<Box py={1} px={2}>
-							<Box pb={1}>
-								<Typography
-									color="textSecondary"
-									align="center"
-								>
-									There are no colleges created yet
-								</Typography>
-							</Box>
-							{university?.role === UserRole.ADMIN && (
-								<AddListItem
-									variant="h5"
-									resourceType="College"
-									form={(onSuccess) => (
-										<CreateCollegeForm
-											onSuccess={onSuccess}
-										/>
-									)}
-								/>
-							)}
+							<Typography color="textSecondary" align="center">
+								There are no colleges created yet
+							</Typography>
 						</Box>
 					);
 				}
 
 				return (
 					<List>
-						{university?.role === UserRole.ADMIN && (
-							<AddListItem
-								variant="h5"
-								resourceType="College"
-								form={(onSuccess) => (
-									<CreateCollegeForm onSuccess={onSuccess} />
-								)}
-							/>
-						)}
 						{colleges.data.colleges.map((college) => (
 							<CollegeDashboardCollapsible
 								key={college.id}
@@ -85,6 +88,18 @@ export default function UniversityDashboard() {
 					</List>
 				);
 			})()}
+
+			<Dialog
+				open={isCreateCollegeDialogOpen}
+				onClose={closeCreateCollegeDialog}
+				fullWidth
+				maxWidth="xs"
+			>
+				<Content>
+					<ContentHeader title="Create College" />
+					<CreateCollegeForm onSuccess={closeCreateCollegeDialog} />
+				</Content>
+			</Dialog>
 		</>
 	);
 }

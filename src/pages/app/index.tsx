@@ -40,7 +40,6 @@ export default function App() {
 	return (
 		<>
 			<MyHead title="Dashboard" />
-
 			<ContentHeader
 				title="Universities"
 				action={

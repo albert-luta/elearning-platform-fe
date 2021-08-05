@@ -1,11 +1,21 @@
 import { useReactiveVar } from '@apollo/client';
-import { Box, List, Typography } from '@material-ui/core';
+import {
+	Box,
+	IconButton,
+	List,
+	Typography,
+	Tooltip,
+	Dialog
+} from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import { SectionCollapsible } from 'domains/course/components/SectionCollapsible';
 import { CreateSectionForm } from 'domains/course/components/SectionForm/CreateSectionForm';
-import { AddListItem } from 'domains/shared/components/list/AddListItem';
+import { Content } from 'domains/shared/components/layout/Content';
+import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
 import { MySkeleton } from 'domains/shared/components/MySkeleton';
 import { UserRole } from 'domains/shared/constants/UserRole';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useSectionsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
@@ -22,10 +32,27 @@ export default function CourseDashboard() {
 	const canManipulateSections = [UserRole.ADMIN, UserRole.TEACHER].includes(
 		university?.role ?? UserRole.STUDENT
 	);
+	const [
+		isCreateSectionDialogOpen,
+		openCreateSectionDialog,
+		closeCreateSectionDialog
+	] = useBooleanState();
 
 	return (
 		<>
 			<MyHead title="Course" />
+			<ContentHeader
+				title="Sections"
+				action={
+					canManipulateSections && (
+						<Tooltip title="Create Section">
+							<IconButton onClick={openCreateSectionDialog}>
+								<Add />
+							</IconButton>
+						</Tooltip>
+					)
+				}
+			/>
 
 			{(() => {
 				if (sections.loading) {
@@ -48,46 +75,15 @@ export default function CourseDashboard() {
 				if (!sections.data?.sections.length) {
 					return (
 						<Box py={1} px={2}>
-							<Box pb={1}>
-								<Typography
-									color="textSecondary"
-									align="center"
-								>
-									There are no sections created yet
-								</Typography>
-							</Box>
-							{canManipulateSections && (
-								<AddListItem
-									variant="h5"
-									resourceType="Section"
-									form={(onSuccess) => (
-										<CreateSectionForm
-											courseId={String(
-												router.query.courseId
-											)}
-											onSuccess={onSuccess}
-										/>
-									)}
-								/>
-							)}
+							<Typography color="textSecondary" align="center">
+								There are no sections created yet
+							</Typography>
 						</Box>
 					);
 				}
 
 				return (
 					<List>
-						{canManipulateSections && (
-							<AddListItem
-								variant="h5"
-								resourceType="Section"
-								form={(onSuccess) => (
-									<CreateSectionForm
-										courseId={String(router.query.courseId)}
-										onSuccess={onSuccess}
-									/>
-								)}
-							/>
-						)}
 						{sections.data.sections.map((section) => (
 							<SectionCollapsible
 								key={section.id}
@@ -97,6 +93,21 @@ export default function CourseDashboard() {
 					</List>
 				);
 			})()}
+
+			<Dialog
+				open={isCreateSectionDialogOpen}
+				onClose={closeCreateSectionDialog}
+				fullWidth
+				maxWidth="xs"
+			>
+				<Content>
+					<ContentHeader title="Create Section" />
+					<CreateSectionForm
+						courseId={String(router.query.courseId)}
+						onSuccess={closeCreateSectionDialog}
+					/>
+				</Content>
+			</Dialog>
 		</>
 	);
 }

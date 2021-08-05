@@ -1,0 +1,5 @@
+mutation DeleteQuestionCategory($id: String!) {
+	deleteQuestionCategory(id: $id) {
+		...QuestionCategoryBaseFields
+	}
+}

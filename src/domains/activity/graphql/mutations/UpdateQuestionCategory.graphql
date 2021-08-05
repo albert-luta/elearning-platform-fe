@@ -1,0 +1,8 @@
+mutation UpdateQuestionCategory(
+	$id: String!
+	$data: UpdateQuestionCategoryInput!
+) {
+	updateQuestionCategory(id: $id, data: $data) {
+		...QuestionCategoryBaseFields
+	}
+}

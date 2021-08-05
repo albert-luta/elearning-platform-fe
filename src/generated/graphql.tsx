@@ -715,6 +715,19 @@ export type CreateQuestionCategoryMutation = (
   ) }
 );
 
+export type DeleteQuestionCategoryMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteQuestionCategoryMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteQuestionCategory: (
+    { __typename?: 'QuestionCategoryObject' }
+    & QuestionCategoryBaseFieldsFragment
+  ) }
+);
+
 export type UpdateMyAssignmentMutationVariables = Exact<{
   id: Scalars['String'];
   data: UpdateMyAssignmentInput;
@@ -1456,6 +1469,39 @@ export function useCreateQuestionCategoryMutation(baseOptions?: Apollo.MutationH
 export type CreateQuestionCategoryMutationHookResult = ReturnType<typeof useCreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationResult = Apollo.MutationResult<CreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationOptions = Apollo.BaseMutationOptions<CreateQuestionCategoryMutation, CreateQuestionCategoryMutationVariables>;
+export const DeleteQuestionCategoryDocument = gql`
+    mutation DeleteQuestionCategory($id: String!) {
+  deleteQuestionCategory(id: $id) {
+    ...QuestionCategoryBaseFields
+  }
+}
+    ${QuestionCategoryBaseFieldsFragmentDoc}`;
+export type DeleteQuestionCategoryMutationFn = Apollo.MutationFunction<DeleteQuestionCategoryMutation, DeleteQuestionCategoryMutationVariables>;
+
+/**
+ * __useDeleteQuestionCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteQuestionCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteQuestionCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteQuestionCategoryMutation, { data, loading, error }] = useDeleteQuestionCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteQuestionCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteQuestionCategoryMutation, DeleteQuestionCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteQuestionCategoryMutation, DeleteQuestionCategoryMutationVariables>(DeleteQuestionCategoryDocument, options);
+      }
+export type DeleteQuestionCategoryMutationHookResult = ReturnType<typeof useDeleteQuestionCategoryMutation>;
+export type DeleteQuestionCategoryMutationResult = Apollo.MutationResult<DeleteQuestionCategoryMutation>;
+export type DeleteQuestionCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionCategoryMutation, DeleteQuestionCategoryMutationVariables>;
 export const UpdateMyAssignmentDocument = gql`
     mutation UpdateMyAssignment($id: String!, $data: UpdateMyAssignmentInput!, $newFiles: [Upload!]!) {
   updateMyAssignment(id: $id, data: $data, newFiles: $newFiles) {

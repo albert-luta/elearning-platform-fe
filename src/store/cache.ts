@@ -9,6 +9,9 @@ export const cache = new InMemoryCache({
 				},
 				sections: {
 					merge: false
+				},
+				questionBank: {
+					merge: false
 				}
 			}
 		},

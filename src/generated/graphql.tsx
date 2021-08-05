@@ -365,6 +365,7 @@ export type Query = {
   colleges: Array<CollegeObject>;
   me: UserObject;
   myAssignment?: Maybe<UserAssignmentObject>;
+  questionBank: Array<QuestionCategoryObject>;
   sections: Array<SectionObject>;
   userAssignment?: Maybe<UserAssignmentObject>;
   userAssignments: Array<UserAssignmentObject>;
@@ -399,6 +400,64 @@ export type QueryUserAssignmentArgs = {
 export type QueryUserAssignmentsArgs = {
   assignmentId: Scalars['String'];
 };
+
+export type Question = {
+  __typename?: 'Question';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  questionAnswers?: Maybe<Array<QuestionAnswer>>;
+  questionCategory: QuestionCategory;
+  questionCategoryId: Scalars['String'];
+  text: Scalars['String'];
+  type: QuestionType;
+};
+
+export type QuestionAnswer = {
+  __typename?: 'QuestionAnswer';
+  fraction: Scalars['Float'];
+  id: Scalars['ID'];
+  question: Question;
+  questionId: Scalars['String'];
+  text: Scalars['String'];
+};
+
+export type QuestionAnswerObject = {
+  __typename?: 'QuestionAnswerObject';
+  id: Scalars['ID'];
+  text: Scalars['String'];
+};
+
+export type QuestionCategory = {
+  __typename?: 'QuestionCategory';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  questions?: Maybe<Array<Question>>;
+  universityUser: UniversityUser;
+  universityUserId: Scalars['String'];
+};
+
+export type QuestionCategoryObject = {
+  __typename?: 'QuestionCategoryObject';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  questions: Array<QuestionObject>;
+};
+
+export type QuestionObject = {
+  __typename?: 'QuestionObject';
+  answers: Array<QuestionAnswerObject>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  text: Scalars['String'];
+  type: QuestionType;
+};
+
+export enum QuestionType {
+  MultipleChoice = 'MULTIPLE_CHOICE',
+  Numerical = 'NUMERICAL',
+  SingleChoice = 'SINGLE_CHOICE'
+}
 
 export type Quiz = {
   __typename?: 'Quiz';
@@ -511,6 +570,7 @@ export type UniversityUser = {
   __typename?: 'UniversityUser';
   collegeUsers?: Maybe<Array<CollegeUser>>;
   id: Scalars['ID'];
+  questionCategories?: Maybe<Array<QuestionCategory>>;
   role: Role;
   roleId: Scalars['String'];
   university: University;
@@ -649,6 +709,25 @@ export type MyAssignmentQuery = (
   & { myAssignment?: Maybe<(
     { __typename?: 'UserAssignmentObject' }
     & BaseUserAssignmentFieldsFragment
+  )> }
+);
+
+export type QuestionBankQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type QuestionBankQuery = (
+  { __typename?: 'Query' }
+  & { questionBank: Array<(
+    { __typename?: 'QuestionCategoryObject' }
+    & Pick<QuestionCategoryObject, 'id' | 'name'>
+    & { questions: Array<(
+      { __typename?: 'QuestionObject' }
+      & Pick<QuestionObject, 'id' | 'name' | 'text' | 'type'>
+      & { answers: Array<(
+        { __typename?: 'QuestionAnswerObject' }
+        & Pick<QuestionAnswerObject, 'id' | 'text'>
+      )> }
+    )> }
   )> }
 );
 
@@ -1383,6 +1462,51 @@ export function useMyAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MyAssignmentQueryHookResult = ReturnType<typeof useMyAssignmentQuery>;
 export type MyAssignmentLazyQueryHookResult = ReturnType<typeof useMyAssignmentLazyQuery>;
 export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAssignmentQueryVariables>;
+export const QuestionBankDocument = gql`
+    query QuestionBank {
+  questionBank {
+    id
+    name
+    questions {
+      id
+      name
+      text
+      type
+      answers {
+        id
+        text
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useQuestionBankQuery__
+ *
+ * To run a query within a React component, call `useQuestionBankQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionBankQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionBankQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useQuestionBankQuery(baseOptions?: Apollo.QueryHookOptions<QuestionBankQuery, QuestionBankQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<QuestionBankQuery, QuestionBankQueryVariables>(QuestionBankDocument, options);
+      }
+export function useQuestionBankLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionBankQuery, QuestionBankQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<QuestionBankQuery, QuestionBankQueryVariables>(QuestionBankDocument, options);
+        }
+export type QuestionBankQueryHookResult = ReturnType<typeof useQuestionBankQuery>;
+export type QuestionBankLazyQueryHookResult = ReturnType<typeof useQuestionBankLazyQuery>;
+export type QuestionBankQueryResult = Apollo.QueryResult<QuestionBankQuery, QuestionBankQueryVariables>;
 export const UserAssignmentDocument = gql`
     query UserAssignment($id: String!) {
   userAssignment(id: $id) {

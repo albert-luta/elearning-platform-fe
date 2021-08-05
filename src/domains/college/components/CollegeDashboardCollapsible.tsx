@@ -1,15 +1,8 @@
 import { useReactiveVar } from '@apollo/client';
-import {
-	Box,
-	Collapse,
-	ListItem,
-	ListItemSecondaryAction,
-	ListItemText,
-	Typography
-} from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Box, Typography } from '@material-ui/core';
 import { CreateCourseForm } from 'domains/course/components/CourseForm/CreateCourseForm';
 import { AddCard } from 'domains/shared/components/card/AddCard';
+import { ListItemCollapsible } from 'domains/shared/components/list/ListItemCollapsible';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { UserRole } from 'domains/shared/constants/UserRole';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
@@ -45,89 +38,76 @@ export const CollegeDashboardCollapsible: FC<CollegeDashboardCollapsibleProps> =
 		}, [deleteCollege, id]);
 
 		return (
-			<>
-				<ListItem button onClick={toggleIsOpen}>
-					<Box display="flex" alignItems="center" pr={2}>
-						{isOpen ? <ExpandLess /> : <ExpandMore />}
-					</Box>
-					<ListItemText
-						primary={name}
-						primaryTypographyProps={{ variant: 'h5' }}
-					/>
-					{university?.role === UserRole.ADMIN && (
-						<ListItemSecondaryAction>
-							<ModifyResourceAction
-								// Shared
-								resourceName={name}
-								resourceType="College"
-								// Update
-								updateForm={(onSuccess) => (
-									<UpdateCollegeForm
-										college={college}
+			<ListItemCollapsible
+				isOpen={isOpen}
+				onToggle={toggleIsOpen}
+				name={name}
+				action={
+					university?.role === UserRole.ADMIN && (
+						<ModifyResourceAction
+							// Shared
+							resourceName={name}
+							resourceType="College"
+							// Update
+							updateForm={(onSuccess) => (
+								<UpdateCollegeForm
+									college={college}
+									onSuccess={onSuccess}
+								/>
+							)}
+							// Delete
+							onDelete={handleDeleteCollege}
+							deleteLoading={deleteCollegeLoading}
+						/>
+					)
+				}
+			>
+				{courses.length ? (
+					<Box
+						display="grid"
+						gridGap={8}
+						gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+					>
+						{university?.role === UserRole.ADMIN && (
+							<AddCard
+								resourceType="Course"
+								form={(onSuccess) => (
+									<CreateCourseForm
 										onSuccess={onSuccess}
+										collegeId={college.id}
 									/>
 								)}
-								// Delete
-								onDelete={handleDeleteCollege}
-								deleteLoading={deleteCollegeLoading}
 							/>
-						</ListItemSecondaryAction>
-					)}
-				</ListItem>
-
-				<Collapse in={isOpen}>
-					<Box p={2}>
-						{courses.length ? (
-							<Box
-								display="grid"
-								gridGap={8}
-								gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-							>
-								{university?.role === UserRole.ADMIN && (
-									<AddCard
-										resourceType="Course"
-										form={(onSuccess) => (
-											<CreateCourseForm
-												onSuccess={onSuccess}
-												collegeId={college.id}
-											/>
-										)}
-									/>
-								)}
-								{courses.map((course) => (
-									<CourseDashboardCard
-										key={course.id}
-										collegeId={id}
-										course={course}
-									/>
-								))}
-							</Box>
-						) : (
-							<>
-								{university?.role === UserRole.ADMIN && (
-									<Box mb={2}>
-										<AddCard
-											resourceType="Course"
-											form={(onSuccess) => (
-												<CreateCourseForm
-													onSuccess={onSuccess}
-													collegeId={college.id}
-												/>
-											)}
-										/>
-									</Box>
-								)}
-								<Typography
-									color="textSecondary"
-									align="center"
-								>
-									There are no courses created yet
-								</Typography>
-							</>
 						)}
+						{courses.map((course) => (
+							<CourseDashboardCard
+								key={course.id}
+								collegeId={id}
+								course={course}
+							/>
+						))}
 					</Box>
-				</Collapse>
-			</>
+				) : (
+					<>
+						{university?.role === UserRole.ADMIN && (
+							<Box mb={2}>
+								<AddCard
+									resourceType="Course"
+									form={(onSuccess) => (
+										<CreateCourseForm
+											onSuccess={onSuccess}
+											collegeId={college.id}
+										/>
+									)}
+								/>
+							</Box>
+						)}
+						<Typography color="textSecondary" align="center">
+							There are no courses created yet
+						</Typography>
+					</>
+				)}
+			</ListItemCollapsible>
 		);
 	}
 );

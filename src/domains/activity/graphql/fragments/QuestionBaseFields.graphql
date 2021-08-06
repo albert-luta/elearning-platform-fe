@@ -1,0 +1,6 @@
+fragment QuestionBaseFields on QuestionObject {
+	id
+	name
+	text
+	type
+}

@@ -139,6 +139,11 @@ export type CourseUser = {
   id: Scalars['ID'];
 };
 
+export type CreateAnswerInput = {
+  fraction: Scalars['Float'];
+  text: Scalars['String'];
+};
+
 export type CreateAssignmentInput = {
   deadline: Scalars['DateTime'];
   description: Scalars['String'];
@@ -158,6 +163,13 @@ export type CreateCourseInput = {
 
 export type CreateQuestionCategoryInput = {
   name: Scalars['String'];
+};
+
+export type CreateQuestionInput = {
+  answers: Array<CreateAnswerInput>;
+  name: Scalars['String'];
+  text: Scalars['String'];
+  type: QuestionType;
 };
 
 export type CreateQuizInput = {
@@ -198,6 +210,7 @@ export type Mutation = {
   createAssignment: BaseActivityInterface;
   createCollege: CollegeObject;
   createCourse: CourseObject;
+  createQuestion: QuestionObject;
   createQuestionCategory: QuestionCategoryObject;
   createQuiz: BaseActivityInterface;
   createResource: BaseActivityInterface;
@@ -206,6 +219,7 @@ export type Mutation = {
   deleteActivity: BaseActivityInterface;
   deleteCollege: CollegeObject;
   deleteCourse: CourseObject;
+  deleteQuestion: QuestionObject;
   deleteQuestionCategory: QuestionCategoryObject;
   deleteSection: SectionObject;
   deleteUniversity: UniversityObject;
@@ -218,6 +232,7 @@ export type Mutation = {
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
   updateMyAssignment: UserAssignmentObject;
+  updateQuestion: QuestionObject;
   updateQuestionCategory: QuestionCategoryObject;
   updateQuiz: BaseActivityInterface;
   updateResource: BaseActivityInterface;
@@ -240,6 +255,12 @@ export type MutationCreateCollegeArgs = {
 
 export type MutationCreateCourseArgs = {
   data: CreateCourseInput;
+};
+
+
+export type MutationCreateQuestionArgs = {
+  data: CreateQuestionInput;
+  questionCategoryId: Scalars['String'];
 };
 
 
@@ -283,6 +304,11 @@ export type MutationDeleteCollegeArgs = {
 
 
 export type MutationDeleteCourseArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteQuestionArgs = {
   id: Scalars['String'];
 };
 
@@ -341,6 +367,12 @@ export type MutationUpdateMyAssignmentArgs = {
   data: UpdateMyAssignmentInput;
   id: Scalars['String'];
   newFiles: Array<Scalars['Upload']>;
+};
+
+
+export type MutationUpdateQuestionArgs = {
+  data: UpdateQuestionInput;
+  id: Scalars['String'];
 };
 
 
@@ -447,6 +479,7 @@ export type QuestionAnswer = {
 
 export type QuestionAnswerObject = {
   __typename?: 'QuestionAnswerObject';
+  fraction: Scalars['Float'];
   id: Scalars['ID'];
   text: Scalars['String'];
 };
@@ -478,7 +511,6 @@ export type QuestionObject = {
 
 export enum QuestionType {
   MultipleChoice = 'MULTIPLE_CHOICE',
-  Numerical = 'NUMERICAL',
   SingleChoice = 'SINGLE_CHOICE'
 }
 
@@ -602,6 +634,11 @@ export type UniversityUser = {
   userId: Scalars['String'];
 };
 
+export type UpdateAnswerInput = {
+  fraction: Scalars['Float'];
+  text: Scalars['String'];
+};
+
 export type UpdateAssignmentInput = {
   deadline: Scalars['DateTime'];
   description: Scalars['String'];
@@ -619,6 +656,13 @@ export type UpdateMyAssignmentInput = {
 
 export type UpdateQuestionCategoryInput = {
   name: Scalars['String'];
+};
+
+export type UpdateQuestionInput = {
+  answers: Array<UpdateAnswerInput>;
+  name: Scalars['String'];
+  text: Scalars['String'];
+  type: QuestionType;
 };
 
 export type UpdateQuizInput = {
@@ -692,14 +736,57 @@ export type UserObject = {
   lastName: Scalars['String'];
 };
 
+export type AnswerBaseFieldsFragment = (
+  { __typename?: 'QuestionAnswerObject' }
+  & Pick<QuestionAnswerObject, 'id' | 'text'>
+);
+
 export type BaseUserAssignmentFieldsFragment = (
   { __typename?: 'UserAssignmentObject' }
   & Pick<UserAssignmentObject, 'id' | 'userId' | 'assignmentId' | 'grade' | 'files' | 'updatedAt'>
 );
 
+export type QuestionBaseFieldsFragment = (
+  { __typename?: 'QuestionObject' }
+  & Pick<QuestionObject, 'id' | 'name' | 'text' | 'type'>
+);
+
 export type QuestionCategoryBaseFieldsFragment = (
   { __typename?: 'QuestionCategoryObject' }
   & Pick<QuestionCategoryObject, 'id' | 'name'>
+);
+
+export type QuestionCategoryFieldsFragment = (
+  { __typename?: 'QuestionCategoryObject' }
+  & { questions: Array<(
+    { __typename?: 'QuestionObject' }
+    & { answers: Array<(
+      { __typename?: 'QuestionAnswerObject' }
+      & Pick<QuestionAnswerObject, 'fraction'>
+      & AnswerBaseFieldsFragment
+    )> }
+    & QuestionBaseFieldsFragment
+  )> }
+  & QuestionCategoryBaseFieldsFragment
+);
+
+export type CreateQuestionMutationVariables = Exact<{
+  questionCategoryId: Scalars['String'];
+  data: CreateQuestionInput;
+}>;
+
+
+export type CreateQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { createQuestion: (
+    { __typename?: 'QuestionObject' }
+    & { answers: Array<(
+      { __typename?: 'QuestionAnswerObject' }
+      & Pick<QuestionAnswerObject, 'fraction'>
+      & AnswerBaseFieldsFragment
+    )> }
+    & QuestionBaseFieldsFragment
+  ) }
 );
 
 export type CreateQuestionCategoryMutationVariables = Exact<{
@@ -712,6 +799,19 @@ export type CreateQuestionCategoryMutation = (
   & { createQuestionCategory: (
     { __typename?: 'QuestionCategoryObject' }
     & QuestionCategoryBaseFieldsFragment
+  ) }
+);
+
+export type DeleteQuestionMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteQuestion: (
+    { __typename?: 'QuestionObject' }
+    & QuestionBaseFieldsFragment
   ) }
 );
 
@@ -740,6 +840,25 @@ export type UpdateMyAssignmentMutation = (
   & { updateMyAssignment: (
     { __typename?: 'UserAssignmentObject' }
     & BaseUserAssignmentFieldsFragment
+  ) }
+);
+
+export type UpdateQuestionMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateQuestionInput;
+}>;
+
+
+export type UpdateQuestionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateQuestion: (
+    { __typename?: 'QuestionObject' }
+    & { answers: Array<(
+      { __typename?: 'QuestionAnswerObject' }
+      & Pick<QuestionAnswerObject, 'fraction'>
+      & AnswerBaseFieldsFragment
+    )> }
+    & QuestionBaseFieldsFragment
   ) }
 );
 
@@ -793,11 +912,12 @@ export type QuestionBankQuery = (
     { __typename?: 'QuestionCategoryObject' }
     & { questions: Array<(
       { __typename?: 'QuestionObject' }
-      & Pick<QuestionObject, 'id' | 'name' | 'text' | 'type'>
       & { answers: Array<(
         { __typename?: 'QuestionAnswerObject' }
-        & Pick<QuestionAnswerObject, 'id' | 'text'>
+        & Pick<QuestionAnswerObject, 'fraction'>
+        & AnswerBaseFieldsFragment
       )> }
+      & QuestionBaseFieldsFragment
     )> }
     & QuestionCategoryBaseFieldsFragment
   )> }
@@ -1363,6 +1483,34 @@ export const QuestionCategoryBaseFieldsFragmentDoc = gql`
   name
 }
     `;
+export const QuestionBaseFieldsFragmentDoc = gql`
+    fragment QuestionBaseFields on QuestionObject {
+  id
+  name
+  text
+  type
+}
+    `;
+export const AnswerBaseFieldsFragmentDoc = gql`
+    fragment AnswerBaseFields on QuestionAnswerObject {
+  id
+  text
+}
+    `;
+export const QuestionCategoryFieldsFragmentDoc = gql`
+    fragment QuestionCategoryFields on QuestionCategoryObject {
+  ...QuestionCategoryBaseFields
+  questions {
+    ...QuestionBaseFields
+    answers {
+      ...AnswerBaseFields
+      fraction
+    }
+  }
+}
+    ${QuestionCategoryBaseFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
 export const AuthenticationFieldsFragmentDoc = gql`
     fragment AuthenticationFields on Authentication {
   accessToken
@@ -1436,6 +1584,45 @@ export const BaseUserFieldsFragmentDoc = gql`
   avatar
 }
     `;
+export const CreateQuestionDocument = gql`
+    mutation CreateQuestion($questionCategoryId: String!, $data: CreateQuestionInput!) {
+  createQuestion(questionCategoryId: $questionCategoryId, data: $data) {
+    ...QuestionBaseFields
+    answers {
+      ...AnswerBaseFields
+      fraction
+    }
+  }
+}
+    ${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
+export type CreateQuestionMutationFn = Apollo.MutationFunction<CreateQuestionMutation, CreateQuestionMutationVariables>;
+
+/**
+ * __useCreateQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuestionMutation, { data, loading, error }] = useCreateQuestionMutation({
+ *   variables: {
+ *      questionCategoryId: // value for 'questionCategoryId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuestionMutation, CreateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuestionMutation, CreateQuestionMutationVariables>(CreateQuestionDocument, options);
+      }
+export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
+export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
 export const CreateQuestionCategoryDocument = gql`
     mutation CreateQuestionCategory($data: CreateQuestionCategoryInput!) {
   createQuestionCategory(data: $data) {
@@ -1469,6 +1656,39 @@ export function useCreateQuestionCategoryMutation(baseOptions?: Apollo.MutationH
 export type CreateQuestionCategoryMutationHookResult = ReturnType<typeof useCreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationResult = Apollo.MutationResult<CreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationOptions = Apollo.BaseMutationOptions<CreateQuestionCategoryMutation, CreateQuestionCategoryMutationVariables>;
+export const DeleteQuestionDocument = gql`
+    mutation DeleteQuestion($id: String!) {
+  deleteQuestion(id: $id) {
+    ...QuestionBaseFields
+  }
+}
+    ${QuestionBaseFieldsFragmentDoc}`;
+export type DeleteQuestionMutationFn = Apollo.MutationFunction<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
+
+/**
+ * __useDeleteQuestionMutation__
+ *
+ * To run a mutation, you first call `useDeleteQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteQuestionMutation, { data, loading, error }] = useDeleteQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteQuestionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteQuestionMutation, DeleteQuestionMutationVariables>(DeleteQuestionDocument, options);
+      }
+export type DeleteQuestionMutationHookResult = ReturnType<typeof useDeleteQuestionMutation>;
+export type DeleteQuestionMutationResult = Apollo.MutationResult<DeleteQuestionMutation>;
+export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
 export const DeleteQuestionCategoryDocument = gql`
     mutation DeleteQuestionCategory($id: String!) {
   deleteQuestionCategory(id: $id) {
@@ -1537,6 +1757,45 @@ export function useUpdateMyAssignmentMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateMyAssignmentMutationHookResult = ReturnType<typeof useUpdateMyAssignmentMutation>;
 export type UpdateMyAssignmentMutationResult = Apollo.MutationResult<UpdateMyAssignmentMutation>;
 export type UpdateMyAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateMyAssignmentMutation, UpdateMyAssignmentMutationVariables>;
+export const UpdateQuestionDocument = gql`
+    mutation UpdateQuestion($id: String!, $data: UpdateQuestionInput!) {
+  updateQuestion(id: $id, data: $data) {
+    ...QuestionBaseFields
+    answers {
+      ...AnswerBaseFields
+      fraction
+    }
+  }
+}
+    ${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
+export type UpdateQuestionMutationFn = Apollo.MutationFunction<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+
+/**
+ * __useUpdateQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQuestionMutation, { data, loading, error }] = useUpdateQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateQuestionMutation, UpdateQuestionMutationVariables>(UpdateQuestionDocument, options);
+      }
+export type UpdateQuestionMutationHookResult = ReturnType<typeof useUpdateQuestionMutation>;
+export type UpdateQuestionMutationResult = Apollo.MutationResult<UpdateQuestionMutation>;
+export type UpdateQuestionMutationOptions = Apollo.BaseMutationOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
 export const UpdateQuestionCategoryDocument = gql`
     mutation UpdateQuestionCategory($id: String!, $data: UpdateQuestionCategoryInput!) {
   updateQuestionCategory(id: $id, data: $data) {
@@ -1645,18 +1904,17 @@ export const QuestionBankDocument = gql`
   questionBank {
     ...QuestionCategoryBaseFields
     questions {
-      id
-      name
-      text
-      type
+      ...QuestionBaseFields
       answers {
-        id
-        text
+        ...AnswerBaseFields
+        fraction
       }
     }
   }
 }
-    ${QuestionCategoryBaseFieldsFragmentDoc}`;
+    ${QuestionCategoryBaseFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
 
 /**
  * __useQuestionBankQuery__

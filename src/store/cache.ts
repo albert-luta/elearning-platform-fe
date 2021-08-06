@@ -35,6 +35,20 @@ export const cache = new InMemoryCache({
 					merge: false
 				}
 			}
+		},
+		QuestionObject: {
+			fields: {
+				answers: {
+					merge: false
+				}
+			}
+		},
+		QuestionCategoryObject: {
+			fields: {
+				questions: {
+					merge: false
+				}
+			}
 		}
 	},
 	possibleTypes: {

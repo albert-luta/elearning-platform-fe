@@ -1,13 +1,19 @@
+import { Box, Typography } from '@material-ui/core';
+import { AddButton } from 'domains/shared/components/buttons/AddButton';
 import { ListItemCollapsible } from 'domains/shared/components/list/ListItemCollapsible';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import {
 	QuestionCategoryObject,
-	useDeleteQuestionCategoryMutation
+	useDeleteQuestionCategoryMutation,
+	useDeleteQuestionMutation
 } from 'generated/graphql';
 import { FC, memo, useCallback } from 'react';
 import { deleteQuestionCategoryUpdate } from '../graphql/updates/deleteQuestionCategoryUpdate';
+import { deleteQuestionUpdate } from '../graphql/updates/deleteQuestionUpdate';
 import { UpdateQuestionCategoryForm } from './QuestionCategoryForm/UpdateQuestionCategoryForm';
+import { CreateQuestionForm } from './QuestionForm/CreateQuestionForm';
+import { UpdateQuestionForm } from './QuestionForm/UpdateQuestionForm';
 
 interface QuestionCategoryCollapsibleProps {
 	category: QuestionCategoryObject;
@@ -31,6 +37,13 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 			}).catch(() => null);
 		}, [deleteQuestionCategory, category.id]);
 
+		const [
+			deleteQuestion,
+			{ loading: deleteQuestionLoading }
+		] = useDeleteQuestionMutation({
+			update: deleteQuestionUpdate(category.id)
+		});
+
 		return (
 			<ListItemCollapsible
 				isOpen={isOpen}
@@ -53,8 +66,70 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 						deleteLoading={deleteQuestionCategoryLoading}
 					/>
 				}
-			></ListItemCollapsible>
+			>
+				<Box pb={0.5}>
+					<AddButton
+						fullWidth
+						resourceType="Question Category"
+						form={(onSuccess) => (
+							<CreateQuestionForm
+								categoryId={category.id}
+								onSuccess={onSuccess}
+							/>
+						)}
+					/>
+				</Box>
+				{category.questions.length ? (
+					category.questions.map((question) => (
+						<Box
+							key={question.id}
+							display="flex"
+							alignItems="center"
+						>
+							<Box
+								width="100%"
+								display="flex"
+								alignItems="center"
+							>
+								<Box
+									pr={1.5}
+									display="flex"
+									alignItems="center"
+								>
+									{/* <ActivityIcon type={question.type} /> */}
+									{/* TODO: QuestionIcon */}
+								</Box>
+								<Typography>{question.name}</Typography>
+							</Box>
+							<ModifyResourceAction
+								// Shared
+								resourceName={question.name}
+								resourceType="Question"
+								// Update
+								updateForm={(onSuccess) => (
+									<UpdateQuestionForm
+										question={question}
+										onSuccess={onSuccess}
+									/>
+								)}
+								// Delete
+								onDelete={() => {
+									deleteQuestion({
+										variables: {
+											id: question.id
+										}
+									}).catch(() => null);
+								}}
+								deleteLoading={deleteQuestionLoading}
+							/>
+						</Box>
+					))
+				) : (
+					<Typography color="textSecondary" align="center">
+						There are no questions created yet
+					</Typography>
+				)}
+			</ListItemCollapsible>
 		);
 	}
 );
-// TODO: show the questions

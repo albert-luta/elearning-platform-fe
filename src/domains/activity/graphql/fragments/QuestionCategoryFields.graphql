@@ -1,0 +1,10 @@
+fragment QuestionCategoryFields on QuestionCategoryObject {
+	...QuestionCategoryBaseFields
+	questions {
+		...QuestionBaseFields
+		answers {
+			...AnswerBaseFields
+			fraction
+		}
+	}
+}

@@ -1,0 +1,12 @@
+mutation CreateQuestion(
+	$questionCategoryId: String!
+	$data: CreateQuestionInput!
+) {
+	createQuestion(questionCategoryId: $questionCategoryId, data: $data) {
+		...QuestionBaseFields
+		answers {
+			...AnswerBaseFields
+			fraction
+		}
+	}
+}

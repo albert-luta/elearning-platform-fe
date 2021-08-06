@@ -1,0 +1,4 @@
+fragment AnswerBaseFields on QuestionAnswerObject {
+	id
+	text
+}

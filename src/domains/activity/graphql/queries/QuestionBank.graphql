@@ -2,13 +2,10 @@ query QuestionBank {
 	questionBank {
 		...QuestionCategoryBaseFields
 		questions {
-			id
-			name
-			text
-			type
+			...QuestionBaseFields
 			answers {
-				id
-				text
+				...AnswerBaseFields
+				fraction
 			}
 		}
 	}

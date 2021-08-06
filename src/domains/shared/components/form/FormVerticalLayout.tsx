@@ -24,7 +24,7 @@ interface FormVerticalLayoutProps {
 }
 
 export const FormVerticalLayout: FC<FormVerticalLayoutProps> = memo(
-	function FormVerticalLayout({ fields, actions, spacing = 2 }) {
+	function FormVerticalLayout({ fields, actions, spacing = 1 }) {
 		return (
 			<Container spacing={spacing}>
 				{isFragment(fields) ? (

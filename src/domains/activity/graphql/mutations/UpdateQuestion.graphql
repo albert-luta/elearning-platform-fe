@@ -1,0 +1,9 @@
+mutation UpdateQuestion($id: String!, $data: UpdateQuestionInput!) {
+	updateQuestion(id: $id, data: $data) {
+		...QuestionBaseFields
+		answers {
+			...AnswerBaseFields
+			fraction
+		}
+	}
+}

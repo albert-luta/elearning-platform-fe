@@ -195,5 +195,3 @@ export const QuestionForm: FC<QuestionFormProps> = memo(function QuestionForm(
 		</MyFormik>
 	);
 });
-
-// TODO: Before sending the data, divide by 100 the fractions

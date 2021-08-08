@@ -14,6 +14,7 @@ import { deleteQuestionUpdate } from '../graphql/updates/deleteQuestionUpdate';
 import { UpdateQuestionCategoryForm } from './QuestionCategoryForm/UpdateQuestionCategoryForm';
 import { CreateQuestionForm } from './QuestionForm/CreateQuestionForm';
 import { UpdateQuestionForm } from './QuestionForm/UpdateQuestionForm';
+import { QuestionIcon } from './QuestionIcon';
 
 interface QuestionCategoryCollapsibleProps {
 	category: QuestionCategoryObject;
@@ -96,8 +97,7 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 									display="flex"
 									alignItems="center"
 								>
-									{/* <ActivityIcon type={question.type} /> */}
-									{/* TODO: QuestionIcon */}
+									<QuestionIcon type={question.type} />
 								</Box>
 								<Typography>{question.name}</Typography>
 							</Box>

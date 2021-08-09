@@ -17,9 +17,15 @@ import {
 	Tooltip,
 	Typography
 } from '@material-ui/core';
-import { ArrowDropDown, ArrowDropUp, Clear } from '@material-ui/icons';
+import {
+	ArrowDropDown,
+	ArrowDropUp,
+	Clear,
+	DragHandle
+} from '@material-ui/icons';
 import { AnswersTips } from './AnswersTips';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 export interface CreateQuestionFormValues {
 	name: string;
@@ -130,42 +136,107 @@ export const QuestionForm: FC<QuestionFormProps> = memo(function QuestionForm(
 					</Box>
 					<FieldArray
 						name="answers"
-						render={({ remove, push }) => (
+						render={({ remove, push, move }) => (
 							<>
-								{values.answers.map((_, i) => (
-									<Box key={i} mt={2}>
-										<Box display="flex" alignItems="center">
-											<InputLabel>
-												Answer {i + 1}
-											</InputLabel>
-											<Tooltip title="Delete answer">
-												<IconButton
-													onClick={() => remove(i)}
-												>
-													<Clear fontSize="small" />
-												</IconButton>
-											</Tooltip>
-										</Box>
-										<Box mt={1}>
-											<Field
-												component={TextField}
-												name={`answers[${i}].text`}
-												label="Text"
-												fullWidth
-												multiline
-											/>
-										</Box>
-										<Box mt={1}>
-											<Field
-												component={TextField}
-												name={`answers[${i}].fraction`}
-												label="Fraction"
-												type="number"
-												fullWidth
-											/>
-										</Box>
-									</Box>
-								))}
+								<DragDropContext
+									onDragEnd={({ destination, source }) => {
+										if (!destination) return;
+										if (destination.index === source.index)
+											return;
+
+										move(source.index, destination.index);
+									}}
+								>
+									<Droppable droppableId="answer-list">
+										{(providedDroppable) => (
+											<div
+												ref={providedDroppable.innerRef}
+												{...providedDroppable.droppableProps}
+											>
+												{values.answers.map((_, i) => (
+													<Draggable
+														key={i}
+														draggableId={String(i)}
+														index={i}
+													>
+														{(
+															providedDraggable
+														) => (
+															<div
+																ref={
+																	providedDraggable.innerRef
+																}
+																{...providedDraggable.draggableProps}
+																style={{
+																	marginTop: 16,
+																	...providedDraggable
+																		.draggableProps
+																		.style
+																}}
+															>
+																<Box
+																	display="flex"
+																	alignItems="center"
+																>
+																	<Box
+																		display="flex"
+																		justifyContent="center"
+																		alignItems="center"
+																		{...providedDraggable.dragHandleProps}
+																		style={{
+																			padding:
+																				'12px 12px 12px 0'
+																		}}
+																	>
+																		<DragHandle fontSize="small" />
+																	</Box>
+																	<InputLabel>
+																		Answer{' '}
+																		{i + 1}
+																	</InputLabel>
+																	<Tooltip title="Delete answer">
+																		<IconButton
+																			onClick={() =>
+																				remove(
+																					i
+																				)
+																			}
+																		>
+																			<Clear fontSize="small" />
+																		</IconButton>
+																	</Tooltip>
+																</Box>
+																<Box mt={1}>
+																	<Field
+																		component={
+																			TextField
+																		}
+																		name={`answers[${i}].text`}
+																		label="Text"
+																		fullWidth
+																		multiline
+																	/>
+																</Box>
+																<Box mt={1}>
+																	<Field
+																		component={
+																			TextField
+																		}
+																		name={`answers[${i}].fraction`}
+																		label="Fraction"
+																		type="number"
+																		fullWidth
+																	/>
+																</Box>
+															</div>
+														)}
+													</Draggable>
+												))}
+												{providedDroppable.placeholder}
+											</div>
+										)}
+									</Droppable>
+								</DragDropContext>
 								<Box mt={2}>
 									<Button
 										fullWidth
@@ -195,3 +266,5 @@ export const QuestionForm: FC<QuestionFormProps> = memo(function QuestionForm(
 		</MyFormik>
 	);
 });
+
+// TODO: use react-beautiful-dnd and an order number for answers - use formik FieldArray swap helper

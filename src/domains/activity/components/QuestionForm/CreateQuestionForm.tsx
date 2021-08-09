@@ -22,10 +22,13 @@ export const CreateQuestionForm: FC<CreateQuestionFormProps> = memo(
 						data: {
 							...data,
 							type: type as QuestionType,
-							answers: answers.map(({ fraction, ...answer }) => ({
-								...answer,
-								fraction: fraction / 100
-							}))
+							answers: answers.map(
+								({ fraction, ...answer }, i) => ({
+									...answer,
+									fraction: fraction / 100,
+									order: i
+								})
+							)
 						}
 					}
 				});

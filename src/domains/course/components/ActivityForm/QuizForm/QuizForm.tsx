@@ -60,3 +60,6 @@ export const QuizForm: FC<QuizFormProps> = memo(function QuizForm(props) {
 		</MyFormik>
 	);
 });
+
+// TODO: display time limit in minutes(fixed) - convert to ms when sending/from ms when receiving(at update)
+// TODO: use react-beautiful-dnd and an order number for questions

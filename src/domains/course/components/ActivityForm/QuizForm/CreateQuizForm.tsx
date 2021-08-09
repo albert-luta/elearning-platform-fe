@@ -17,7 +17,8 @@ export const CreateQuizForm: FC<CreateActivityProps> = memo(
 						data: {
 							sectionId,
 							...data
-						},
+						} as any,
+						// TODO: send the correct create quiz data
 						files: Object.values(files)
 					}
 				});

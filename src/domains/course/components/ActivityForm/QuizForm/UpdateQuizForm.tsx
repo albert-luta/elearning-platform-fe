@@ -21,7 +21,8 @@ export const UpdateQuizForm: FC<UpdateActivityProps> = memo(
 							...data,
 							sectionId: activity.data?.activity.sectionId ?? '',
 							filesToDelete: Object.keys(filesToDelete)
-						},
+						} as any,
+						// TODO: send the corect update quiz data
 						newFiles: Object.values(files)
 					}
 				});

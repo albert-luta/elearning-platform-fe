@@ -7,6 +7,7 @@ import Document, {
 } from 'next/document';
 import { ServerStyleSheet as StyledComponentsSheet } from 'styled-components';
 import { ServerStyleSheets as MaterialUiSheet } from '@material-ui/core/styles';
+import { resetServerContext } from 'react-beautiful-dnd';
 
 export default class MyDocument extends Document {
 	static async getInitialProps(ctx: DocumentContext) {
@@ -24,6 +25,8 @@ export default class MyDocument extends Document {
 				});
 
 			const initialProps = await Document.getInitialProps(ctx);
+			resetServerContext();
+
 			return {
 				...initialProps,
 				styles: (

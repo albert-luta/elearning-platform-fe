@@ -141,6 +141,7 @@ export type CourseUser = {
 
 export type CreateAnswerInput = {
   fraction: Scalars['Float'];
+  order: Scalars['Int'];
   text: Scalars['String'];
 };
 
@@ -175,7 +176,20 @@ export type CreateQuestionInput = {
 export type CreateQuizInput = {
   description: Scalars['String'];
   name: Scalars['String'];
+  questions: Array<CreateQuizQuestionInput>;
   sectionId: Scalars['String'];
+  shuffleAnswers: Scalars['Boolean'];
+  shuffleQuestions: Scalars['Boolean'];
+  timeClose: Scalars['DateTime'];
+  timeLimit: Scalars['Int'];
+  timeOpen: Scalars['DateTime'];
+  visible: Scalars['Boolean'];
+};
+
+export type CreateQuizQuestionInput = {
+  maxGrade: Scalars['Float'];
+  order: Scalars['Int'];
+  questionId: Scalars['String'];
 };
 
 export type CreateResourceInput = {
@@ -207,13 +221,13 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createAssignment: BaseActivityInterface;
+  createAssignment: AssignmentObject;
   createCollege: CollegeObject;
   createCourse: CourseObject;
   createQuestion: QuestionObject;
   createQuestionCategory: QuestionCategoryObject;
-  createQuiz: BaseActivityInterface;
-  createResource: BaseActivityInterface;
+  createQuiz: QuizObject;
+  createResource: ResourceObject;
   createSection: SectionObject;
   createUniversity: UniversityObject;
   deleteActivity: BaseActivityInterface;
@@ -228,14 +242,14 @@ export type Mutation = {
   logout?: Maybe<Authentication>;
   refreshTokens: Authentication;
   register: Authentication;
-  updateAssignment: BaseActivityInterface;
+  updateAssignment: AssignmentObject;
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
   updateMyAssignment: UserAssignmentObject;
   updateQuestion: QuestionObject;
   updateQuestionCategory: QuestionCategoryObject;
-  updateQuiz: BaseActivityInterface;
-  updateResource: BaseActivityInterface;
+  updateQuiz: QuizObject;
+  updateResource: ResourceObject;
   updateSection: SectionObject;
   updateUniversity: UniversityObject;
   updateUserAssignment: UserAssignmentObject;
@@ -464,6 +478,7 @@ export type Question = {
   questionAnswers?: Maybe<Array<QuestionAnswer>>;
   questionCategory: QuestionCategory;
   questionCategoryId: Scalars['String'];
+  quizQuestions?: Maybe<Array<QuizQuestion>>;
   text: Scalars['String'];
   type: QuestionType;
 };
@@ -472,6 +487,7 @@ export type QuestionAnswer = {
   __typename?: 'QuestionAnswer';
   fraction: Scalars['Float'];
   id: Scalars['ID'];
+  order: Scalars['Int'];
   question: Question;
   questionId: Scalars['String'];
   text: Scalars['String'];
@@ -481,6 +497,7 @@ export type QuestionAnswerObject = {
   __typename?: 'QuestionAnswerObject';
   fraction: Scalars['Float'];
   id: Scalars['ID'];
+  order: Scalars['Int'];
   text: Scalars['String'];
 };
 
@@ -518,8 +535,15 @@ export type Quiz = {
   __typename?: 'Quiz';
   activity: Activity;
   activityId: Scalars['ID'];
+  quizQuestions?: Maybe<Array<QuizQuestion>>;
+  shuffleAnswers: Scalars['Boolean'];
+  shuffleQuestions: Scalars['Boolean'];
+  timeClose: Scalars['DateTime'];
+  timeLimit: Scalars['Int'];
+  timeOpen: Scalars['DateTime'];
   university: University;
   universityId: Scalars['String'];
+  visible: Scalars['Boolean'];
 };
 
 export type QuizObject = BaseActivityInterface & {
@@ -529,9 +553,37 @@ export type QuizObject = BaseActivityInterface & {
   files: Array<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  quizQuestions: Array<QuizQuestionObject>;
   sectionId: Scalars['String'];
+  shuffleAnswers: Scalars['Boolean'];
+  shuffleQuestions: Scalars['Boolean'];
+  timeClose: Scalars['DateTime'];
+  timeLimit: Scalars['Int'];
+  timeOpen: Scalars['DateTime'];
   type: Scalars['String'];
   universityId: Scalars['String'];
+  visible: Scalars['Boolean'];
+};
+
+export type QuizQuestion = {
+  __typename?: 'QuizQuestion';
+  id: Scalars['ID'];
+  maxGrade: Scalars['Float'];
+  order: Scalars['Int'];
+  question: Question;
+  questionId: Scalars['String'];
+  quiz: Quiz;
+  quizId: Scalars['String'];
+};
+
+export type QuizQuestionObject = {
+  __typename?: 'QuizQuestionObject';
+  id: Scalars['ID'];
+  maxGrade: Scalars['Float'];
+  order: Scalars['Int'];
+  question: QuestionObject;
+  questionId: Scalars['String'];
+  quizId: Scalars['String'];
 };
 
 export type RegisterUserInput = {
@@ -636,6 +688,7 @@ export type UniversityUser = {
 
 export type UpdateAnswerInput = {
   fraction: Scalars['Float'];
+  order: Scalars['Int'];
   text: Scalars['String'];
 };
 
@@ -670,7 +723,14 @@ export type UpdateQuizInput = {
   filesToDelete: Array<Scalars['String']>;
   name: Scalars['String'];
   oldFiles: Array<Scalars['String']>;
+  questions: Array<CreateQuizQuestionInput>;
   sectionId: Scalars['String'];
+  shuffleAnswers: Scalars['Boolean'];
+  shuffleQuestions: Scalars['Boolean'];
+  timeClose: Scalars['DateTime'];
+  timeLimit: Scalars['Int'];
+  timeOpen: Scalars['DateTime'];
+  visible: Scalars['Boolean'];
 };
 
 export type UpdateResourceInput = {
@@ -914,7 +974,7 @@ export type QuestionBankQuery = (
       { __typename?: 'QuestionObject' }
       & { answers: Array<(
         { __typename?: 'QuestionAnswerObject' }
-        & Pick<QuestionAnswerObject, 'fraction'>
+        & Pick<QuestionAnswerObject, 'fraction' | 'order'>
         & AnswerBaseFieldsFragment
       )> }
       & QuestionBaseFieldsFragment
@@ -1081,6 +1141,20 @@ type ActivityFields_AssignmentObject_Fragment = (
 
 type ActivityFields_QuizObject_Fragment = (
   { __typename?: 'QuizObject' }
+  & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers' | 'timeOpen' | 'timeClose' | 'timeLimit'>
+  & { quizQuestions: Array<(
+    { __typename?: 'QuizQuestionObject' }
+    & Pick<QuizQuestionObject, 'id' | 'quizId' | 'questionId' | 'maxGrade' | 'order'>
+    & { question: (
+      { __typename?: 'QuestionObject' }
+      & { answers: Array<(
+        { __typename?: 'QuestionAnswerObject' }
+        & Pick<QuestionAnswerObject, 'fraction' | 'order'>
+        & AnswerBaseFieldsFragment
+      )> }
+      & QuestionBaseFieldsFragment
+    ) }
+  )> }
   & BaseActivityFields_QuizObject_Fragment
 );
 
@@ -1139,12 +1213,6 @@ export type CreateAssignmentMutation = (
   & { createAssignment: (
     { __typename?: 'AssignmentObject' }
     & BaseActivityFields_AssignmentObject_Fragment
-  ) | (
-    { __typename?: 'QuizObject' }
-    & BaseActivityFields_QuizObject_Fragment
-  ) | (
-    { __typename?: 'ResourceObject' }
-    & BaseActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -1170,14 +1238,8 @@ export type CreateQuizMutationVariables = Exact<{
 export type CreateQuizMutation = (
   { __typename?: 'Mutation' }
   & { createQuiz: (
-    { __typename?: 'AssignmentObject' }
-    & BaseActivityFields_AssignmentObject_Fragment
-  ) | (
     { __typename?: 'QuizObject' }
     & BaseActivityFields_QuizObject_Fragment
-  ) | (
-    { __typename?: 'ResourceObject' }
-    & BaseActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -1190,12 +1252,6 @@ export type CreateResourceMutationVariables = Exact<{
 export type CreateResourceMutation = (
   { __typename?: 'Mutation' }
   & { createResource: (
-    { __typename?: 'AssignmentObject' }
-    & BaseActivityFields_AssignmentObject_Fragment
-  ) | (
-    { __typename?: 'QuizObject' }
-    & BaseActivityFields_QuizObject_Fragment
-  ) | (
     { __typename?: 'ResourceObject' }
     & BaseActivityFields_ResourceObject_Fragment
   ) }
@@ -1272,12 +1328,6 @@ export type UpdateAssignmentMutation = (
   & { updateAssignment: (
     { __typename?: 'AssignmentObject' }
     & ActivityFields_AssignmentObject_Fragment
-  ) | (
-    { __typename?: 'QuizObject' }
-    & ActivityFields_QuizObject_Fragment
-  ) | (
-    { __typename?: 'ResourceObject' }
-    & ActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -1305,14 +1355,8 @@ export type UpdateQuizMutationVariables = Exact<{
 export type UpdateQuizMutation = (
   { __typename?: 'Mutation' }
   & { updateQuiz: (
-    { __typename?: 'AssignmentObject' }
-    & ActivityFields_AssignmentObject_Fragment
-  ) | (
     { __typename?: 'QuizObject' }
     & ActivityFields_QuizObject_Fragment
-  ) | (
-    { __typename?: 'ResourceObject' }
-    & ActivityFields_ResourceObject_Fragment
   ) }
 );
 
@@ -1326,12 +1370,6 @@ export type UpdateResourceMutationVariables = Exact<{
 export type UpdateResourceMutation = (
   { __typename?: 'Mutation' }
   & { updateResource: (
-    { __typename?: 'AssignmentObject' }
-    & ActivityFields_AssignmentObject_Fragment
-  ) | (
-    { __typename?: 'QuizObject' }
-    & ActivityFields_QuizObject_Fragment
-  ) | (
     { __typename?: 'ResourceObject' }
     & ActivityFields_ResourceObject_Fragment
   ) }
@@ -1553,8 +1591,33 @@ export const ActivityFieldsFragmentDoc = gql`
     deadline
     maxGrade
   }
+  ... on QuizObject {
+    visible
+    shuffleQuestions
+    shuffleAnswers
+    timeOpen
+    timeClose
+    timeLimit
+    quizQuestions {
+      id
+      quizId
+      questionId
+      maxGrade
+      order
+      question {
+        ...QuestionBaseFields
+        answers {
+          ...AnswerBaseFields
+          fraction
+          order
+        }
+      }
+    }
+  }
 }
-    ${BaseActivityFieldsFragmentDoc}`;
+    ${BaseActivityFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
@@ -1908,6 +1971,7 @@ export const QuestionBankDocument = gql`
       answers {
         ...AnswerBaseFields
         fraction
+        order
       }
     }
   }

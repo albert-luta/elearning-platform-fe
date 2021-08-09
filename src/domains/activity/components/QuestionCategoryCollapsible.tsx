@@ -71,7 +71,8 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 				<Box pb={0.5}>
 					<AddButton
 						fullWidth
-						resourceType="Question Category"
+						resourceType="Question"
+						dialogMaxWidth="sm"
 						form={(onSuccess) => (
 							<CreateQuestionForm
 								categoryId={category.id}
@@ -105,6 +106,7 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 								// Shared
 								resourceName={question.name}
 								resourceType="Question"
+								updateDialogMaxWidth="sm"
 								// Update
 								updateForm={(onSuccess) => (
 									<UpdateQuestionForm

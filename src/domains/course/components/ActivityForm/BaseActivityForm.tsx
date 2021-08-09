@@ -112,3 +112,9 @@ export const BaseActivityFormFields: FC = memo(
 		);
 	}
 );
+
+/*
+TODO: extract fragments
+TODO: query the next fields only to children: visible, shuffleQuestions, shuffleAnswers
+TODO: don't query the order fields
+ */

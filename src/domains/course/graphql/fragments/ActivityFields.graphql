@@ -4,4 +4,27 @@ fragment ActivityFields on BaseActivityInterface {
 		deadline
 		maxGrade
 	}
+	... on QuizObject {
+		visible
+		shuffleQuestions
+		shuffleAnswers
+		timeOpen
+		timeClose
+		timeLimit
+		quizQuestions {
+			id
+			quizId
+			questionId
+			maxGrade
+			order
+			question {
+				...QuestionBaseFields
+				answers {
+					...AnswerBaseFields
+					fraction
+					order
+				}
+			}
+		}
+	}
 }

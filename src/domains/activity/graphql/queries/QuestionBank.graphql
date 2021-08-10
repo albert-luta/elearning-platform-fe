@@ -6,7 +6,6 @@ query QuestionBank {
 			answers {
 				...AnswerBaseFields
 				fraction
-				order
 			}
 		}
 	}

@@ -6,6 +6,8 @@ import { FC, memo } from 'react';
 import { UpdateActivityProps } from '../BaseActivityForm';
 import { QuizForm, UpdateQuizFormValues } from './QuizForm';
 
+const MINUTE_MILLISECONDS = 1000 * 60;
+
 export const UpdateQuizForm: FC<UpdateActivityProps> = memo(
 	function UpdateQuizForm({ activity: { id }, onSuccess }) {
 		const activity = useActivityQuery({
@@ -13,16 +15,21 @@ export const UpdateQuizForm: FC<UpdateActivityProps> = memo(
 		});
 		const [updateQuiz] = useUpdateQuizMutation();
 		const handleUpdateQuiz = useFormikSubmit<UpdateQuizFormValues>(
-			async ({ files, filesToDelete, ...data }) => {
+			async ({ files, filesToDelete, timeLimit, questions, ...data }) => {
 				const res = await updateQuiz({
 					variables: {
 						id,
 						data: {
 							...data,
 							sectionId: activity.data?.activity.sectionId ?? '',
-							filesToDelete: Object.keys(filesToDelete)
-						} as any,
-						// TODO: send the corect update quiz data
+							filesToDelete: Object.keys(filesToDelete),
+							timeLimit: timeLimit * MINUTE_MILLISECONDS,
+							questions: questions.map(({ id, maxGrade }, i) => ({
+								maxGrade,
+								questionId: id,
+								order: i
+							}))
+						},
 						newFiles: Object.values(files)
 					}
 				});
@@ -50,6 +57,10 @@ export const UpdateQuizForm: FC<UpdateActivityProps> = memo(
 			createdAt,
 			description,
 			files,
+			timeOpen,
+			timeClose,
+			timeLimit,
+			quizQuestions,
 			...initialValues
 		} = normalizeUpdateFormInitialValues(activity.data.activity);
 
@@ -61,7 +72,18 @@ export const UpdateQuizForm: FC<UpdateActivityProps> = memo(
 					description: description ?? '',
 					files: {},
 					oldFiles: files,
-					filesToDelete: {}
+					filesToDelete: {},
+					timeOpen: new Date(timeOpen),
+					timeClose: new Date(timeClose),
+					timeLimit: Math.trunc(timeLimit / MINUTE_MILLISECONDS),
+					questions: quizQuestions.map(
+						({ maxGrade, question: { id, name, type } }) => ({
+							maxGrade,
+							id,
+							name,
+							type
+						})
+					)
 				}}
 				onUpdate={handleUpdateQuiz}
 			/>

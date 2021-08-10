@@ -103,6 +103,7 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 						<AddButton
 							fullWidth
 							resourceType="Activity"
+							dialogMaxWidth="sm"
 							form={(onSuccess) => (
 								<CreateActivityForm
 									courseId={courseId}
@@ -160,6 +161,7 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 									// Shared
 									resourceName={activity.name}
 									resourceType={activity.type}
+									updateDialogMaxWidth="sm"
 									// Update
 									updateForm={(onSuccess) => (
 										<UpdateActivityForm

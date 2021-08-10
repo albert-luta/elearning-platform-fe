@@ -1,0 +1,7 @@
+fragment QuizQuestionBaseFields on QuizQuestionObject {
+	id
+	quizId
+	questionId
+	maxGrade
+	order
+}

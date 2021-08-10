@@ -5,5 +5,6 @@ export const FormErrors = {
 	MIN_NUMBER: 'The minimum value allowed is ',
 	MAX_NUMBER: 'The maximum value allowed is ',
 	MIN_DATE: 'The minimum date allowed is ',
-	ONLY_NUMBER: 'This field must be a number'
+	ONLY_NUMBER: 'This field must be a number',
+	INTEGER: 'This field must be an integer'
 };

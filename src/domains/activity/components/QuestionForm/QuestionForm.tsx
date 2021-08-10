@@ -266,5 +266,3 @@ export const QuestionForm: FC<QuestionFormProps> = memo(function QuestionForm(
 		</MyFormik>
 	);
 });
-
-// TODO: use react-beautiful-dnd and an order number for answers - use formik FieldArray swap helper

@@ -5,24 +5,17 @@ fragment ActivityFields on BaseActivityInterface {
 		maxGrade
 	}
 	... on QuizObject {
+		...QuizBaseFields
 		visible
 		shuffleQuestions
 		shuffleAnswers
-		timeOpen
-		timeClose
-		timeLimit
 		quizQuestions {
-			id
-			quizId
-			questionId
-			maxGrade
-			order
+			...QuizQuestionBaseFields
 			question {
 				...QuestionBaseFields
 				answers {
 					...AnswerBaseFields
 					fraction
-					order
 				}
 			}
 		}

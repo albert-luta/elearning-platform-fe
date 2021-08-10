@@ -1,0 +1,5 @@
+fragment QuizBaseFields on QuizObject {
+	timeOpen
+	timeClose
+	timeLimit
+}

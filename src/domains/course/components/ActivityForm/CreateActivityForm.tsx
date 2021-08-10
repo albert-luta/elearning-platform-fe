@@ -17,7 +17,12 @@ export const CreateActivityForm: FC<CreateActivityProps> = memo(
 			<>
 				<Box pb={2} display="flex" alignItems="center">
 					<Box component="span" mr={2}>
-						<InputLabel id="activity-type-label">Type:</InputLabel>
+						<InputLabel
+							htmlFor="activity-type"
+							id="activity-type-label"
+						>
+							Type
+						</InputLabel>
 					</Box>
 					<Select
 						labelId="activity-type-label"

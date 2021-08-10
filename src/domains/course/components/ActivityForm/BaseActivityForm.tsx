@@ -58,7 +58,7 @@ export const BaseActivityFormFields: FC = memo(
 	function BaseActivityFormFields() {
 		return (
 			<>
-				<Box pb={2}>
+				<Box pb={1}>
 					<Field
 						component={TextField}
 						name="name"
@@ -66,7 +66,7 @@ export const BaseActivityFormFields: FC = memo(
 						fullWidth
 					/>
 				</Box>
-				<Box pb={2}>
+				<Box pb={1}>
 					<Field
 						component={TextField}
 						name="description"
@@ -112,9 +112,3 @@ export const BaseActivityFormFields: FC = memo(
 		);
 	}
 );
-
-/*
-TODO: extract fragments
-TODO: query the next fields only to children: visible, shuffleQuestions, shuffleAnswers
-TODO: don't query the order fields
- */

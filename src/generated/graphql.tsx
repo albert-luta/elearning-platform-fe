@@ -183,7 +183,6 @@ export type CreateQuizInput = {
   timeClose: Scalars['DateTime'];
   timeLimit: Scalars['Int'];
   timeOpen: Scalars['DateTime'];
-  visible: Scalars['Boolean'];
 };
 
 export type CreateQuizQuestionInput = {
@@ -730,7 +729,6 @@ export type UpdateQuizInput = {
   timeClose: Scalars['DateTime'];
   timeLimit: Scalars['Int'];
   timeOpen: Scalars['DateTime'];
-  visible: Scalars['Boolean'];
 };
 
 export type UpdateResourceInput = {
@@ -798,7 +796,7 @@ export type UserObject = {
 
 export type AnswerBaseFieldsFragment = (
   { __typename?: 'QuestionAnswerObject' }
-  & Pick<QuestionAnswerObject, 'id' | 'text'>
+  & Pick<QuestionAnswerObject, 'id' | 'text' | 'order'>
 );
 
 export type BaseUserAssignmentFieldsFragment = (
@@ -974,7 +972,7 @@ export type QuestionBankQuery = (
       { __typename?: 'QuestionObject' }
       & { answers: Array<(
         { __typename?: 'QuestionAnswerObject' }
-        & Pick<QuestionAnswerObject, 'fraction' | 'order'>
+        & Pick<QuestionAnswerObject, 'fraction'>
         & AnswerBaseFieldsFragment
       )> }
       & QuestionBaseFieldsFragment
@@ -1141,20 +1139,21 @@ type ActivityFields_AssignmentObject_Fragment = (
 
 type ActivityFields_QuizObject_Fragment = (
   { __typename?: 'QuizObject' }
-  & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers' | 'timeOpen' | 'timeClose' | 'timeLimit'>
+  & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers'>
   & { quizQuestions: Array<(
     { __typename?: 'QuizQuestionObject' }
-    & Pick<QuizQuestionObject, 'id' | 'quizId' | 'questionId' | 'maxGrade' | 'order'>
     & { question: (
       { __typename?: 'QuestionObject' }
       & { answers: Array<(
         { __typename?: 'QuestionAnswerObject' }
-        & Pick<QuestionAnswerObject, 'fraction' | 'order'>
+        & Pick<QuestionAnswerObject, 'fraction'>
         & AnswerBaseFieldsFragment
       )> }
       & QuestionBaseFieldsFragment
     ) }
+    & QuizQuestionBaseFieldsFragment
   )> }
+  & QuizBaseFieldsFragment
   & BaseActivityFields_QuizObject_Fragment
 );
 
@@ -1185,6 +1184,16 @@ export type BaseActivityFieldsFragment = BaseActivityFields_AssignmentObject_Fra
 export type CourseFieldsFragment = (
   { __typename?: 'CourseObject' }
   & Pick<CourseObject, 'id' | 'name' | 'collegeId' | 'universityId'>
+);
+
+export type QuizBaseFieldsFragment = (
+  { __typename?: 'QuizObject' }
+  & Pick<QuizObject, 'timeOpen' | 'timeClose' | 'timeLimit'>
+);
+
+export type QuizQuestionBaseFieldsFragment = (
+  { __typename?: 'QuizQuestionObject' }
+  & Pick<QuizQuestionObject, 'id' | 'quizId' | 'questionId' | 'maxGrade' | 'order'>
 );
 
 export type SectionFieldsFragment = (
@@ -1533,6 +1542,7 @@ export const AnswerBaseFieldsFragmentDoc = gql`
     fragment AnswerBaseFields on QuestionAnswerObject {
   id
   text
+  order
 }
     `;
 export const QuestionCategoryFieldsFragmentDoc = gql`
@@ -1584,6 +1594,22 @@ export const BaseActivityFieldsFragmentDoc = gql`
   createdAt
 }
     `;
+export const QuizBaseFieldsFragmentDoc = gql`
+    fragment QuizBaseFields on QuizObject {
+  timeOpen
+  timeClose
+  timeLimit
+}
+    `;
+export const QuizQuestionBaseFieldsFragmentDoc = gql`
+    fragment QuizQuestionBaseFields on QuizQuestionObject {
+  id
+  quizId
+  questionId
+  maxGrade
+  order
+}
+    `;
 export const ActivityFieldsFragmentDoc = gql`
     fragment ActivityFields on BaseActivityInterface {
   ...BaseActivityFields
@@ -1592,30 +1618,25 @@ export const ActivityFieldsFragmentDoc = gql`
     maxGrade
   }
   ... on QuizObject {
+    ...QuizBaseFields
     visible
     shuffleQuestions
     shuffleAnswers
-    timeOpen
-    timeClose
-    timeLimit
     quizQuestions {
-      id
-      quizId
-      questionId
-      maxGrade
-      order
+      ...QuizQuestionBaseFields
       question {
         ...QuestionBaseFields
         answers {
           ...AnswerBaseFields
           fraction
-          order
         }
       }
     }
   }
 }
     ${BaseActivityFieldsFragmentDoc}
+${QuizBaseFieldsFragmentDoc}
+${QuizQuestionBaseFieldsFragmentDoc}
 ${QuestionBaseFieldsFragmentDoc}
 ${AnswerBaseFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
@@ -1971,7 +1992,6 @@ export const QuestionBankDocument = gql`
       answers {
         ...AnswerBaseFields
         fraction
-        order
       }
     }
   }

@@ -21,7 +21,7 @@ import { deleteActivityUpdate } from '../graphql/updates/deleteActivityUpdate';
 import { deleteSectionUpdate } from '../graphql/updates/deleteSectionUpdate';
 import { CreateActivityForm } from './ActivityForm/CreateActivityForm';
 import { UpdateActivityForm } from './ActivityForm/UpdateActivityForm';
-import { ActivityIcon } from './ActivityIcon';
+import { ActivityIcon } from '../../shared/components/icons/ActivityIcon';
 import { UpdateSectionForm } from './SectionForm/UpdateSectionForm';
 
 const getActivityRoute = (type: string): keyof typeof Routes.activity => {

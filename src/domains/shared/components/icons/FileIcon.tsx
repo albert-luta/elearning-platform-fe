@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
-import { FileType } from '../constants/file/FileType';
-import { getFileType } from '../utils/file/getFileType';
+import { FileType } from '../../constants/file/FileType';
+import { getFileType } from '../../utils/file/getFileType';
 import { AiFillFileUnknown } from 'react-icons/ai';
 import {
 	FaFileAlt,

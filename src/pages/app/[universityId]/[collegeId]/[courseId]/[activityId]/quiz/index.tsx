@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { ActivityLoadingOrError } from 'domains/activity/components/ActivityLoadingOrError';
 import { CommonActivityDisplay } from 'domains/activity/components/CommonActivityDisplay';
 import { QuizSpecificDisplay } from 'domains/activity/components/QuizSpecificDisplay';
@@ -37,15 +37,10 @@ export default function QuizDashboard() {
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>
-
 						<Box mt={2}>
-							<Typography variant="h5">Quiz status</Typography>
-
-							<Box mt={2}>
-								<QuizSpecificDisplay
-									activity={activityQuery.data.activity}
-								/>
-							</Box>
+							<QuizSpecificDisplay
+								activity={activityQuery.data.activity}
+							/>
 						</Box>
 					</>
 				);

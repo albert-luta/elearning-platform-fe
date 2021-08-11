@@ -30,7 +30,7 @@ export const AssignmentStatus: FC<AssignmentStatusProps> = memo(
 				<Table>
 					<TableBody>
 						<TableRow>
-							<TableCell>
+							<TableCell variant="head" component="th">
 								{props.type === 'general' && 'Max '}Grade
 							</TableCell>
 							<TableCell>
@@ -40,7 +40,9 @@ export const AssignmentStatus: FC<AssignmentStatusProps> = memo(
 							</TableCell>
 						</TableRow>
 						<TableRow>
-							<TableCell>Deadline</TableCell>
+							<TableCell variant="head" component="th">
+								Deadline
+							</TableCell>
 							<TableCell>
 								{props.deadline.toLocaleString()} -{' '}
 								{props.deadlineCountdown.hasCompleted
@@ -53,7 +55,9 @@ export const AssignmentStatus: FC<AssignmentStatusProps> = memo(
 						</TableRow>
 						{props.type === 'specific' && (
 							<TableRow>
-								<TableCell>Last time updated</TableCell>
+								<TableCell variant="head" component="th">
+									Last time updated
+								</TableCell>
 								<TableCell>
 									{props.updatedAt
 										? `${props.updatedAt.toLocaleString()} - ${formatDuration(

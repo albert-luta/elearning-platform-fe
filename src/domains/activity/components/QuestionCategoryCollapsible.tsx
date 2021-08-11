@@ -14,7 +14,7 @@ import { deleteQuestionUpdate } from '../graphql/updates/deleteQuestionUpdate';
 import { UpdateQuestionCategoryForm } from './QuestionCategoryForm/UpdateQuestionCategoryForm';
 import { CreateQuestionForm } from './QuestionForm/CreateQuestionForm';
 import { UpdateQuestionForm } from './QuestionForm/UpdateQuestionForm';
-import { QuestionIcon } from './QuestionIcon';
+import { QuestionIcon } from '../../shared/components/icons/QuestionIcon';
 
 interface QuestionCategoryCollapsibleProps {
 	category: QuestionCategoryObject;

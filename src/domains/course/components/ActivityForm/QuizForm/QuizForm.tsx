@@ -9,7 +9,7 @@ import {
 	Tooltip
 } from '@material-ui/core';
 import { Clear, DragHandle } from '@material-ui/icons';
-import { QuestionIcon } from 'domains/activity/components/QuestionIcon';
+import { QuestionIcon } from 'domains/shared/components/icons/QuestionIcon';
 import { ButtonWithLoader } from 'domains/shared/components/buttons/ButtonWithLoader';
 import { FormVerticalLayout } from 'domains/shared/components/form/FormVerticalLayout';
 import { MyFormik } from 'domains/shared/components/form/MyFormik';

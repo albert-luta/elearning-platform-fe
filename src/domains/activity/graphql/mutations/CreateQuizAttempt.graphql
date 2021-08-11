@@ -1,0 +1,18 @@
+mutation CreateQuizAttempt($quizId: String!) {
+	createQuizAttempt(quizId: $quizId) {
+		...UserQuizBaseFields
+		questions {
+			...UserQuizQuestionBaseFields
+			question {
+				...QuestionBaseFields
+				answers {
+					...AnswerBaseFields
+					fraction
+				}
+			}
+			pickedAnswers {
+				...UserQuestionAnswerBaseFields
+			}
+		}
+	}
+}

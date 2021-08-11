@@ -33,10 +33,19 @@ export const ExtraContentDrawerContent = memo(
 					if (
 						isRouteMatching(
 							router.asPath,
-							Routes.activity.QUIZ_REVIEW
+							Routes.activity.QUIZ_STUDENT_REVIEW
 						)
 					) {
-						return <>quiz review</>;
+						return <>quiz student review</>;
+					}
+
+					if (
+						isRouteMatching(
+							router.asPath,
+							Routes.activity.QUIZ_TEACHER_REVIEW
+						)
+					) {
+						return <>quiz teacher review</>;
 					}
 
 					return null;

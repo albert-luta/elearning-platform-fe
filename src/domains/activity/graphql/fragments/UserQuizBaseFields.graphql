@@ -1,0 +1,7 @@
+fragment UserQuizBaseFields on UserQuizObject {
+	id
+	userId
+	quizId
+	timeStart
+	timeFinish
+}

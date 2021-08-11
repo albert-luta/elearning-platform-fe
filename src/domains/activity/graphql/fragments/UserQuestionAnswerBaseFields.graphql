@@ -1,0 +1,5 @@
+fragment UserQuestionAnswerBaseFields on UserQuestionAnswerObject {
+	id
+	questionAnswerId
+	userQuizQuestionId
+}

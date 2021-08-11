@@ -57,11 +57,18 @@ export const Routes = inferRoutes({
 		},
 		QUIZ_ACTIVE: {
 			path:
-				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/active'
+				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/active',
+			universityRoles: [UserRole.STUDENT]
 		},
-		QUIZ_REVIEW: {
+		QUIZ_STUDENT_REVIEW: {
 			path:
-				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizeId'
+				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/review',
+			universityRoles: [UserRole.STUDENT]
+		},
+		QUIZ_TEACHER_REVIEW: {
+			path:
+				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizId',
+			universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
 		}
 	}
 });
@@ -81,7 +88,7 @@ export const RoutesGroups = {
 	EXTRA_CONTENT_DRAWER_VISIBLE: [
 		Routes.activity.ASSIGNMENT_REVIEW,
 		Routes.activity.QUIZ_ACTIVE,
-		Routes.activity.QUIZ_REVIEW
+		Routes.activity.QUIZ_TEACHER_REVIEW
 	],
 	// Content layout
 	SMALL_CONTENT_WIDTH: [...Object.values(Routes.user)],

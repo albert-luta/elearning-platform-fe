@@ -226,6 +226,7 @@ export type Mutation = {
   createQuestion: QuestionObject;
   createQuestionCategory: QuestionCategoryObject;
   createQuiz: QuizObject;
+  createQuizAttempt: UserQuizObject;
   createResource: ResourceObject;
   createSection: SectionObject;
   createUniversity: UniversityObject;
@@ -285,6 +286,11 @@ export type MutationCreateQuestionCategoryArgs = {
 export type MutationCreateQuizArgs = {
   data: CreateQuizInput;
   files: Array<Scalars['Upload']>;
+};
+
+
+export type MutationCreateQuizAttemptArgs = {
+  quizId: Scalars['String'];
 };
 
 
@@ -433,6 +439,7 @@ export type Query = {
   colleges: Array<CollegeObject>;
   me: UserObject;
   myAssignment?: Maybe<UserAssignmentObject>;
+  myQuiz?: Maybe<UserQuizObject>;
   questionBank: Array<QuestionCategoryObject>;
   sections: Array<SectionObject>;
   userAssignment?: Maybe<UserAssignmentObject>;
@@ -452,6 +459,11 @@ export type QueryCollegesArgs = {
 
 export type QueryMyAssignmentArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryMyQuizArgs = {
+  quizId: Scalars['String'];
 };
 
 
@@ -490,6 +502,7 @@ export type QuestionAnswer = {
   question: Question;
   questionId: Scalars['String'];
   text: Scalars['String'];
+  userQuestionAnswers?: Maybe<Array<UserQuestionAnswer>>;
 };
 
 export type QuestionAnswerObject = {
@@ -542,6 +555,7 @@ export type Quiz = {
   timeOpen: Scalars['DateTime'];
   university: University;
   universityId: Scalars['String'];
+  userQuizes?: Maybe<Array<UserQuiz>>;
   visible: Scalars['Boolean'];
 };
 
@@ -573,6 +587,7 @@ export type QuizQuestion = {
   questionId: Scalars['String'];
   quiz: Quiz;
   quizId: Scalars['String'];
+  userQuizQuestions?: Maybe<Array<UserQuizQuestion>>;
 };
 
 export type QuizQuestionObject = {
@@ -757,6 +772,7 @@ export type User = {
   password: Scalars['String'];
   universityUsers?: Maybe<Array<UniversityUser>>;
   userAssignments?: Maybe<Array<UserAssignment>>;
+  userQuizes?: Maybe<Array<UserQuiz>>;
 };
 
 export type UserAssignment = {
@@ -794,6 +810,65 @@ export type UserObject = {
   lastName: Scalars['String'];
 };
 
+export type UserQuestionAnswer = {
+  __typename?: 'UserQuestionAnswer';
+  id: Scalars['ID'];
+  questionAnswer: QuestionAnswer;
+  questionAnswerId: Scalars['String'];
+  userQuizQuestion: UserQuizQuestion;
+  userQuizQuestionId: Scalars['String'];
+};
+
+export type UserQuestionAnswerObject = {
+  __typename?: 'UserQuestionAnswerObject';
+  id: Scalars['ID'];
+  questionAnswerId: Scalars['String'];
+  userQuizQuestionId: Scalars['String'];
+};
+
+export type UserQuiz = {
+  __typename?: 'UserQuiz';
+  id: Scalars['ID'];
+  quiz: Quiz;
+  quizId: Scalars['String'];
+  timeFinish?: Maybe<Scalars['DateTime']>;
+  timeStart: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+  userQuizQuestions?: Maybe<Array<UserQuizQuestion>>;
+};
+
+export type UserQuizObject = {
+  __typename?: 'UserQuizObject';
+  id: Scalars['ID'];
+  questions: Array<UserQuizQuestionObject>;
+  quizId: Scalars['String'];
+  timeFinish?: Maybe<Scalars['DateTime']>;
+  timeStart: Scalars['DateTime'];
+  userId: Scalars['String'];
+};
+
+export type UserQuizQuestion = {
+  __typename?: 'UserQuizQuestion';
+  grade?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  quizQuestion: QuizQuestion;
+  quizQuestionId: Scalars['String'];
+  userQuestionAnswers?: Maybe<Array<UserQuestionAnswer>>;
+  userQuiz: UserQuiz;
+  userQuizId: Scalars['String'];
+};
+
+export type UserQuizQuestionObject = {
+  __typename?: 'UserQuizQuestionObject';
+  grade?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  pickedAnswers: Array<UserQuestionAnswerObject>;
+  question: QuestionObject;
+  quizQuestionId: Scalars['String'];
+  userQuizId: Scalars['String'];
+};
+
 export type AnswerBaseFieldsFragment = (
   { __typename?: 'QuestionAnswerObject' }
   & Pick<QuestionAnswerObject, 'id' | 'text' | 'order'>
@@ -828,6 +903,21 @@ export type QuestionCategoryFieldsFragment = (
   & QuestionCategoryBaseFieldsFragment
 );
 
+export type UserQuestionAnswerBaseFieldsFragment = (
+  { __typename?: 'UserQuestionAnswerObject' }
+  & Pick<UserQuestionAnswerObject, 'id' | 'questionAnswerId' | 'userQuizQuestionId'>
+);
+
+export type UserQuizBaseFieldsFragment = (
+  { __typename?: 'UserQuizObject' }
+  & Pick<UserQuizObject, 'id' | 'userId' | 'quizId' | 'timeStart' | 'timeFinish'>
+);
+
+export type UserQuizQuestionBaseFieldsFragment = (
+  { __typename?: 'UserQuizQuestionObject' }
+  & Pick<UserQuizQuestionObject, 'id' | 'userQuizId' | 'quizQuestionId' | 'grade'>
+);
+
 export type CreateQuestionMutationVariables = Exact<{
   questionCategoryId: Scalars['String'];
   data: CreateQuestionInput;
@@ -857,6 +947,35 @@ export type CreateQuestionCategoryMutation = (
   & { createQuestionCategory: (
     { __typename?: 'QuestionCategoryObject' }
     & QuestionCategoryBaseFieldsFragment
+  ) }
+);
+
+export type CreateQuizAttemptMutationVariables = Exact<{
+  quizId: Scalars['String'];
+}>;
+
+
+export type CreateQuizAttemptMutation = (
+  { __typename?: 'Mutation' }
+  & { createQuizAttempt: (
+    { __typename?: 'UserQuizObject' }
+    & { questions: Array<(
+      { __typename?: 'UserQuizQuestionObject' }
+      & { question: (
+        { __typename?: 'QuestionObject' }
+        & { answers: Array<(
+          { __typename?: 'QuestionAnswerObject' }
+          & Pick<QuestionAnswerObject, 'fraction'>
+          & AnswerBaseFieldsFragment
+        )> }
+        & QuestionBaseFieldsFragment
+      ), pickedAnswers: Array<(
+        { __typename?: 'UserQuestionAnswerObject' }
+        & UserQuestionAnswerBaseFieldsFragment
+      )> }
+      & UserQuizQuestionBaseFieldsFragment
+    )> }
+    & UserQuizBaseFieldsFragment
   ) }
 );
 
@@ -958,6 +1077,35 @@ export type MyAssignmentQuery = (
   & { myAssignment?: Maybe<(
     { __typename?: 'UserAssignmentObject' }
     & BaseUserAssignmentFieldsFragment
+  )> }
+);
+
+export type MyQuizQueryVariables = Exact<{
+  quizId: Scalars['String'];
+}>;
+
+
+export type MyQuizQuery = (
+  { __typename?: 'Query' }
+  & { myQuiz?: Maybe<(
+    { __typename?: 'UserQuizObject' }
+    & { questions: Array<(
+      { __typename?: 'UserQuizQuestionObject' }
+      & { question: (
+        { __typename?: 'QuestionObject' }
+        & { answers: Array<(
+          { __typename?: 'QuestionAnswerObject' }
+          & Pick<QuestionAnswerObject, 'fraction'>
+          & AnswerBaseFieldsFragment
+        )> }
+        & QuestionBaseFieldsFragment
+      ), pickedAnswers: Array<(
+        { __typename?: 'UserQuestionAnswerObject' }
+        & UserQuestionAnswerBaseFieldsFragment
+      )> }
+      & UserQuizQuestionBaseFieldsFragment
+    )> }
+    & UserQuizBaseFieldsFragment
   )> }
 );
 
@@ -1559,6 +1707,30 @@ export const QuestionCategoryFieldsFragmentDoc = gql`
     ${QuestionCategoryBaseFieldsFragmentDoc}
 ${QuestionBaseFieldsFragmentDoc}
 ${AnswerBaseFieldsFragmentDoc}`;
+export const UserQuestionAnswerBaseFieldsFragmentDoc = gql`
+    fragment UserQuestionAnswerBaseFields on UserQuestionAnswerObject {
+  id
+  questionAnswerId
+  userQuizQuestionId
+}
+    `;
+export const UserQuizBaseFieldsFragmentDoc = gql`
+    fragment UserQuizBaseFields on UserQuizObject {
+  id
+  userId
+  quizId
+  timeStart
+  timeFinish
+}
+    `;
+export const UserQuizQuestionBaseFieldsFragmentDoc = gql`
+    fragment UserQuizQuestionBaseFields on UserQuizQuestionObject {
+  id
+  userQuizId
+  quizQuestionId
+  grade
+}
+    `;
 export const AuthenticationFieldsFragmentDoc = gql`
     fragment AuthenticationFields on Authentication {
   accessToken
@@ -1740,6 +1912,56 @@ export function useCreateQuestionCategoryMutation(baseOptions?: Apollo.MutationH
 export type CreateQuestionCategoryMutationHookResult = ReturnType<typeof useCreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationResult = Apollo.MutationResult<CreateQuestionCategoryMutation>;
 export type CreateQuestionCategoryMutationOptions = Apollo.BaseMutationOptions<CreateQuestionCategoryMutation, CreateQuestionCategoryMutationVariables>;
+export const CreateQuizAttemptDocument = gql`
+    mutation CreateQuizAttempt($quizId: String!) {
+  createQuizAttempt(quizId: $quizId) {
+    ...UserQuizBaseFields
+    questions {
+      ...UserQuizQuestionBaseFields
+      question {
+        ...QuestionBaseFields
+        answers {
+          ...AnswerBaseFields
+          fraction
+        }
+      }
+      pickedAnswers {
+        ...UserQuestionAnswerBaseFields
+      }
+    }
+  }
+}
+    ${UserQuizBaseFieldsFragmentDoc}
+${UserQuizQuestionBaseFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}
+${UserQuestionAnswerBaseFieldsFragmentDoc}`;
+export type CreateQuizAttemptMutationFn = Apollo.MutationFunction<CreateQuizAttemptMutation, CreateQuizAttemptMutationVariables>;
+
+/**
+ * __useCreateQuizAttemptMutation__
+ *
+ * To run a mutation, you first call `useCreateQuizAttemptMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuizAttemptMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuizAttemptMutation, { data, loading, error }] = useCreateQuizAttemptMutation({
+ *   variables: {
+ *      quizId: // value for 'quizId'
+ *   },
+ * });
+ */
+export function useCreateQuizAttemptMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuizAttemptMutation, CreateQuizAttemptMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuizAttemptMutation, CreateQuizAttemptMutationVariables>(CreateQuizAttemptDocument, options);
+      }
+export type CreateQuizAttemptMutationHookResult = ReturnType<typeof useCreateQuizAttemptMutation>;
+export type CreateQuizAttemptMutationResult = Apollo.MutationResult<CreateQuizAttemptMutation>;
+export type CreateQuizAttemptMutationOptions = Apollo.BaseMutationOptions<CreateQuizAttemptMutation, CreateQuizAttemptMutationVariables>;
 export const DeleteQuestionDocument = gql`
     mutation DeleteQuestion($id: String!) {
   deleteQuestion(id: $id) {
@@ -1983,6 +2205,58 @@ export function useMyAssignmentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MyAssignmentQueryHookResult = ReturnType<typeof useMyAssignmentQuery>;
 export type MyAssignmentLazyQueryHookResult = ReturnType<typeof useMyAssignmentLazyQuery>;
 export type MyAssignmentQueryResult = Apollo.QueryResult<MyAssignmentQuery, MyAssignmentQueryVariables>;
+export const MyQuizDocument = gql`
+    query MyQuiz($quizId: String!) {
+  myQuiz(quizId: $quizId) {
+    ...UserQuizBaseFields
+    questions {
+      ...UserQuizQuestionBaseFields
+      question {
+        ...QuestionBaseFields
+        answers {
+          ...AnswerBaseFields
+          fraction
+        }
+      }
+      pickedAnswers {
+        ...UserQuestionAnswerBaseFields
+      }
+    }
+  }
+}
+    ${UserQuizBaseFieldsFragmentDoc}
+${UserQuizQuestionBaseFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}
+${UserQuestionAnswerBaseFieldsFragmentDoc}`;
+
+/**
+ * __useMyQuizQuery__
+ *
+ * To run a query within a React component, call `useMyQuizQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyQuizQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyQuizQuery({
+ *   variables: {
+ *      quizId: // value for 'quizId'
+ *   },
+ * });
+ */
+export function useMyQuizQuery(baseOptions: Apollo.QueryHookOptions<MyQuizQuery, MyQuizQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyQuizQuery, MyQuizQueryVariables>(MyQuizDocument, options);
+      }
+export function useMyQuizLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyQuizQuery, MyQuizQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyQuizQuery, MyQuizQueryVariables>(MyQuizDocument, options);
+        }
+export type MyQuizQueryHookResult = ReturnType<typeof useMyQuizQuery>;
+export type MyQuizLazyQueryHookResult = ReturnType<typeof useMyQuizLazyQuery>;
+export type MyQuizQueryResult = Apollo.QueryResult<MyQuizQuery, MyQuizQueryVariables>;
 export const QuestionBankDocument = gql`
     query QuestionBank {
   questionBank {

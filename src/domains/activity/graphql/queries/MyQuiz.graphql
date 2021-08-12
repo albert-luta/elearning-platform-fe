@@ -1,18 +1,5 @@
 query MyQuiz($quizId: String!) {
 	myQuiz(quizId: $quizId) {
-		...UserQuizBaseFields
-		questions {
-			...UserQuizQuestionBaseFields
-			question {
-				...QuestionBaseFields
-				answers {
-					...AnswerBaseFields
-					fraction
-				}
-			}
-			pickedAnswers {
-				...UserQuestionAnswerBaseFields
-			}
-		}
+		...UserQuizFields
 	}
 }

@@ -1,0 +1,5 @@
+query UserQuizAttempts($quizId: String!) {
+	userQuizAttempts(quizId: $quizId) {
+		...UserQuizFields
+	}
+}

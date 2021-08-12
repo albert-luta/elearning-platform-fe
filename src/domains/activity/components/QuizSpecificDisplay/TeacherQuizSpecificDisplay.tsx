@@ -1,8 +1,9 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
-import { QuizObject } from 'generated/graphql';
+import { QuizObject, useUserQuizAttemptsQuery } from 'generated/graphql';
 import { FC, memo, useMemo } from 'react';
 import { QuizStatus } from '../QuizStatus';
+import { StudentQuizButton } from './StudentQuizButton';
 
 interface TeacherQuizSpecificDisplayProps {
 	activity: QuizObject;
@@ -25,6 +26,12 @@ export const TeacherQuizSpecificDisplay: FC<TeacherQuizSpecificDisplayProps> = m
 		const timeClose = new Date(activity.timeClose);
 		const timeCloseCountdown = useCountdown(timeClose.getTime());
 
+		const userQuizAttempts = useUserQuizAttemptsQuery({
+			variables: {
+				quizId: activity.id
+			}
+		});
+
 		return (
 			<>
 				<Typography variant="h5">Quiz details</Typography>
@@ -42,10 +49,34 @@ export const TeacherQuizSpecificDisplay: FC<TeacherQuizSpecificDisplayProps> = m
 						quizQuestions={activity.quizQuestions}
 					/>
 				</Box>
-				{/* TODO: add student here - can redirect to the review page */}
-				{/* <Box mt={2}>
+				<Box mt={2}>
 					<Typography variant="h5">Students</Typography>
-				</Box> */}
+				</Box>
+				<Box mt={2}>
+					{userQuizAttempts.loading ? (
+						<Box display="flex" justifyContent="center">
+							<CircularProgress />
+						</Box>
+					) : (
+						<>
+							{userQuizAttempts.data?.userQuizAttempts.length ? (
+								userQuizAttempts.data.userQuizAttempts.map(
+									(userQuizAttempt) => (
+										<StudentQuizButton
+											key={userQuizAttempt.id}
+											userQuizAttempt={userQuizAttempt}
+											maxGrade={maxGrade}
+										/>
+									)
+								)
+							) : (
+								<Typography color="textSecondary">
+									There are no attempts for this quiz
+								</Typography>
+							)}
+						</>
+					)}
+				</Box>
 			</>
 		);
 	}

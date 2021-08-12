@@ -88,6 +88,7 @@ export const RoutesGroups = {
 	EXTRA_CONTENT_DRAWER_VISIBLE: [
 		Routes.activity.ASSIGNMENT_REVIEW,
 		Routes.activity.QUIZ_ACTIVE,
+		Routes.activity.QUIZ_STUDENT_REVIEW,
 		Routes.activity.QUIZ_TEACHER_REVIEW
 	],
 	// Content layout

@@ -4,6 +4,7 @@ import { Routes } from 'domains/shared/constants/Routes';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import {
+	MyQuizDocument,
 	QuizObject,
 	useCreateQuizAttemptMutation,
 	useMyQuizQuery
@@ -90,7 +91,15 @@ export const StudentQuizSpecificDisplay: FC<StudentQuizSpecificDisplayProps> = m
 			await createQuizAttempt({
 				variables: {
 					quizId: activity.id
-				}
+				},
+				refetchQueries: [
+					{
+						query: MyQuizDocument,
+						variables: {
+							quizId: activity.id
+						}
+					}
+				]
 			}).catch(() => null);
 			continueAttempt();
 		}, [createQuizAttempt, activity.id, continueAttempt]);

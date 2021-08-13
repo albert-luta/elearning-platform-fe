@@ -58,6 +58,23 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 			Math.min(timeStartPlusLimit, timeClose)
 		);
 
+		const redirectToQuizDashboard = useCallback((): void => {
+			router.replace(
+				composeDynamicRoute(Routes.activity.QUIZ_DASHBOARD.path, {
+					universityId: String(router.query.universityId),
+					collegeId: String(router.query.collegeId),
+					courseId: String(router.query.courseId),
+					activityId: String(router.query.activityId)
+				})
+			);
+		}, [router]);
+
+		useEffect(() => {
+			if (userQuiz.timeFinish != null) {
+				redirectToQuizDashboard();
+			}
+		}, [userQuiz.timeFinish, redirectToQuizDashboard]);
+
 		const [
 			submitMyQuiz,
 			{ loading: submitMyQuizLoading }
@@ -78,28 +95,23 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 			})
 				.catch(() => null)
 				.finally(() => {
-					router.replace(
-						composeDynamicRoute(
-							Routes.activity.QUIZ_DASHBOARD.path,
-							{
-								universityId: String(router.query.universityId),
-								collegeId: String(router.query.collegeId),
-								courseId: String(router.query.courseId),
-								activityId: String(router.query.activityId)
-							}
-						)
-					);
+					redirectToQuizDashboard();
 				});
-		}, [router, submitMyQuiz, userQuiz.id]);
+		}, [submitMyQuiz, userQuiz.id, redirectToQuizDashboard]);
 
 		useEffect(() => {
 			if (
+				userQuiz.timeFinish == null &&
 				timeFinishCountdown.hasCompleted &&
 				quizQuestionsAnswersVar() != null
 			) {
 				handleSubmitMyQuiz();
 			}
-		}, [timeFinishCountdown.hasCompleted, handleSubmitMyQuiz]);
+		}, [
+			userQuiz.timeFinish,
+			timeFinishCountdown.hasCompleted,
+			handleSubmitMyQuiz
+		]);
 
 		useEffect(
 			() => () => {
@@ -160,6 +172,7 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 			{ loading: updateQuestionAnswersLoading }
 		] = useUpdateQuestionAnswersMutation();
 		useEffect(() => {
+			if (userQuiz.timeFinish != null) return;
 			if (timeFinishCountdown.hasCompleted) return;
 			if (quizQuestionIndex === previousQuizQuestionIndex.current) return;
 			if (updateQuestionAnswersLoading) return;
@@ -178,6 +191,7 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 					previousQuizQuestionIndex.current = quizQuestionIndex;
 				});
 		}, [
+			userQuiz.timeFinish,
 			quizQuestionIndex,
 			updateQuestionAnswers,
 			userQuiz.questions,

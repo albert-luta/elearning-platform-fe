@@ -26,10 +26,11 @@ const MINUTE_MILLISECONDS = 1000 * 60;
 interface QuizQuestionsListProps {
 	quiz: QuizObject;
 	userQuiz: UserQuizFieldsFragment;
+	disabled?: boolean;
 }
 
 export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
-	function QuizQuestionsList({ quiz, userQuiz }) {
+	function QuizQuestionsList({ quiz, userQuiz, disabled = false }) {
 		useEffect(() => {
 			if (quizQuestionsAnswersVar() == null) {
 				quizQuestionsAnswersVar(
@@ -70,10 +71,12 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 		}, [router]);
 
 		useEffect(() => {
+			if (disabled) return;
+
 			if (userQuiz.timeFinish != null) {
 				redirectToQuizDashboard();
 			}
-		}, [userQuiz.timeFinish, redirectToQuizDashboard]);
+		}, [disabled, userQuiz.timeFinish, redirectToQuizDashboard]);
 
 		const [
 			submitMyQuiz,
@@ -100,6 +103,8 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 		}, [submitMyQuiz, userQuiz.id, redirectToQuizDashboard]);
 
 		useEffect(() => {
+			if (disabled) return;
+
 			if (
 				userQuiz.timeFinish == null &&
 				timeFinishCountdown.hasCompleted &&
@@ -108,6 +113,7 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 				handleSubmitMyQuiz();
 			}
 		}, [
+			disabled,
 			userQuiz.timeFinish,
 			timeFinishCountdown.hasCompleted,
 			handleSubmitMyQuiz
@@ -172,6 +178,8 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 			{ loading: updateQuestionAnswersLoading }
 		] = useUpdateQuestionAnswersMutation();
 		useEffect(() => {
+			if (disabled) return;
+
 			if (userQuiz.timeFinish != null) return;
 			if (timeFinishCountdown.hasCompleted) return;
 			if (quizQuestionIndex === previousQuizQuestionIndex.current) return;
@@ -191,6 +199,7 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 					previousQuizQuestionIndex.current = quizQuestionIndex;
 				});
 		}, [
+			disabled,
 			userQuiz.timeFinish,
 			quizQuestionIndex,
 			updateQuestionAnswers,
@@ -207,26 +216,37 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 							Question: {quizQuestionIndex + 1} /{' '}
 							{userQuiz.questions.length}
 						</Typography>
-						<Typography>Max Grade: {questionMaxGrade}</Typography>
+						<Typography>
+							{!disabled && 'Max '}Grade:{' '}
+							{disabled &&
+								`${userQuiz.questions[quizQuestionIndex].grade} / `}
+							{questionMaxGrade}
+						</Typography>
 					</div>
 
-					<Typography
-						variant="h5"
-						align="right"
-						color={
-							timeFinishCountdown.duration >
-							5 * MINUTE_MILLISECONDS
-								? 'initial'
-								: 'secondary'
-						}
-					>
-						{formatDuration(timeFinishCountdown.duration, 'clock')}
-					</Typography>
+					{!disabled && (
+						<Typography
+							variant="h5"
+							align="right"
+							color={
+								timeFinishCountdown.duration >
+								5 * MINUTE_MILLISECONDS
+									? 'initial'
+									: 'secondary'
+							}
+						>
+							{formatDuration(
+								timeFinishCountdown.duration,
+								'clock'
+							)}
+						</Typography>
+					)}
 				</Box>
 
 				<Box mt={2}>
 					<QuizQuestion
 						quizQuestion={userQuiz.questions[quizQuestionIndex]}
+						disabled={disabled}
 					/>
 				</Box>
 
@@ -253,14 +273,16 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 							Next
 						</Button>
 					) : (
-						<Button
-							variant="contained"
-							color="secondary"
-							endIcon={<Publish />}
-							onClick={openSubmitDialog}
-						>
-							Submit
-						</Button>
+						!disabled && (
+							<Button
+								variant="contained"
+								color="secondary"
+								endIcon={<Publish />}
+								onClick={openSubmitDialog}
+							>
+								Submit
+							</Button>
+						)
 					)}
 				</Box>
 

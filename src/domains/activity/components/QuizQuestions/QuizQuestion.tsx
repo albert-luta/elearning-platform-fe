@@ -1,5 +1,5 @@
 import { useReactiveVar } from '@apollo/client';
-import { Delete } from '@material-ui/icons';
+import { ArrowRight, Delete } from '@material-ui/icons';
 import {
 	Box,
 	Button,
@@ -21,20 +21,24 @@ import { ChangeEvent, FC, memo, useCallback, useMemo } from 'react';
 
 interface QuizQuestionProps {
 	quizQuestion: UserQuizFieldsFragment['questions'][number];
+	disabled?: boolean;
 }
 
 export const QuizQuestion: FC<QuizQuestionProps> = memo(function QuizQuestion({
-	quizQuestion: { id, question }
+	quizQuestion: { id, question },
+	disabled = false
 }) {
 	const quizQuestionsAnswers = useReactiveVar(quizQuestionsAnswersVar);
 	const updateQuizQuestionsAnswers = useCallback(
 		(pickedAnswers: string[]) => {
+			if (disabled) return;
+
 			quizQuestionsAnswersVar({
 				...quizQuestionsAnswersVar(),
 				[id]: pickedAnswers
 			});
 		},
-		[id]
+		[disabled, id]
 	);
 
 	return (
@@ -47,12 +51,14 @@ export const QuizQuestion: FC<QuizQuestionProps> = memo(function QuizQuestion({
 							answers={question.answers}
 							pickedAnswers={quizQuestionsAnswers?.[id] ?? []}
 							onPickedAnswersChange={updateQuizQuestionsAnswers}
+							disabled={disabled}
 						/>
 					) : (
 						<CheckboxAnswers
 							answers={question.answers}
 							pickedAnswers={quizQuestionsAnswers?.[id] ?? []}
 							onPickedAnswersChange={updateQuizQuestionsAnswers}
+							disabled={disabled}
 						/>
 					)}
 				</FormControl>
@@ -65,11 +71,13 @@ interface AnswersProps {
 	answers: QuestionAnswerObject[];
 	pickedAnswers: string[];
 	onPickedAnswersChange: (updatedPickedAnswers: string[]) => void;
+	disabled?: boolean;
 }
 const CheckboxAnswers: FC<AnswersProps> = memo(function CheckboxAnswers({
 	answers,
 	pickedAnswers,
-	onPickedAnswersChange
+	onPickedAnswersChange,
+	disabled = false
 }) {
 	const pickedAnswersMap = useMemo(
 		() =>
@@ -80,7 +88,12 @@ const CheckboxAnswers: FC<AnswersProps> = memo(function CheckboxAnswers({
 		[pickedAnswers]
 	);
 	const updatePickedAnswers = useCallback(
-		(e: ChangeEvent<HTMLInputElement>, answer: QuestionAnswerObject) => {
+		(
+			e: ChangeEvent<HTMLInputElement>,
+			answer: QuestionAnswerObject
+		): void => {
+			if (disabled) return;
+
 			if (e.target.checked) {
 				onPickedAnswersChange([...pickedAnswers, answer.id]);
 			} else {
@@ -89,25 +102,30 @@ const CheckboxAnswers: FC<AnswersProps> = memo(function CheckboxAnswers({
 				);
 			}
 		},
-		[pickedAnswers, onPickedAnswersChange]
+		[disabled, pickedAnswers, onPickedAnswersChange]
 	);
 
 	return (
 		<FormGroup>
 			{answers.map((answer) => (
-				<FormControlLabel
-					key={answer.id}
-					control={
-						<Checkbox
-							checked={!!pickedAnswersMap[answer.id]}
-							onChange={(e) => updatePickedAnswers(e, answer)}
-							name={answer.text}
-							color="primary"
-						/>
-					}
-					label={answer.text}
-					labelPlacement="end"
-				/>
+				<Box key={answer.id} display="flex" alignItems="center">
+					{disabled && (
+						<AnswerCorrectIcon isCorrect={answer.fraction > 0} />
+					)}
+					<FormControlLabel
+						control={
+							<Checkbox
+								checked={!!pickedAnswersMap[answer.id]}
+								onChange={(e) => updatePickedAnswers(e, answer)}
+								name={answer.text}
+								color="primary"
+								disabled={disabled}
+							/>
+						}
+						label={answer.text}
+						labelPlacement="end"
+					/>
+				</Box>
 			))}
 		</FormGroup>
 	);
@@ -116,17 +134,22 @@ const CheckboxAnswers: FC<AnswersProps> = memo(function CheckboxAnswers({
 const RadioAnswers: FC<AnswersProps> = memo(function RadioAnswers({
 	answers,
 	pickedAnswers,
-	onPickedAnswersChange
+	onPickedAnswersChange,
+	disabled = false
 }) {
 	const updatePickedAnswer = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
+			if (disabled) return;
+
 			onPickedAnswersChange([e.target.value]);
 		},
-		[onPickedAnswersChange]
+		[disabled, onPickedAnswersChange]
 	);
 	const clearPickedAnswer = useCallback(() => {
+		if (disabled) return;
+
 		onPickedAnswersChange([]);
-	}, [onPickedAnswersChange]);
+	}, [disabled, onPickedAnswersChange]);
 
 	return (
 		<>
@@ -135,20 +158,43 @@ const RadioAnswers: FC<AnswersProps> = memo(function RadioAnswers({
 				onChange={updatePickedAnswer}
 			>
 				{answers.map((answer) => (
-					<FormControlLabel
-						key={answer.id}
-						value={answer.id}
-						control={<Radio color="primary" />}
-						label={answer.text}
-						labelPlacement="end"
-					/>
+					<Box key={answer.id} display="flex" alignItems="center">
+						{disabled && (
+							<AnswerCorrectIcon
+								isCorrect={answer.fraction > 0}
+							/>
+						)}
+						<FormControlLabel
+							value={answer.id}
+							control={
+								<Radio color="primary" disabled={disabled} />
+							}
+							label={answer.text}
+							labelPlacement="end"
+						/>
+					</Box>
 				))}
 			</RadioGroup>
-			<Box mt={1}>
-				<Button onClick={clearPickedAnswer} startIcon={<Delete />}>
-					Clear Answer
-				</Button>
-			</Box>
+			{!disabled && (
+				<Box mt={1}>
+					<Button onClick={clearPickedAnswer} startIcon={<Delete />}>
+						Clear Answer
+					</Button>
+				</Box>
+			)}
 		</>
 	);
 });
+
+const AnswerCorrectIcon: FC<{ isCorrect: boolean }> = memo(
+	function AnswerCorrectIcon({ isCorrect }) {
+		return (
+			<ArrowRight
+				fontSize="large"
+				style={{
+					color: isCorrect ? '#388e3c' : '#d32f2f'
+				}}
+			/>
+		);
+	}
+);

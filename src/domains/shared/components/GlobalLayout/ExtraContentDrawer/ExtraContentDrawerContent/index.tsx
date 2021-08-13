@@ -4,6 +4,9 @@ import { isRouteMatching } from 'domains/shared/utils/route/isRouteMatching';
 import { useRouter } from 'next/router';
 import { memo } from 'react';
 import { AssignmentReview } from './AssignmentReview';
+import { QuizActive } from './QuizActive';
+import { QuizStudentReview } from './QuizStudentReview';
+import { QuizTeacherReview } from './QuizTeacherReview';
 
 export const ExtraContentDrawerContent = memo(
 	function ExtraContentDrawerContent() {
@@ -27,7 +30,7 @@ export const ExtraContentDrawerContent = memo(
 							Routes.activity.QUIZ_ACTIVE
 						)
 					) {
-						return <>quiz active</>;
+						return <QuizActive />;
 					}
 
 					if (
@@ -36,7 +39,7 @@ export const ExtraContentDrawerContent = memo(
 							Routes.activity.QUIZ_STUDENT_REVIEW
 						)
 					) {
-						return <>quiz student review</>;
+						return <QuizStudentReview />;
 					}
 
 					if (
@@ -45,7 +48,7 @@ export const ExtraContentDrawerContent = memo(
 							Routes.activity.QUIZ_TEACHER_REVIEW
 						)
 					) {
-						return <>quiz teacher review</>;
+						return <QuizTeacherReview />;
 					}
 
 					return null;

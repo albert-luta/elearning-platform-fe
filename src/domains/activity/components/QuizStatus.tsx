@@ -25,7 +25,12 @@ type QuizStatusProps = {
 	timeCloseCountdown: Countdown;
 	timeLimit: number;
 } & (
-	| { type: 'student'; grade?: number | null }
+	| {
+			type: 'student';
+			grade?: number | null;
+			timeStart: Date | null;
+			timeFinish: Date | null;
+	  }
 	| {
 			type: 'teacher';
 			shuffleQuestions: boolean;
@@ -55,13 +60,12 @@ export const QuizStatus: FC<QuizStatusProps> = memo(function QuizStatus(props) {
 						<TableRow>
 							<TableCell>Time Open</TableCell>
 							<TableCell>
-								{props.timeOpen.toLocaleString()} -{' '}
+								{props.timeOpen.toLocaleString()}{' '}
 								{props.timeOpenCountdown.hasCompleted
-									? 'No time'
-									: formatDuration(
+									? null
+									: `- ${formatDuration(
 											props.timeOpenCountdown.duration
-									  )}{' '}
-								remaining
+									  )} remaining`}
 							</TableCell>
 						</TableRow>
 						<TableRow>
@@ -82,6 +86,26 @@ export const QuizStatus: FC<QuizStatusProps> = memo(function QuizStatus(props) {
 								{formatDuration(props.timeLimit)}
 							</TableCell>
 						</TableRow>
+						{props.type === 'student' && (
+							<>
+								<TableRow>
+									<TableCell>Time Start</TableCell>
+									<TableCell>
+										{props.timeStart
+											? props.timeStart.toLocaleString()
+											: 'Not started yet'}
+									</TableCell>
+								</TableRow>
+								<TableRow>
+									<TableCell>Time Finish</TableCell>
+									<TableCell>
+										{props.timeFinish
+											? props.timeFinish.toLocaleString()
+											: 'Not submitted yet'}
+									</TableCell>
+								</TableRow>
+							</>
+						)}
 						{props.type === 'teacher' && (
 							<>
 								<TableRow>

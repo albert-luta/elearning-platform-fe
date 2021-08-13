@@ -125,6 +125,16 @@ export const StudentQuizSpecificDisplay: FC<StudentQuizSpecificDisplayProps> = m
 						timeCloseCountdown={timeCloseCountdown}
 						timeLimit={activity.timeLimit}
 						grade={grade}
+						timeStart={
+							myQuiz.data?.myQuiz?.timeStart
+								? new Date(myQuiz.data?.myQuiz?.timeStart)
+								: null
+						}
+						timeFinish={
+							myQuiz.data?.myQuiz?.timeFinish
+								? new Date(myQuiz.data?.myQuiz?.timeFinish)
+								: null
+						}
 					/>
 				</Box>
 				{timeCloseCountdown.hasCompleted && myQuiz.data?.myQuiz && (

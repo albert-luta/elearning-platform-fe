@@ -1,17 +1,7 @@
 fragment UserQuizFields on UserQuizObject {
 	...UserQuizBaseFields
 	questions {
-		...UserQuizQuestionBaseFields
-		question {
-			...QuestionBaseFields
-			answers {
-				...AnswerBaseFields
-				fraction
-			}
-		}
-		pickedAnswers {
-			...UserQuestionAnswerBaseFields
-		}
+		...UserQuizQuestionFields
 	}
 	user {
 		...BaseUserFields

@@ -1,0 +1,11 @@
+mutation UpdateQuestionAnswers(
+	$userQuizQuestionId: String!
+	$answers: [String!]!
+) {
+	updateQuestionAnswers(
+		userQuizQuestionId: $userQuizQuestionId
+		answers: $answers
+	) {
+		...UserQuizQuestionFields
+	}
+}

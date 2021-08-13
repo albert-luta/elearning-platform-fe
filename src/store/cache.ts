@@ -49,6 +49,13 @@ export const cache = new InMemoryCache({
 					merge: false
 				}
 			}
+		},
+		UserQuizQuestionObject: {
+			fields: {
+				pickedAnswers: {
+					merge: false
+				}
+			}
 		}
 	},
 	possibleTypes: {

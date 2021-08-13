@@ -1,0 +1,5 @@
+mutation SubmitMyQuiz($id: String!, $data: SubmitMyQuizInput!) {
+	submitMyQuiz(id: $id, data: $data) {
+		...UserQuizFields
+	}
+}

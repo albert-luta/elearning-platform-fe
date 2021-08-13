@@ -1,0 +1,13 @@
+fragment UserQuizQuestionFields on UserQuizQuestionObject {
+	...UserQuizQuestionBaseFields
+	question {
+		...QuestionBaseFields
+		answers {
+			...AnswerBaseFields
+			fraction
+		}
+	}
+	pickedAnswers {
+		...UserQuestionAnswerBaseFields
+	}
+}

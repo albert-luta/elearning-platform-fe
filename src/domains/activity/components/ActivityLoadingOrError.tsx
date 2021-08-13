@@ -28,7 +28,7 @@ export const ActivityLoadingOrError: FC<ActivityLoadingOrErrorProps> = memo(
 		if (activityQuery.data.activity.__typename !== typename) {
 			return (
 				<Typography align="center" color="textSecondary">
-					{typename.replace('Object', '')} doesn&apos;t exist
+					{typename.replace('Object', '')} doesn&quot;t exist
 				</Typography>
 			);
 		}

@@ -499,8 +499,7 @@ export type QueryUserAssignmentsArgs = {
 
 
 export type QueryUserQuizAttemptArgs = {
-  quizId: Scalars['String'];
-  userId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
@@ -1230,8 +1229,7 @@ export type UserAssignmentsQuery = (
 );
 
 export type UserQuizAttemptQueryVariables = Exact<{
-  userId: Scalars['String'];
-  quizId: Scalars['String'];
+  id: Scalars['String'];
 }>;
 
 
@@ -2544,8 +2542,8 @@ export type UserAssignmentsQueryHookResult = ReturnType<typeof useUserAssignment
 export type UserAssignmentsLazyQueryHookResult = ReturnType<typeof useUserAssignmentsLazyQuery>;
 export type UserAssignmentsQueryResult = Apollo.QueryResult<UserAssignmentsQuery, UserAssignmentsQueryVariables>;
 export const UserQuizAttemptDocument = gql`
-    query UserQuizAttempt($userId: String!, $quizId: String!) {
-  userQuizAttempt(userId: $userId, quizId: $quizId) {
+    query UserQuizAttempt($id: String!) {
+  userQuizAttempt(id: $id) {
     ...UserQuizFields
   }
 }
@@ -2563,8 +2561,7 @@ export const UserQuizAttemptDocument = gql`
  * @example
  * const { data, loading, error } = useUserQuizAttemptQuery({
  *   variables: {
- *      userId: // value for 'userId'
- *      quizId: // value for 'quizId'
+ *      id: // value for 'id'
  *   },
  * });
  */

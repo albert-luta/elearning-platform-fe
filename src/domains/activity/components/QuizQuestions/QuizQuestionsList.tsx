@@ -219,7 +219,10 @@ export const QuizQuestionsList: FC<QuizQuestionsListProps> = memo(
 						<Typography>
 							{!disabled && 'Max '}Grade:{' '}
 							{disabled &&
-								`${userQuiz.questions[quizQuestionIndex].grade} / `}
+								`${
+									userQuiz.questions[quizQuestionIndex]
+										.grade ?? 'Not graded yet'
+								} / `}
 							{questionMaxGrade}
 						</Typography>
 					</div>

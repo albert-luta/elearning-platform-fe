@@ -1,5 +1,5 @@
-query UserQuizAttempt($userId: String!, $quizId: String!) {
-	userQuizAttempt(userId: $userId, quizId: $quizId) {
+query UserQuizAttempt($id: String!) {
+	userQuizAttempt(id: $id) {
 		...UserQuizFields
 	}
 }

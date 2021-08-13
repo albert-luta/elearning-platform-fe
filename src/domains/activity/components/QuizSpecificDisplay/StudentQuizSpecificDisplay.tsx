@@ -137,19 +137,19 @@ export const StudentQuizSpecificDisplay: FC<StudentQuizSpecificDisplayProps> = m
 						}
 					/>
 				</Box>
-				{timeCloseCountdown.hasCompleted && myQuiz.data?.myQuiz && (
+				{myQuiz.data?.myQuiz?.timeFinish ? (
 					<Box mt={2}>
 						<Button
 							variant="contained"
 							color="primary"
 							fullWidth
 							onClick={reviewAttempt}
+							disabled={!timeCloseCountdown.hasCompleted}
 						>
 							Review Attempt
 						</Button>
 					</Box>
-				)}
-				{timeOpenCountdown.hasCompleted &&
+				) : (
 					!timeCloseCountdown.hasCompleted && (
 						<Box mt={2}>
 							{myQuiz.data?.myQuiz ? (
@@ -173,7 +173,8 @@ export const StudentQuizSpecificDisplay: FC<StudentQuizSpecificDisplayProps> = m
 								</ButtonWithLoader>
 							)}
 						</Box>
-					)}
+					)
+				)}
 			</>
 		);
 	}

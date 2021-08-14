@@ -1,0 +1,8 @@
+mutation CreateForumComment(
+	$forumId: String!
+	$data: CreateForumCommentInput!
+) {
+	createForumComment(forumId: $forumId, data: $data) {
+		...ForumCommentFields
+	}
+}

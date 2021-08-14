@@ -1,6 +1,10 @@
+import { Box } from '@material-ui/core';
 import { ActivityLoadingOrError } from 'domains/activity/components/ActivityLoadingOrError';
 import { CommonActivityDisplay } from 'domains/activity/components/CommonActivityDisplay';
+import { ForumSpecificDisplay } from 'domains/activity/components/ForumSpecificDisplay';
+import { UserActivityReviewInfo } from 'domains/activity/components/UserActivityReviewInfo';
 import { MyHead } from 'domains/shared/components/MyHead';
+import { UserRole } from 'domains/shared/constants/UserRole';
 import { useActivityQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 
@@ -31,9 +35,27 @@ export default function ForumDashboard() {
 				}
 
 				return (
-					<CommonActivityDisplay
-						activity={activityQuery.data.activity}
-					/>
+					<>
+						<UserActivityReviewInfo
+							user={
+								activityQuery.data.activity.universityUser.user
+							}
+							role={
+								activityQuery.data.activity.universityUser.role
+									.name as UserRole
+							}
+						/>
+						<Box mt={2}>
+							<CommonActivityDisplay
+								activity={activityQuery.data.activity}
+							/>
+						</Box>
+						<Box mt={2}>
+							<ForumSpecificDisplay
+								activity={activityQuery.data.activity}
+							/>
+						</Box>
+					</>
 				);
 			})()}
 		</>

@@ -164,6 +164,10 @@ export type CreateCourseInput = {
   name: Scalars['String'];
 };
 
+export type CreateForumCommentInput = {
+  text: Scalars['String'];
+};
+
 export type CreateForumInput = {
   description: Scalars['String'];
   name: Scalars['String'];
@@ -237,6 +241,16 @@ export type ForumComment = {
   universityUserId: Scalars['String'];
 };
 
+export type ForumCommentObject = {
+  __typename?: 'ForumCommentObject';
+  createdAt: Scalars['DateTime'];
+  forumId: Scalars['String'];
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  universityUser: UniversityUserObject;
+  universityUserId: Scalars['String'];
+};
+
 export type ForumObject = BaseActivityInterface & {
   __typename?: 'ForumObject';
   createdAt: Scalars['DateTime'];
@@ -268,6 +282,7 @@ export type Mutation = {
   createCollege: CollegeObject;
   createCourse: CourseObject;
   createForum: ForumObject;
+  createForumComment: ForumCommentObject;
   createQuestion: QuestionObject;
   createQuestionCategory: QuestionCategoryObject;
   createQuiz: QuizObject;
@@ -323,6 +338,12 @@ export type MutationCreateCourseArgs = {
 export type MutationCreateForumArgs = {
   data: CreateForumInput;
   files: Array<Scalars['Upload']>;
+};
+
+
+export type MutationCreateForumCommentArgs = {
+  data: CreateForumCommentInput;
+  forumId: Scalars['String'];
 };
 
 
@@ -510,6 +531,7 @@ export type Query = {
   __typename?: 'Query';
   activity: BaseActivityInterface;
   colleges: Array<CollegeObject>;
+  forumComments: Array<ForumCommentObject>;
   me: UserObject;
   myAssignment?: Maybe<UserAssignmentObject>;
   myQuiz?: Maybe<UserQuizObject>;
@@ -529,6 +551,11 @@ export type QueryActivityArgs = {
 
 export type QueryCollegesArgs = {
   universityId: Scalars['String'];
+};
+
+
+export type QueryForumCommentsArgs = {
+  forumId: Scalars['String'];
 };
 
 
@@ -1001,6 +1028,15 @@ export type BaseUserAssignmentFieldsFragment = (
   & Pick<UserAssignmentObject, 'id' | 'userId' | 'assignmentId' | 'grade' | 'files' | 'updatedAt'>
 );
 
+export type ForumCommentFieldsFragment = (
+  { __typename?: 'ForumCommentObject' }
+  & Pick<ForumCommentObject, 'id' | 'forumId' | 'universityUserId' | 'text' | 'createdAt'>
+  & { universityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & UniversityUserFieldsFragment
+  ) }
+);
+
 export type QuestionBaseFieldsFragment = (
   { __typename?: 'QuestionObject' }
   & Pick<QuestionObject, 'id' | 'name' | 'text' | 'type'>
@@ -1067,6 +1103,20 @@ export type UserQuizQuestionFieldsFragment = (
     & UserQuestionAnswerBaseFieldsFragment
   )> }
   & UserQuizQuestionBaseFieldsFragment
+);
+
+export type CreateForumCommentMutationVariables = Exact<{
+  forumId: Scalars['String'];
+  data: CreateForumCommentInput;
+}>;
+
+
+export type CreateForumCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createForumComment: (
+    { __typename?: 'ForumCommentObject' }
+    & ForumCommentFieldsFragment
+  ) }
 );
 
 export type CreateQuestionMutationVariables = Exact<{
@@ -1232,6 +1282,19 @@ export type UpdateUserAssignmentMutation = (
     { __typename?: 'UserAssignmentObject' }
     & BaseUserAssignmentFieldsFragment
   ) }
+);
+
+export type ForumCommentsQueryVariables = Exact<{
+  forumId: Scalars['String'];
+}>;
+
+
+export type ForumCommentsQuery = (
+  { __typename?: 'Query' }
+  & { forumComments: Array<(
+    { __typename?: 'ForumCommentObject' }
+    & ForumCommentFieldsFragment
+  )> }
 );
 
 export type MyAssignmentQueryVariables = Exact<{
@@ -1464,6 +1527,11 @@ type ActivityFields_AssignmentObject_Fragment = (
 
 type ActivityFields_ForumObject_Fragment = (
   { __typename?: 'ForumObject' }
+  & Pick<ForumObject, 'universityUserId'>
+  & { universityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & UniversityUserFieldsFragment
+  ) }
   & BaseActivityFields_ForumObject_Fragment
 );
 
@@ -1547,6 +1615,18 @@ export type SectionFieldsFragment = (
     { __typename?: 'ResourceObject' }
     & BaseActivityFields_ResourceObject_Fragment
   )> }
+);
+
+export type UniversityUserFieldsFragment = (
+  { __typename?: 'UniversityUserObject' }
+  & Pick<UniversityUserObject, 'id' | 'universityId' | 'roleId' | 'userId'>
+  & { user: (
+    { __typename?: 'UserObject' }
+    & BaseUserFieldsFragment
+  ), role: (
+    { __typename?: 'RoleObject' }
+    & Pick<RoleObject, 'id' | 'name'>
+  ) }
 );
 
 export type CreateAssignmentMutationVariables = Exact<{
@@ -1897,6 +1977,43 @@ export const BaseUserAssignmentFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const BaseUserFieldsFragmentDoc = gql`
+    fragment BaseUserFields on UserObject {
+  id
+  email
+  fatherInitial
+  firstName
+  lastName
+  avatar
+}
+    `;
+export const UniversityUserFieldsFragmentDoc = gql`
+    fragment UniversityUserFields on UniversityUserObject {
+  id
+  universityId
+  roleId
+  userId
+  user {
+    ...BaseUserFields
+  }
+  role {
+    id
+    name
+  }
+}
+    ${BaseUserFieldsFragmentDoc}`;
+export const ForumCommentFieldsFragmentDoc = gql`
+    fragment ForumCommentFields on ForumCommentObject {
+  id
+  forumId
+  universityUserId
+  text
+  createdAt
+  universityUser {
+    ...UniversityUserFields
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}`;
 export const QuestionCategoryBaseFieldsFragmentDoc = gql`
     fragment QuestionCategoryBaseFields on QuestionCategoryObject {
   id
@@ -1974,16 +2091,6 @@ export const UserQuizQuestionFieldsFragmentDoc = gql`
 ${QuestionBaseFieldsFragmentDoc}
 ${AnswerBaseFieldsFragmentDoc}
 ${UserQuestionAnswerBaseFieldsFragmentDoc}`;
-export const BaseUserFieldsFragmentDoc = gql`
-    fragment BaseUserFields on UserObject {
-  id
-  email
-  fatherInitial
-  firstName
-  lastName
-  avatar
-}
-    `;
 export const UserQuizFieldsFragmentDoc = gql`
     fragment UserQuizFields on UserQuizObject {
   ...UserQuizBaseFields
@@ -2071,12 +2178,19 @@ export const ActivityFieldsFragmentDoc = gql`
       }
     }
   }
+  ... on ForumObject {
+    universityUserId
+    universityUser {
+      ...UniversityUserFields
+    }
+  }
 }
     ${BaseActivityFieldsFragmentDoc}
 ${QuizBaseFieldsFragmentDoc}
 ${QuizQuestionBaseFieldsFragmentDoc}
 ${QuestionBaseFieldsFragmentDoc}
-${AnswerBaseFieldsFragmentDoc}`;
+${AnswerBaseFieldsFragmentDoc}
+${UniversityUserFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
@@ -2096,6 +2210,40 @@ export const UniversityFieldsFragmentDoc = gql`
   logo
 }
     `;
+export const CreateForumCommentDocument = gql`
+    mutation CreateForumComment($forumId: String!, $data: CreateForumCommentInput!) {
+  createForumComment(forumId: $forumId, data: $data) {
+    ...ForumCommentFields
+  }
+}
+    ${ForumCommentFieldsFragmentDoc}`;
+export type CreateForumCommentMutationFn = Apollo.MutationFunction<CreateForumCommentMutation, CreateForumCommentMutationVariables>;
+
+/**
+ * __useCreateForumCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateForumCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateForumCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createForumCommentMutation, { data, loading, error }] = useCreateForumCommentMutation({
+ *   variables: {
+ *      forumId: // value for 'forumId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateForumCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateForumCommentMutation, CreateForumCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateForumCommentMutation, CreateForumCommentMutationVariables>(CreateForumCommentDocument, options);
+      }
+export type CreateForumCommentMutationHookResult = ReturnType<typeof useCreateForumCommentMutation>;
+export type CreateForumCommentMutationResult = Apollo.MutationResult<CreateForumCommentMutation>;
+export type CreateForumCommentMutationOptions = Apollo.BaseMutationOptions<CreateForumCommentMutation, CreateForumCommentMutationVariables>;
 export const CreateQuestionDocument = gql`
     mutation CreateQuestion($questionCategoryId: String!, $data: CreateQuestionInput!) {
   createQuestion(questionCategoryId: $questionCategoryId, data: $data) {
@@ -2484,6 +2632,41 @@ export function useUpdateUserAssignmentMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateUserAssignmentMutationHookResult = ReturnType<typeof useUpdateUserAssignmentMutation>;
 export type UpdateUserAssignmentMutationResult = Apollo.MutationResult<UpdateUserAssignmentMutation>;
 export type UpdateUserAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateUserAssignmentMutation, UpdateUserAssignmentMutationVariables>;
+export const ForumCommentsDocument = gql`
+    query ForumComments($forumId: String!) {
+  forumComments(forumId: $forumId) {
+    ...ForumCommentFields
+  }
+}
+    ${ForumCommentFieldsFragmentDoc}`;
+
+/**
+ * __useForumCommentsQuery__
+ *
+ * To run a query within a React component, call `useForumCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useForumCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useForumCommentsQuery({
+ *   variables: {
+ *      forumId: // value for 'forumId'
+ *   },
+ * });
+ */
+export function useForumCommentsQuery(baseOptions: Apollo.QueryHookOptions<ForumCommentsQuery, ForumCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ForumCommentsQuery, ForumCommentsQueryVariables>(ForumCommentsDocument, options);
+      }
+export function useForumCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ForumCommentsQuery, ForumCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ForumCommentsQuery, ForumCommentsQueryVariables>(ForumCommentsDocument, options);
+        }
+export type ForumCommentsQueryHookResult = ReturnType<typeof useForumCommentsQuery>;
+export type ForumCommentsLazyQueryHookResult = ReturnType<typeof useForumCommentsLazyQuery>;
+export type ForumCommentsQueryResult = Apollo.QueryResult<ForumCommentsQuery, ForumCommentsQueryVariables>;
 export const MyAssignmentDocument = gql`
     query MyAssignment($id: String!) {
   myAssignment(id: $id) {

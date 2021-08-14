@@ -20,4 +20,10 @@ fragment ActivityFields on BaseActivityInterface {
 			}
 		}
 	}
+	... on ForumObject {
+		universityUserId
+		universityUser {
+			...UniversityUserFields
+		}
+	}
 }

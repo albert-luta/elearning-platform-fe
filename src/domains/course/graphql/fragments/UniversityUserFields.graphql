@@ -1,0 +1,13 @@
+fragment UniversityUserFields on UniversityUserObject {
+	id
+	universityId
+	roleId
+	userId
+	user {
+		...BaseUserFields
+	}
+	role {
+		id
+		name
+	}
+}

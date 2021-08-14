@@ -1,0 +1,10 @@
+fragment ForumCommentFields on ForumCommentObject {
+	id
+	forumId
+	universityUserId
+	text
+	createdAt
+	universityUser {
+		...UniversityUserFields
+	}
+}

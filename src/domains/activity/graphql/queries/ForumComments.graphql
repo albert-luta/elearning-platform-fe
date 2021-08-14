@@ -1,0 +1,5 @@
+query ForumComments($forumId: String!) {
+	forumComments(forumId: $forumId) {
+		...ForumCommentFields
+	}
+}

@@ -1,4 +1,4 @@
-import { Assessment, Assignment, Folder } from '@material-ui/icons';
+import { Assessment, Assignment, Folder, Forum } from '@material-ui/icons';
 import { ActivityType } from 'generated/graphql';
 import { FC, memo } from 'react';
 
@@ -17,5 +17,9 @@ export const ActivityIcon: FC<ActivityIconProps> = memo(function ActivityIcon({
 		return <Assignment />;
 	}
 
-	return <Assessment />;
+	if (type === ActivityType.Quiz) {
+		return <Assessment />;
+	}
+
+	return <Forum />;
 });

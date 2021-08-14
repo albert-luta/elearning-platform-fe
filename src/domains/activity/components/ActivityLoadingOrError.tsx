@@ -4,7 +4,11 @@ import { FC, memo } from 'react';
 
 interface ActivityLoadingOrErrorProps {
 	activityQuery: ReturnType<typeof useActivityQuery>;
-	typename: 'ResourceObject' | 'AssignmentObject' | 'QuizObject';
+	typename:
+		| 'ResourceObject'
+		| 'AssignmentObject'
+		| 'QuizObject'
+		| 'ForumObject';
 }
 
 export const ActivityLoadingOrError: FC<ActivityLoadingOrErrorProps> = memo(

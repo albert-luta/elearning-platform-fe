@@ -82,6 +82,7 @@ export const GlobalLayout: FC = memo(function GlobalLayout({ children }) {
 			)
 		) {
 			showExtraContentDrawer();
+			// TODO: open it just on desktop
 			openExtraContentDrawer();
 		} else {
 			hideExtraContentDrawer();

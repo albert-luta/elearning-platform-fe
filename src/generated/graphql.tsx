@@ -24,6 +24,7 @@ export type Activity = {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files?: Maybe<Array<Scalars['String']>>;
+  forums?: Maybe<Array<Forum>>;
   id: Scalars['ID'];
   name: Scalars['String'];
   quizes?: Maybe<Array<Quiz>>;
@@ -37,6 +38,7 @@ export type Activity = {
 
 export enum ActivityType {
   Assignment = 'ASSIGNMENT',
+  Forum = 'FORUM',
   Quiz = 'QUIZ',
   Resource = 'RESOURCE'
 }
@@ -162,6 +164,12 @@ export type CreateCourseInput = {
   name: Scalars['String'];
 };
 
+export type CreateForumInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+};
+
 export type CreateQuestionCategoryInput = {
   name: Scalars['String'];
 };
@@ -207,6 +215,42 @@ export type CreateUniversityInput = {
 };
 
 
+export type Forum = {
+  __typename?: 'Forum';
+  activity: Activity;
+  activityId: Scalars['ID'];
+  forumComments?: Maybe<Array<ForumComment>>;
+  university: University;
+  universityId: Scalars['String'];
+  universityUser: UniversityUser;
+  universityUserId: Scalars['String'];
+};
+
+export type ForumComment = {
+  __typename?: 'ForumComment';
+  createdAt: Scalars['DateTime'];
+  forum: Forum;
+  forumId: Scalars['String'];
+  id: Scalars['ID'];
+  text: Scalars['String'];
+  universityUser: UniversityUser;
+  universityUserId: Scalars['String'];
+};
+
+export type ForumObject = BaseActivityInterface & {
+  __typename?: 'ForumObject';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  files: Array<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  sectionId: Scalars['String'];
+  type: Scalars['String'];
+  universityId: Scalars['String'];
+  universityUser: UniversityUserObject;
+  universityUserId: Scalars['String'];
+};
+
 export type GroupedByRoleUniversitiesObject = {
   __typename?: 'GroupedByRoleUniversitiesObject';
   role: Scalars['String'];
@@ -223,6 +267,7 @@ export type Mutation = {
   createAssignment: AssignmentObject;
   createCollege: CollegeObject;
   createCourse: CourseObject;
+  createForum: ForumObject;
   createQuestion: QuestionObject;
   createQuestionCategory: QuestionCategoryObject;
   createQuiz: QuizObject;
@@ -246,6 +291,7 @@ export type Mutation = {
   updateAssignment: AssignmentObject;
   updateCollege: CollegeObject;
   updateCourse: CourseObject;
+  updateForum: ForumObject;
   updateMyAssignment: UserAssignmentObject;
   updateQuestion: QuestionObject;
   updateQuestionAnswers: UserQuizQuestionObject;
@@ -271,6 +317,12 @@ export type MutationCreateCollegeArgs = {
 
 export type MutationCreateCourseArgs = {
   data: CreateCourseInput;
+};
+
+
+export type MutationCreateForumArgs = {
+  data: CreateForumInput;
+  files: Array<Scalars['Upload']>;
 };
 
 
@@ -387,6 +439,13 @@ export type MutationUpdateCollegeArgs = {
 export type MutationUpdateCourseArgs = {
   data: CreateCourseInput;
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateForumArgs = {
+  data: UpdateForumInput;
+  id: Scalars['String'];
+  newFiles: Array<Scalars['Upload']>;
 };
 
 
@@ -662,6 +721,12 @@ export type Role = {
   universityUsers?: Maybe<Array<UniversityUser>>;
 };
 
+export type RoleObject = {
+  __typename?: 'RoleObject';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
 export type Scope = {
   __typename?: 'Scope';
   id: Scalars['ID'];
@@ -706,6 +771,7 @@ export type University = {
   assignments?: Maybe<Array<Assignment>>;
   colleges?: Maybe<Array<College>>;
   courses?: Maybe<Array<Course>>;
+  forums?: Maybe<Array<Forum>>;
   id: Scalars['ID'];
   logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
@@ -725,6 +791,8 @@ export type UniversityObject = {
 export type UniversityUser = {
   __typename?: 'UniversityUser';
   collegeUsers?: Maybe<Array<CollegeUser>>;
+  forumComments?: Maybe<Array<ForumComment>>;
+  forums?: Maybe<Array<Forum>>;
   id: Scalars['ID'];
   questionCategories?: Maybe<Array<QuestionCategory>>;
   role: Role;
@@ -732,6 +800,16 @@ export type UniversityUser = {
   university: University;
   universityId: Scalars['String'];
   user: User;
+  userId: Scalars['String'];
+};
+
+export type UniversityUserObject = {
+  __typename?: 'UniversityUserObject';
+  id: Scalars['ID'];
+  role: RoleObject;
+  roleId: Scalars['String'];
+  universityId: Scalars['String'];
+  user: UserObject;
   userId: Scalars['String'];
 };
 
@@ -746,6 +824,14 @@ export type UpdateAssignmentInput = {
   description: Scalars['String'];
   filesToDelete: Array<Scalars['String']>;
   maxGrade: Scalars['Float'];
+  name: Scalars['String'];
+  oldFiles: Array<Scalars['String']>;
+  sectionId: Scalars['String'];
+};
+
+export type UpdateForumInput = {
+  description: Scalars['String'];
+  filesToDelete: Array<Scalars['String']>;
   name: Scalars['String'];
   oldFiles: Array<Scalars['String']>;
   sectionId: Scalars['String'];
@@ -1376,6 +1462,11 @@ type ActivityFields_AssignmentObject_Fragment = (
   & BaseActivityFields_AssignmentObject_Fragment
 );
 
+type ActivityFields_ForumObject_Fragment = (
+  { __typename?: 'ForumObject' }
+  & BaseActivityFields_ForumObject_Fragment
+);
+
 type ActivityFields_QuizObject_Fragment = (
   { __typename?: 'QuizObject' }
   & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers'>
@@ -1401,11 +1492,16 @@ type ActivityFields_ResourceObject_Fragment = (
   & BaseActivityFields_ResourceObject_Fragment
 );
 
-export type ActivityFieldsFragment = ActivityFields_AssignmentObject_Fragment | ActivityFields_QuizObject_Fragment | ActivityFields_ResourceObject_Fragment;
+export type ActivityFieldsFragment = ActivityFields_AssignmentObject_Fragment | ActivityFields_ForumObject_Fragment | ActivityFields_QuizObject_Fragment | ActivityFields_ResourceObject_Fragment;
 
 type BaseActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
   & Pick<AssignmentObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
+);
+
+type BaseActivityFields_ForumObject_Fragment = (
+  { __typename?: 'ForumObject' }
+  & Pick<ForumObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
 );
 
 type BaseActivityFields_QuizObject_Fragment = (
@@ -1418,7 +1514,7 @@ type BaseActivityFields_ResourceObject_Fragment = (
   & Pick<ResourceObject, 'id' | 'name' | 'sectionId' | 'universityId' | 'type' | 'description' | 'files' | 'createdAt'>
 );
 
-export type BaseActivityFieldsFragment = BaseActivityFields_AssignmentObject_Fragment | BaseActivityFields_QuizObject_Fragment | BaseActivityFields_ResourceObject_Fragment;
+export type BaseActivityFieldsFragment = BaseActivityFields_AssignmentObject_Fragment | BaseActivityFields_ForumObject_Fragment | BaseActivityFields_QuizObject_Fragment | BaseActivityFields_ResourceObject_Fragment;
 
 export type CourseFieldsFragment = (
   { __typename?: 'CourseObject' }
@@ -1441,6 +1537,9 @@ export type SectionFieldsFragment = (
   & { activities: Array<(
     { __typename?: 'AssignmentObject' }
     & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'ForumObject' }
+    & BaseActivityFields_ForumObject_Fragment
   ) | (
     { __typename?: 'QuizObject' }
     & BaseActivityFields_QuizObject_Fragment
@@ -1474,6 +1573,20 @@ export type CreateCourseMutation = (
   & { createCourse: (
     { __typename?: 'CourseObject' }
     & CourseFieldsFragment
+  ) }
+);
+
+export type CreateForumMutationVariables = Exact<{
+  data: CreateForumInput;
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type CreateForumMutation = (
+  { __typename?: 'Mutation' }
+  & { createForum: (
+    { __typename?: 'ForumObject' }
+    & BaseActivityFields_ForumObject_Fragment
   ) }
 );
 
@@ -1529,6 +1642,9 @@ export type DeleteActivityMutation = (
   & { deleteActivity: (
     { __typename?: 'AssignmentObject' }
     & BaseActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'ForumObject' }
+    & BaseActivityFields_ForumObject_Fragment
   ) | (
     { __typename?: 'QuizObject' }
     & BaseActivityFields_QuizObject_Fragment
@@ -1593,6 +1709,21 @@ export type UpdateCourseMutation = (
   ) }
 );
 
+export type UpdateForumMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateForumInput;
+  newFiles: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UpdateForumMutation = (
+  { __typename?: 'Mutation' }
+  & { updateForum: (
+    { __typename?: 'ForumObject' }
+    & ActivityFields_ForumObject_Fragment
+  ) }
+);
+
 export type UpdateQuizMutationVariables = Exact<{
   id: Scalars['String'];
   data: UpdateQuizInput;
@@ -1647,6 +1778,9 @@ export type ActivityQuery = (
   & { activity: (
     { __typename?: 'AssignmentObject' }
     & ActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'ForumObject' }
+    & ActivityFields_ForumObject_Fragment
   ) | (
     { __typename?: 'QuizObject' }
     & ActivityFields_QuizObject_Fragment
@@ -2944,6 +3078,40 @@ export function useCreateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateCourseMutationHookResult = ReturnType<typeof useCreateCourseMutation>;
 export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<CreateCourseMutation, CreateCourseMutationVariables>;
+export const CreateForumDocument = gql`
+    mutation CreateForum($data: CreateForumInput!, $files: [Upload!]!) {
+  createForum(data: $data, files: $files) {
+    ...BaseActivityFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}`;
+export type CreateForumMutationFn = Apollo.MutationFunction<CreateForumMutation, CreateForumMutationVariables>;
+
+/**
+ * __useCreateForumMutation__
+ *
+ * To run a mutation, you first call `useCreateForumMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateForumMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createForumMutation, { data, loading, error }] = useCreateForumMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      files: // value for 'files'
+ *   },
+ * });
+ */
+export function useCreateForumMutation(baseOptions?: Apollo.MutationHookOptions<CreateForumMutation, CreateForumMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateForumMutation, CreateForumMutationVariables>(CreateForumDocument, options);
+      }
+export type CreateForumMutationHookResult = ReturnType<typeof useCreateForumMutation>;
+export type CreateForumMutationResult = Apollo.MutationResult<CreateForumMutation>;
+export type CreateForumMutationOptions = Apollo.BaseMutationOptions<CreateForumMutation, CreateForumMutationVariables>;
 export const CreateQuizDocument = gql`
     mutation CreateQuiz($data: CreateQuizInput!, $files: [Upload!]!) {
   createQuiz(data: $data, files: $files) {
@@ -3214,6 +3382,41 @@ export function useUpdateCourseMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateCourseMutationHookResult = ReturnType<typeof useUpdateCourseMutation>;
 export type UpdateCourseMutationResult = Apollo.MutationResult<UpdateCourseMutation>;
 export type UpdateCourseMutationOptions = Apollo.BaseMutationOptions<UpdateCourseMutation, UpdateCourseMutationVariables>;
+export const UpdateForumDocument = gql`
+    mutation UpdateForum($id: String!, $data: UpdateForumInput!, $newFiles: [Upload!]!) {
+  updateForum(id: $id, data: $data, newFiles: $newFiles) {
+    ...ActivityFields
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
+export type UpdateForumMutationFn = Apollo.MutationFunction<UpdateForumMutation, UpdateForumMutationVariables>;
+
+/**
+ * __useUpdateForumMutation__
+ *
+ * To run a mutation, you first call `useUpdateForumMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateForumMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateForumMutation, { data, loading, error }] = useUpdateForumMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *      newFiles: // value for 'newFiles'
+ *   },
+ * });
+ */
+export function useUpdateForumMutation(baseOptions?: Apollo.MutationHookOptions<UpdateForumMutation, UpdateForumMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateForumMutation, UpdateForumMutationVariables>(UpdateForumDocument, options);
+      }
+export type UpdateForumMutationHookResult = ReturnType<typeof useUpdateForumMutation>;
+export type UpdateForumMutationResult = Apollo.MutationResult<UpdateForumMutation>;
+export type UpdateForumMutationOptions = Apollo.BaseMutationOptions<UpdateForumMutation, UpdateForumMutationVariables>;
 export const UpdateQuizDocument = gql`
     mutation UpdateQuiz($id: String!, $data: UpdateQuizInput!, $newFiles: [Upload!]!) {
   updateQuiz(id: $id, data: $data, newFiles: $newFiles) {

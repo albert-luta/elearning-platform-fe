@@ -1,0 +1,5 @@
+mutation CreateForum($data: CreateForumInput!, $files: [Upload!]!) {
+	createForum(data: $data, files: $files) {
+		...BaseActivityFields
+	}
+}

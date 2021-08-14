@@ -1,0 +1,9 @@
+mutation UpdateForum(
+	$id: String!
+	$data: UpdateForumInput!
+	$newFiles: [Upload!]!
+) {
+	updateForum(id: $id, data: $data, newFiles: $newFiles) {
+		...ActivityFields
+	}
+}

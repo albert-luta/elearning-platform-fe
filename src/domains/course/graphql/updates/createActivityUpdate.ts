@@ -1,6 +1,7 @@
 import { ApolloCache } from '@apollo/client';
 import {
 	CreateAssignmentMutation,
+	CreateForumMutation,
 	CreateQuizMutation,
 	CreateResourceMutation,
 	SectionsDocument,
@@ -12,12 +13,14 @@ export const createActivityUpdate = <
 		| CreateResourceMutation
 		| CreateAssignmentMutation
 		| CreateQuizMutation
+		| CreateForumMutation
 >(
 	cache: ApolloCache<T>,
 	activity:
 		| CreateResourceMutation['createResource']
 		| CreateAssignmentMutation['createAssignment']
-		| CreateQuizMutation['createQuiz'],
+		| CreateQuizMutation['createQuiz']
+		| CreateForumMutation['createForum'],
 	courseId: string
 ) => {
 	const prevSections = cache.readQuery<SectionsQuery>({

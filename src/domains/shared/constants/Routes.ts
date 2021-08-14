@@ -69,6 +69,10 @@ export const Routes = inferRoutes({
 			path:
 				'/app/:universityId/:collegeId/:courseId/:activityId/quiz/userQuizes/:userQuizId',
 			universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
+		},
+
+		FORUM_DASHBOARD: {
+			path: '/app/:universityId/:collegeId/:courseId/:activityId/forum'
 		}
 	}
 });

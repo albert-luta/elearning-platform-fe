@@ -24,15 +24,17 @@ import { UpdateActivityForm } from './ActivityForm/UpdateActivityForm';
 import { ActivityIcon } from '../../shared/components/icons/ActivityIcon';
 import { UpdateSectionForm } from './SectionForm/UpdateSectionForm';
 
-const getActivityRoute = (type: string): keyof typeof Routes.activity => {
+const getActivityRoute = (type: ActivityType): keyof typeof Routes.activity => {
 	switch (type) {
 		case ActivityType.Resource:
 			return 'RESOURCE_DASHBOARD';
 		case ActivityType.Assignment:
 			return 'ASSIGNMENT_DASHBOARD';
 		case ActivityType.Quiz:
-		default:
 			return 'QUIZ_DASHBOARD';
+		case ActivityType.Forum:
+		default:
+			return 'FORUM_DASHBOARD';
 	}
 };
 
@@ -126,7 +128,9 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 								style={{ textTransform: 'none' }}
 								href={composeDynamicRoute(
 									Routes.activity[
-										getActivityRoute(activity.type)
+										getActivityRoute(
+											activity.type as ActivityType
+										)
 									].path,
 									{
 										universityId: String(

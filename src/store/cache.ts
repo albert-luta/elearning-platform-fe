@@ -62,7 +62,8 @@ export const cache = new InMemoryCache({
 		BaseActivityInterface: [
 			'ResourceObject',
 			'AssignmentObject',
-			'QuizObject'
+			'QuizObject',
+			'ForumObject'
 		]
 	}
 });

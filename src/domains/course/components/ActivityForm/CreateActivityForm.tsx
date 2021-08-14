@@ -3,6 +3,7 @@ import { ActivityType } from 'generated/graphql';
 import { ChangeEvent, FC, memo, useCallback, useState } from 'react';
 import { CreateAssignmentForm } from './AssignmentForm/CreateAssignmentForm';
 import { CreateActivityProps } from './BaseActivityForm';
+import { CreateForumForm } from './ForumForm/CreateForumForm';
 import { CreateQuizForm } from './QuizForm/CreateQuizForm';
 import { CreateResourceForm } from './ResourceForm/CreateResourceForm';
 
@@ -38,6 +39,7 @@ export const CreateActivityForm: FC<CreateActivityProps> = memo(
 							Assignment
 						</MenuItem>
 						<MenuItem value={ActivityType.Quiz}>Quiz</MenuItem>
+						<MenuItem value={ActivityType.Forum}>Forum</MenuItem>
 					</Select>
 				</Box>
 
@@ -57,6 +59,13 @@ export const CreateActivityForm: FC<CreateActivityProps> = memo(
 				)}
 				{type === ActivityType.Quiz && (
 					<CreateQuizForm
+						courseId={courseId}
+						sectionId={sectionId}
+						onSuccess={onSuccess}
+					/>
+				)}
+				{type === ActivityType.Forum && (
+					<CreateForumForm
 						courseId={courseId}
 						sectionId={sectionId}
 						onSuccess={onSuccess}

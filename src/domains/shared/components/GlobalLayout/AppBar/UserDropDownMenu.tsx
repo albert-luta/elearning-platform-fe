@@ -13,7 +13,7 @@ import {
 	EventNote,
 	DateRange,
 	Person,
-	Forum,
+	// Forum,
 	AccountBalance
 } from '@material-ui/icons';
 import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
@@ -134,7 +134,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 								</ListItemIcon>
 								<ListItemText primary="Grades" />
 							</MenuLinkItem>
-							<MenuLinkItem
+							{/* <MenuLinkItem
 								href={composeDynamicRoute(
 									Routes.userUniversity.FORUM.path,
 									{
@@ -150,7 +150,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 									<Forum />
 								</ListItemIcon>
 								<ListItemText primary="Forum" />
-							</MenuLinkItem>
+							</MenuLinkItem> */}
 							{shouldShowTeacherSpecificButtons && (
 								<MenuLinkItem
 									href={composeDynamicRoute(

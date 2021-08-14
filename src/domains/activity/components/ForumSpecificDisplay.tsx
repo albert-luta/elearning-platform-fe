@@ -12,8 +12,8 @@ import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { UserRole } from 'domains/shared/constants/UserRole';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import {
-	ForumObject,
-	UniversityUserFieldsFragment,
+	BaseActivityFieldsFragment,
+	ForumFieldsFragment,
 	useForumCommentsQuery
 } from 'generated/graphql';
 import { FC, memo } from 'react';
@@ -21,9 +21,7 @@ import { CreateForumCommentForm } from './ForumCommentForm/CreateForumCommentFor
 import { UserActivityReviewInfo } from './UserActivityReviewInfo';
 
 interface ForumSpecificDisplayProps {
-	activity: Omit<ForumObject, 'universityUser'> & {
-		universityUser: UniversityUserFieldsFragment;
-	};
+	activity: BaseActivityFieldsFragment & ForumFieldsFragment;
 }
 
 export const ForumSpecificDisplay: FC<ForumSpecificDisplayProps> = memo(

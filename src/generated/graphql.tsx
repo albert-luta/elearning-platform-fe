@@ -56,6 +56,8 @@ export type Assignment = {
 
 export type AssignmentObject = BaseActivityInterface & {
   __typename?: 'AssignmentObject';
+  college: CollegeObject;
+  course: CourseObject;
   createdAt: Scalars['DateTime'];
   deadline: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -74,6 +76,8 @@ export type Authentication = {
 };
 
 export type BaseActivityInterface = {
+  college: CollegeObject;
+  course: CourseObject;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
@@ -253,6 +257,8 @@ export type ForumCommentObject = {
 
 export type ForumObject = BaseActivityInterface & {
   __typename?: 'ForumObject';
+  college: CollegeObject;
+  course: CourseObject;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
@@ -537,6 +543,7 @@ export type Query = {
   myQuiz?: Maybe<UserQuizObject>;
   questionBank: Array<QuestionCategoryObject>;
   sections: Array<SectionObject>;
+  upcomingActivities: Array<BaseActivityInterface>;
   userAssignment?: Maybe<UserAssignmentObject>;
   userAssignments: Array<UserAssignmentObject>;
   userQuizAttempt: UserQuizObject;
@@ -673,6 +680,8 @@ export type Quiz = {
 
 export type QuizObject = BaseActivityInterface & {
   __typename?: 'QuizObject';
+  college: CollegeObject;
+  course: CourseObject;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
@@ -730,6 +739,8 @@ export type Resource = {
 
 export type ResourceObject = BaseActivityInterface & {
   __typename?: 'ResourceObject';
+  college: CollegeObject;
+  course: CourseObject;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   files: Array<Scalars['String']>;
@@ -1061,6 +1072,56 @@ export type QuestionCategoryFieldsFragment = (
   & QuestionCategoryBaseFieldsFragment
 );
 
+type UpcomingActivityFields_AssignmentObject_Fragment = (
+  { __typename?: 'AssignmentObject' }
+  & { course: (
+    { __typename?: 'CourseObject' }
+    & Pick<CourseObject, 'id' | 'name'>
+  ), college: (
+    { __typename?: 'CollegeObject' }
+    & Pick<CollegeObject, 'id' | 'name'>
+  ) }
+  & ActivityFields_AssignmentObject_Fragment
+);
+
+type UpcomingActivityFields_ForumObject_Fragment = (
+  { __typename?: 'ForumObject' }
+  & { course: (
+    { __typename?: 'CourseObject' }
+    & Pick<CourseObject, 'id' | 'name'>
+  ), college: (
+    { __typename?: 'CollegeObject' }
+    & Pick<CollegeObject, 'id' | 'name'>
+  ) }
+  & ActivityFields_ForumObject_Fragment
+);
+
+type UpcomingActivityFields_QuizObject_Fragment = (
+  { __typename?: 'QuizObject' }
+  & { course: (
+    { __typename?: 'CourseObject' }
+    & Pick<CourseObject, 'id' | 'name'>
+  ), college: (
+    { __typename?: 'CollegeObject' }
+    & Pick<CollegeObject, 'id' | 'name'>
+  ) }
+  & ActivityFields_QuizObject_Fragment
+);
+
+type UpcomingActivityFields_ResourceObject_Fragment = (
+  { __typename?: 'ResourceObject' }
+  & { course: (
+    { __typename?: 'CourseObject' }
+    & Pick<CourseObject, 'id' | 'name'>
+  ), college: (
+    { __typename?: 'CollegeObject' }
+    & Pick<CollegeObject, 'id' | 'name'>
+  ) }
+  & ActivityFields_ResourceObject_Fragment
+);
+
+export type UpcomingActivityFieldsFragment = UpcomingActivityFields_AssignmentObject_Fragment | UpcomingActivityFields_ForumObject_Fragment | UpcomingActivityFields_QuizObject_Fragment | UpcomingActivityFields_ResourceObject_Fragment;
+
 export type UserQuestionAnswerBaseFieldsFragment = (
   { __typename?: 'UserQuestionAnswerObject' }
   & Pick<UserQuestionAnswerObject, 'id' | 'questionAnswerId' | 'userQuizQuestionId'>
@@ -1343,6 +1404,26 @@ export type QuestionBankQuery = (
   )> }
 );
 
+export type UpcomingActivitiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpcomingActivitiesQuery = (
+  { __typename?: 'Query' }
+  & { upcomingActivities: Array<(
+    { __typename?: 'AssignmentObject' }
+    & UpcomingActivityFields_AssignmentObject_Fragment
+  ) | (
+    { __typename?: 'ForumObject' }
+    & UpcomingActivityFields_ForumObject_Fragment
+  ) | (
+    { __typename?: 'QuizObject' }
+    & UpcomingActivityFields_QuizObject_Fragment
+  ) | (
+    { __typename?: 'ResourceObject' }
+    & UpcomingActivityFields_ResourceObject_Fragment
+  )> }
+);
+
 export type UserAssignmentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1521,37 +1602,19 @@ export type CollegesQuery = (
 
 type ActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
-  & Pick<AssignmentObject, 'deadline' | 'maxGrade'>
+  & AssignmentFieldsFragment
   & BaseActivityFields_AssignmentObject_Fragment
 );
 
 type ActivityFields_ForumObject_Fragment = (
   { __typename?: 'ForumObject' }
-  & Pick<ForumObject, 'universityUserId'>
-  & { universityUser: (
-    { __typename?: 'UniversityUserObject' }
-    & UniversityUserFieldsFragment
-  ) }
+  & ForumFieldsFragment
   & BaseActivityFields_ForumObject_Fragment
 );
 
 type ActivityFields_QuizObject_Fragment = (
   { __typename?: 'QuizObject' }
-  & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers'>
-  & { quizQuestions: Array<(
-    { __typename?: 'QuizQuestionObject' }
-    & { question: (
-      { __typename?: 'QuestionObject' }
-      & { answers: Array<(
-        { __typename?: 'QuestionAnswerObject' }
-        & Pick<QuestionAnswerObject, 'fraction'>
-        & AnswerBaseFieldsFragment
-      )> }
-      & QuestionBaseFieldsFragment
-    ) }
-    & QuizQuestionBaseFieldsFragment
-  )> }
-  & QuizBaseFieldsFragment
+  & QuizFieldsFragment
   & BaseActivityFields_QuizObject_Fragment
 );
 
@@ -1561,6 +1624,11 @@ type ActivityFields_ResourceObject_Fragment = (
 );
 
 export type ActivityFieldsFragment = ActivityFields_AssignmentObject_Fragment | ActivityFields_ForumObject_Fragment | ActivityFields_QuizObject_Fragment | ActivityFields_ResourceObject_Fragment;
+
+export type AssignmentFieldsFragment = (
+  { __typename?: 'AssignmentObject' }
+  & Pick<AssignmentObject, 'deadline' | 'maxGrade'>
+);
 
 type BaseActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
@@ -1589,9 +1657,37 @@ export type CourseFieldsFragment = (
   & Pick<CourseObject, 'id' | 'name' | 'collegeId' | 'universityId'>
 );
 
+export type ForumFieldsFragment = (
+  { __typename?: 'ForumObject' }
+  & Pick<ForumObject, 'universityUserId'>
+  & { universityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & UniversityUserFieldsFragment
+  ) }
+);
+
 export type QuizBaseFieldsFragment = (
   { __typename?: 'QuizObject' }
   & Pick<QuizObject, 'timeOpen' | 'timeClose' | 'timeLimit'>
+);
+
+export type QuizFieldsFragment = (
+  { __typename?: 'QuizObject' }
+  & Pick<QuizObject, 'visible' | 'shuffleQuestions' | 'shuffleAnswers'>
+  & { quizQuestions: Array<(
+    { __typename?: 'QuizQuestionObject' }
+    & { question: (
+      { __typename?: 'QuestionObject' }
+      & { answers: Array<(
+        { __typename?: 'QuestionAnswerObject' }
+        & Pick<QuestionAnswerObject, 'fraction'>
+        & AnswerBaseFieldsFragment
+      )> }
+      & QuestionBaseFieldsFragment
+    ) }
+    & QuizQuestionBaseFieldsFragment
+  )> }
+  & QuizBaseFieldsFragment
 );
 
 export type QuizQuestionBaseFieldsFragment = (
@@ -2049,6 +2145,99 @@ export const QuestionCategoryFieldsFragmentDoc = gql`
     ${QuestionCategoryBaseFieldsFragmentDoc}
 ${QuestionBaseFieldsFragmentDoc}
 ${AnswerBaseFieldsFragmentDoc}`;
+export const BaseActivityFieldsFragmentDoc = gql`
+    fragment BaseActivityFields on BaseActivityInterface {
+  id
+  name
+  sectionId
+  universityId
+  type
+  description
+  files
+  createdAt
+}
+    `;
+export const AssignmentFieldsFragmentDoc = gql`
+    fragment AssignmentFields on AssignmentObject {
+  deadline
+  maxGrade
+}
+    `;
+export const QuizBaseFieldsFragmentDoc = gql`
+    fragment QuizBaseFields on QuizObject {
+  timeOpen
+  timeClose
+  timeLimit
+}
+    `;
+export const QuizQuestionBaseFieldsFragmentDoc = gql`
+    fragment QuizQuestionBaseFields on QuizQuestionObject {
+  id
+  quizId
+  questionId
+  maxGrade
+  order
+}
+    `;
+export const QuizFieldsFragmentDoc = gql`
+    fragment QuizFields on QuizObject {
+  ...QuizBaseFields
+  visible
+  shuffleQuestions
+  shuffleAnswers
+  quizQuestions {
+    ...QuizQuestionBaseFields
+    question {
+      ...QuestionBaseFields
+      answers {
+        ...AnswerBaseFields
+        fraction
+      }
+    }
+  }
+}
+    ${QuizBaseFieldsFragmentDoc}
+${QuizQuestionBaseFieldsFragmentDoc}
+${QuestionBaseFieldsFragmentDoc}
+${AnswerBaseFieldsFragmentDoc}`;
+export const ForumFieldsFragmentDoc = gql`
+    fragment ForumFields on ForumObject {
+  universityUserId
+  universityUser {
+    ...UniversityUserFields
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}`;
+export const ActivityFieldsFragmentDoc = gql`
+    fragment ActivityFields on BaseActivityInterface {
+  ...BaseActivityFields
+  ... on AssignmentObject {
+    ...AssignmentFields
+  }
+  ... on QuizObject {
+    ...QuizFields
+  }
+  ... on ForumObject {
+    ...ForumFields
+  }
+}
+    ${BaseActivityFieldsFragmentDoc}
+${AssignmentFieldsFragmentDoc}
+${QuizFieldsFragmentDoc}
+${ForumFieldsFragmentDoc}`;
+export const UpcomingActivityFieldsFragmentDoc = gql`
+    fragment UpcomingActivityFields on BaseActivityInterface {
+  ...ActivityFields
+  course {
+    id
+    name
+  }
+  college {
+    id
+    name
+  }
+}
+    ${ActivityFieldsFragmentDoc}`;
 export const UserQuizBaseFieldsFragmentDoc = gql`
     fragment UserQuizBaseFields on UserQuizObject {
   id
@@ -2127,70 +2316,6 @@ export const CollegeFieldsFragmentDoc = gql`
   }
 }
     ${CourseFieldsFragmentDoc}`;
-export const BaseActivityFieldsFragmentDoc = gql`
-    fragment BaseActivityFields on BaseActivityInterface {
-  id
-  name
-  sectionId
-  universityId
-  type
-  description
-  files
-  createdAt
-}
-    `;
-export const QuizBaseFieldsFragmentDoc = gql`
-    fragment QuizBaseFields on QuizObject {
-  timeOpen
-  timeClose
-  timeLimit
-}
-    `;
-export const QuizQuestionBaseFieldsFragmentDoc = gql`
-    fragment QuizQuestionBaseFields on QuizQuestionObject {
-  id
-  quizId
-  questionId
-  maxGrade
-  order
-}
-    `;
-export const ActivityFieldsFragmentDoc = gql`
-    fragment ActivityFields on BaseActivityInterface {
-  ...BaseActivityFields
-  ... on AssignmentObject {
-    deadline
-    maxGrade
-  }
-  ... on QuizObject {
-    ...QuizBaseFields
-    visible
-    shuffleQuestions
-    shuffleAnswers
-    quizQuestions {
-      ...QuizQuestionBaseFields
-      question {
-        ...QuestionBaseFields
-        answers {
-          ...AnswerBaseFields
-          fraction
-        }
-      }
-    }
-  }
-  ... on ForumObject {
-    universityUserId
-    universityUser {
-      ...UniversityUserFields
-    }
-  }
-}
-    ${BaseActivityFieldsFragmentDoc}
-${QuizBaseFieldsFragmentDoc}
-${QuizQuestionBaseFieldsFragmentDoc}
-${QuestionBaseFieldsFragmentDoc}
-${AnswerBaseFieldsFragmentDoc}
-${UniversityUserFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
@@ -2780,6 +2905,40 @@ export function useQuestionBankLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type QuestionBankQueryHookResult = ReturnType<typeof useQuestionBankQuery>;
 export type QuestionBankLazyQueryHookResult = ReturnType<typeof useQuestionBankLazyQuery>;
 export type QuestionBankQueryResult = Apollo.QueryResult<QuestionBankQuery, QuestionBankQueryVariables>;
+export const UpcomingActivitiesDocument = gql`
+    query UpcomingActivities {
+  upcomingActivities {
+    ...UpcomingActivityFields
+  }
+}
+    ${UpcomingActivityFieldsFragmentDoc}`;
+
+/**
+ * __useUpcomingActivitiesQuery__
+ *
+ * To run a query within a React component, call `useUpcomingActivitiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUpcomingActivitiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpcomingActivitiesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpcomingActivitiesQuery(baseOptions?: Apollo.QueryHookOptions<UpcomingActivitiesQuery, UpcomingActivitiesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UpcomingActivitiesQuery, UpcomingActivitiesQueryVariables>(UpcomingActivitiesDocument, options);
+      }
+export function useUpcomingActivitiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UpcomingActivitiesQuery, UpcomingActivitiesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UpcomingActivitiesQuery, UpcomingActivitiesQueryVariables>(UpcomingActivitiesDocument, options);
+        }
+export type UpcomingActivitiesQueryHookResult = ReturnType<typeof useUpcomingActivitiesQuery>;
+export type UpcomingActivitiesLazyQueryHookResult = ReturnType<typeof useUpcomingActivitiesLazyQuery>;
+export type UpcomingActivitiesQueryResult = Apollo.QueryResult<UpcomingActivitiesQuery, UpcomingActivitiesQueryVariables>;
 export const UserAssignmentDocument = gql`
     query UserAssignment($id: String!) {
   userAssignment(id: $id) {

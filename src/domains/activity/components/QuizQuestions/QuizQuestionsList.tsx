@@ -12,7 +12,7 @@ import { useCountdown } from 'domains/shared/hooks/useCountdown';
 import { formatDuration } from 'domains/shared/utils/formatDuration';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import {
-	QuizObject,
+	QuizFieldsFragment,
 	UserQuizFieldsFragment,
 	useSubmitMyQuizMutation,
 	useUpdateQuestionAnswersMutation
@@ -24,7 +24,7 @@ import { QuizQuestion } from './QuizQuestion';
 const MINUTE_MILLISECONDS = 1000 * 60;
 
 interface QuizQuestionsListProps {
-	quiz: QuizObject;
+	quiz: QuizFieldsFragment;
 	userQuiz: UserQuizFieldsFragment;
 	disabled?: boolean;
 }

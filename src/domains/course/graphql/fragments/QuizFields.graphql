@@ -1,0 +1,16 @@
+fragment QuizFields on QuizObject {
+	...QuizBaseFields
+	visible
+	shuffleQuestions
+	shuffleAnswers
+	quizQuestions {
+		...QuizQuestionBaseFields
+		question {
+			...QuestionBaseFields
+			answers {
+				...AnswerBaseFields
+				fraction
+			}
+		}
+	}
+}

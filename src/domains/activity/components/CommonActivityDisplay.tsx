@@ -2,10 +2,10 @@ import { FC, memo } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { FileButton } from 'domains/shared/components/buttons/FileButton';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
-import { BaseActivityInterface } from 'generated/graphql';
+import { BaseActivityFieldsFragment } from 'generated/graphql';
 
 interface CommonActivityDisplayProps {
-	activity: BaseActivityInterface;
+	activity: BaseActivityFieldsFragment;
 }
 
 export const CommonActivityDisplay: FC<CommonActivityDisplayProps> = memo(

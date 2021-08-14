@@ -1,7 +1,8 @@
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { CircularProgress, Box, Collapse, Typography } from '@material-ui/core';
 import {
-	AssignmentObject,
+	AssignmentFieldsFragment,
+	BaseActivityFieldsFragment,
 	useMyAssignmentQuery,
 	useUpdateMyAssignmentMutation
 } from 'generated/graphql';
@@ -12,7 +13,7 @@ import { FileButton } from 'domains/shared/components/buttons/FileButton';
 import { AssignmentStatus } from '../AssignmentStatus';
 
 interface StudentAssignmentSpecificDisplayProps {
-	activity: AssignmentObject;
+	activity: BaseActivityFieldsFragment & AssignmentFieldsFragment;
 }
 
 export const StudentAssignmentSpecificDisplay: FC<StudentAssignmentSpecificDisplayProps> = memo(

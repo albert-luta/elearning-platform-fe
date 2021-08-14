@@ -11,7 +11,7 @@ import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRo
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import {
 	ActivityType,
-	SectionObject,
+	SectionFieldsFragment,
 	useDeleteActivityMutation,
 	useDeleteSectionMutation
 } from 'generated/graphql';
@@ -23,23 +23,10 @@ import { CreateActivityForm } from './ActivityForm/CreateActivityForm';
 import { UpdateActivityForm } from './ActivityForm/UpdateActivityForm';
 import { ActivityIcon } from '../../shared/components/icons/ActivityIcon';
 import { UpdateSectionForm } from './SectionForm/UpdateSectionForm';
-
-const getActivityRoute = (type: ActivityType): keyof typeof Routes.activity => {
-	switch (type) {
-		case ActivityType.Resource:
-			return 'RESOURCE_DASHBOARD';
-		case ActivityType.Assignment:
-			return 'ASSIGNMENT_DASHBOARD';
-		case ActivityType.Quiz:
-			return 'QUIZ_DASHBOARD';
-		case ActivityType.Forum:
-		default:
-			return 'FORUM_DASHBOARD';
-	}
-};
+import { getActivityRoute } from 'domains/shared/utils/getActivityRoute';
 
 interface SectionCollapsibleProps {
-	section: SectionObject;
+	section: SectionFieldsFragment;
 }
 
 export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(

@@ -1,12 +1,16 @@
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
-import { QuizObject, useUserQuizAttemptsQuery } from 'generated/graphql';
+import {
+	BaseActivityFieldsFragment,
+	QuizFieldsFragment,
+	useUserQuizAttemptsQuery
+} from 'generated/graphql';
 import { FC, memo, useMemo } from 'react';
 import { QuizStatus } from '../QuizStatus';
 import { StudentQuizButton } from './StudentQuizButton';
 
 interface TeacherQuizSpecificDisplayProps {
-	activity: QuizObject;
+	activity: BaseActivityFieldsFragment & QuizFieldsFragment;
 }
 
 export const TeacherQuizSpecificDisplay: FC<TeacherQuizSpecificDisplayProps> = memo(

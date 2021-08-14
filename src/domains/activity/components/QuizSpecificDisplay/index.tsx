@@ -1,4 +1,7 @@
-import { QuizObject } from 'generated/graphql';
+import {
+	BaseActivityFieldsFragment,
+	QuizFieldsFragment
+} from 'generated/graphql';
 import { UserRole } from 'domains/shared/constants/UserRole';
 import { useReactiveVar } from '@apollo/client';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
@@ -7,7 +10,7 @@ import { StudentQuizSpecificDisplay } from './StudentQuizSpecificDisplay';
 import { TeacherQuizSpecificDisplay } from './TeacherQuizSpecificDisplay';
 
 interface QuizSpecificDisplayProps {
-	activity: QuizObject;
+	activity: BaseActivityFieldsFragment & QuizFieldsFragment;
 }
 
 export const QuizSpecificDisplay: FC<QuizSpecificDisplayProps> = memo(

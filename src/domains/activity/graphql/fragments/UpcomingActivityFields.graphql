@@ -1,0 +1,11 @@
+fragment UpcomingActivityFields on BaseActivityInterface {
+	...ActivityFields
+	course {
+		id
+		name
+	}
+	college {
+		id
+		name
+	}
+}

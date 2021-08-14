@@ -1,29 +1,12 @@
 fragment ActivityFields on BaseActivityInterface {
 	...BaseActivityFields
 	... on AssignmentObject {
-		deadline
-		maxGrade
+		...AssignmentFields
 	}
 	... on QuizObject {
-		...QuizBaseFields
-		visible
-		shuffleQuestions
-		shuffleAnswers
-		quizQuestions {
-			...QuizQuestionBaseFields
-			question {
-				...QuestionBaseFields
-				answers {
-					...AnswerBaseFields
-					fraction
-				}
-			}
-		}
+		...QuizFields
 	}
 	... on ForumObject {
-		universityUserId
-		universityUser {
-			...UniversityUserFields
-		}
+		...ForumFields
 	}
 }

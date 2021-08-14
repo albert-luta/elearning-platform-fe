@@ -4,8 +4,9 @@ import { Routes } from 'domains/shared/constants/Routes';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import {
+	BaseActivityFieldsFragment,
 	MyQuizDocument,
-	QuizObject,
+	QuizFieldsFragment,
 	useCreateQuizAttemptMutation,
 	useMyQuizQuery
 } from 'generated/graphql';
@@ -14,7 +15,7 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { QuizStatus } from '../QuizStatus';
 
 interface StudentQuizSpecificDisplayProps {
-	activity: QuizObject;
+	activity: BaseActivityFieldsFragment & QuizFieldsFragment;
 }
 
 export const StudentQuizSpecificDisplay: FC<StudentQuizSpecificDisplayProps> = memo(

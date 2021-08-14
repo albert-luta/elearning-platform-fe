@@ -1,0 +1,4 @@
+fragment AssignmentFields on AssignmentObject {
+	deadline
+	maxGrade
+}

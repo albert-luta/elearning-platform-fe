@@ -1,11 +1,14 @@
 import { useFormikSubmit } from 'domains/shared/hooks/useFormikSubmit';
 import { normalizeUpdateFormInitialValues } from 'domains/shared/utils/form/normalizeUpdateFormInitialValues';
-import { SectionObject, useUpdateSectionMutation } from 'generated/graphql';
+import {
+	SectionFieldsFragment,
+	useUpdateSectionMutation
+} from 'generated/graphql';
 import { FC, memo } from 'react';
 import { SectionForm, UpdateSectionFormValues } from './SectionForm';
 
 interface UpdateSectionFormProps {
-	section: SectionObject;
+	section: SectionFieldsFragment;
 	onSuccess: () => void;
 }
 

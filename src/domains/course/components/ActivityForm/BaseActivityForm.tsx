@@ -11,7 +11,7 @@ import { FC, memo } from 'react';
 import * as Yup from 'yup';
 import { DefinedStringSchema } from 'yup/lib/string';
 import { Box } from '@material-ui/core';
-import { BaseActivityInterface } from 'generated/graphql';
+import { BaseActivityFieldsFragment } from 'generated/graphql';
 
 export interface CreateBaseActivityFormValues {
 	name: string;
@@ -50,7 +50,7 @@ export interface CreateActivityProps {
 	onSuccess: () => void;
 }
 export interface UpdateActivityProps {
-	activity: BaseActivityInterface;
+	activity: BaseActivityFieldsFragment;
 	onSuccess: () => void;
 }
 

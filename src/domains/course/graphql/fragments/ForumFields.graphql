@@ -1,0 +1,6 @@
+fragment ForumFields on ForumObject {
+	universityUserId
+	universityUser {
+		...UniversityUserFields
+	}
+}

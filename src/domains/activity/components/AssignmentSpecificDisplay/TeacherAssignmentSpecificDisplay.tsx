@@ -1,12 +1,16 @@
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { useCountdown } from 'domains/shared/hooks/useCountdown';
-import { AssignmentObject, useUserAssignmentsQuery } from 'generated/graphql';
+import {
+	AssignmentFieldsFragment,
+	BaseActivityFieldsFragment,
+	useUserAssignmentsQuery
+} from 'generated/graphql';
 import { FC, memo } from 'react';
 import { AssignmentStatus } from '../AssignmentStatus';
 import { StudentAssignmentButton } from './StudentAssignmentButton';
 
 interface TeacherAssignmentSpecificDisplayProps {
-	activity: AssignmentObject;
+	activity: BaseActivityFieldsFragment & AssignmentFieldsFragment;
 }
 
 export const TeacherAssignmentSpecificDisplay: FC<TeacherAssignmentSpecificDisplayProps> = memo(

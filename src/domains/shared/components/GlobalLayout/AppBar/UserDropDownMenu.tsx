@@ -8,11 +8,11 @@ import {
 	Popover
 } from '@material-ui/core';
 import {
-	Settings,
+	// Settings,
 	MeetingRoom,
 	EventNote,
 	DateRange,
-	Person,
+	// Person,
 	// Forum,
 	AccountBalance
 } from '@material-ui/icons';
@@ -89,7 +89,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					horizontal: 'right'
 				}}
 			>
-				<MenuList>
+				{/* <MenuList>
 					<MenuLinkItem
 						href={Routes.user.PROFILE.path}
 						onClick={popupState.close}
@@ -112,28 +112,30 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 					</MenuLinkItem>
 				</MenuList>
 
+				<Divider /> */}
+
 				{shouldShowUserUniversitySpecificButtons && (
 					<>
-						<Divider />
-
 						<MenuList>
-							<MenuLinkItem
-								href={composeDynamicRoute(
-									Routes.userUniversity.GRADES.path,
-									{
-										universityId: String(
-											router.query.universityId
-										)
-									}
-								)}
-								onClick={popupState.close}
-								button
-							>
-								<ListItemIcon>
-									<EventNote />
-								</ListItemIcon>
-								<ListItemText primary="Grades" />
-							</MenuLinkItem>
+							{university?.role === UserRole.STUDENT && (
+								<MenuLinkItem
+									href={composeDynamicRoute(
+										Routes.userUniversity.GRADES.path,
+										{
+											universityId: String(
+												router.query.universityId
+											)
+										}
+									)}
+									onClick={popupState.close}
+									button
+								>
+									<ListItemIcon>
+										<EventNote />
+									</ListItemIcon>
+									<ListItemText primary="Grades" />
+								</MenuLinkItem>
+							)}
 							{/* <MenuLinkItem
 								href={composeDynamicRoute(
 									Routes.userUniversity.FORUM.path,
@@ -190,10 +192,10 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 								<ListItemText primary="Upcoming activities" />
 							</MenuLinkItem>
 						</MenuList>
+
+						<Divider />
 					</>
 				)}
-
-				<Divider />
 
 				<MenuList>
 					<MenuItem button onClick={handleLogout}>

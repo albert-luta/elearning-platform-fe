@@ -22,7 +22,10 @@ export const Routes = inferRoutes({
 	},
 	userUniversity: {
 		UPCOMING_ACTIVITIES: { path: '/app/:universityId/upcoming-activities' },
-		GRADES: { path: '/app/:universityId/grades' },
+		GRADES: {
+			path: '/app/:universityId/grades',
+			universityRoles: [UserRole.STUDENT]
+		},
 		// FORUM: { path: '/app/:universityId/forum' },
 		QUESTION_BANK: {
 			path: '/app/:universityId/question-bank',

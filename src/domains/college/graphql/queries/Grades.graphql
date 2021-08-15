@@ -1,0 +1,15 @@
+query Grades($universityId: String!) {
+	colleges(universityId: $universityId) {
+		...CollegeBaseFields
+		courses {
+			...CourseBaseFields
+			activitiesGrade {
+				activityId
+				activityName
+				activityType
+				grade
+				maxGrade
+			}
+		}
+	}
+}

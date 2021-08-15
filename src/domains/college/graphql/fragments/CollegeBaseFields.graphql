@@ -1,0 +1,5 @@
+fragment CollegeBaseFields on CollegeObject {
+	id
+	name
+	universityId
+}

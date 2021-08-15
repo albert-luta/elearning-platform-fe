@@ -5,23 +5,23 @@ import { AddCard } from 'domains/shared/components/card/AddCard';
 import { ListItemCollapsible } from 'domains/shared/components/list/ListItemCollapsible';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { UserRole } from 'domains/shared/constants/UserRole';
-import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
-import { CollegeObject, useDeleteCollegeMutation } from 'generated/graphql';
+import {
+	CollegeFieldsFragment,
+	useDeleteCollegeMutation
+} from 'generated/graphql';
 import { FC, memo, useCallback } from 'react';
 import { deleteCollegeUpdate } from '../graphql/updates/deleteCollegeUpdate';
 import { UpdateCollegeForm } from './CollegeForm/UpdateCollegeForm';
 import { CourseDashboardCard } from './CourseDashboardCard';
 
 interface CollegeDashboardCollapsibleProps {
-	college: CollegeObject;
+	college: CollegeFieldsFragment;
 }
 
 export const CollegeDashboardCollapsible: FC<CollegeDashboardCollapsibleProps> = memo(
 	function CollegeDashboardCollapsible({ college }) {
 		const { id, name, courses } = college;
-
-		const [isOpen, , , toggleIsOpen] = useBooleanState();
 
 		const university = useReactiveVar(selectedUniversityVar);
 
@@ -39,8 +39,6 @@ export const CollegeDashboardCollapsible: FC<CollegeDashboardCollapsibleProps> =
 
 		return (
 			<ListItemCollapsible
-				isOpen={isOpen}
-				onToggle={toggleIsOpen}
 				name={name}
 				action={
 					university?.role === UserRole.ADMIN && (

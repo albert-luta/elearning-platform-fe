@@ -6,7 +6,6 @@ import { ListItemCollapsible } from 'domains/shared/components/list/ListItemColl
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
 import { Routes } from 'domains/shared/constants/Routes';
 import { UserRole } from 'domains/shared/constants/UserRole';
-import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import {
@@ -32,8 +31,6 @@ interface SectionCollapsibleProps {
 export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 	function SectionCollapsible({ section }) {
 		const { id, name, activities, courseId } = section;
-
-		const [isOpen, , , toggleIsOpen] = useBooleanState();
 
 		const university = useReactiveVar(selectedUniversityVar);
 		const router = useRouter();
@@ -64,8 +61,6 @@ export const SectionCollapsible: FC<SectionCollapsibleProps> = memo(
 
 		return (
 			<ListItemCollapsible
-				isOpen={isOpen}
-				onToggle={toggleIsOpen}
 				name={name}
 				action={
 					haveManipulationPermissions && (

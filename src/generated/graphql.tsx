@@ -36,6 +36,15 @@ export type Activity = {
   universityId: Scalars['String'];
 };
 
+export type ActivityGradeObject = {
+  __typename?: 'ActivityGradeObject';
+  activityId: Scalars['String'];
+  activityName: Scalars['String'];
+  activityType: ActivityType;
+  grade?: Maybe<Scalars['Float']>;
+  maxGrade: Scalars['Float'];
+};
+
 export enum ActivityType {
   Assignment = 'ASSIGNMENT',
   Forum = 'FORUM',
@@ -130,6 +139,7 @@ export type Course = {
 
 export type CourseObject = {
   __typename?: 'CourseObject';
+  activitiesGrade: Array<ActivityGradeObject>;
   collegeId: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -1538,13 +1548,18 @@ export type RegisterMutation = (
   ) }
 );
 
-export type CollegeFieldsFragment = (
+export type CollegeBaseFieldsFragment = (
   { __typename?: 'CollegeObject' }
   & Pick<CollegeObject, 'id' | 'name' | 'universityId'>
+);
+
+export type CollegeFieldsFragment = (
+  { __typename?: 'CollegeObject' }
   & { courses: Array<(
     { __typename?: 'CourseObject' }
-    & CourseFieldsFragment
+    & CourseBaseFieldsFragment
   )> }
+  & CollegeBaseFieldsFragment
 );
 
 export type CreateCollegeMutationVariables = Exact<{
@@ -1600,6 +1615,27 @@ export type CollegesQuery = (
   )> }
 );
 
+export type GradesQueryVariables = Exact<{
+  universityId: Scalars['String'];
+}>;
+
+
+export type GradesQuery = (
+  { __typename?: 'Query' }
+  & { colleges: Array<(
+    { __typename?: 'CollegeObject' }
+    & { courses: Array<(
+      { __typename?: 'CourseObject' }
+      & { activitiesGrade: Array<(
+        { __typename?: 'ActivityGradeObject' }
+        & Pick<ActivityGradeObject, 'activityId' | 'activityName' | 'activityType' | 'grade' | 'maxGrade'>
+      )> }
+      & CourseBaseFieldsFragment
+    )> }
+    & CollegeBaseFieldsFragment
+  )> }
+);
+
 type ActivityFields_AssignmentObject_Fragment = (
   { __typename?: 'AssignmentObject' }
   & AssignmentFieldsFragment
@@ -1652,7 +1688,7 @@ type BaseActivityFields_ResourceObject_Fragment = (
 
 export type BaseActivityFieldsFragment = BaseActivityFields_AssignmentObject_Fragment | BaseActivityFields_ForumObject_Fragment | BaseActivityFields_QuizObject_Fragment | BaseActivityFields_ResourceObject_Fragment;
 
-export type CourseFieldsFragment = (
+export type CourseBaseFieldsFragment = (
   { __typename?: 'CourseObject' }
   & Pick<CourseObject, 'id' | 'name' | 'collegeId' | 'universityId'>
 );
@@ -1748,7 +1784,7 @@ export type CreateCourseMutation = (
   { __typename?: 'Mutation' }
   & { createCourse: (
     { __typename?: 'CourseObject' }
-    & CourseFieldsFragment
+    & CourseBaseFieldsFragment
   ) }
 );
 
@@ -1839,7 +1875,7 @@ export type DeleteCourseMutation = (
   { __typename?: 'Mutation' }
   & { deleteCourse: (
     { __typename?: 'CourseObject' }
-    & CourseFieldsFragment
+    & CourseBaseFieldsFragment
   ) }
 );
 
@@ -1881,7 +1917,7 @@ export type UpdateCourseMutation = (
   { __typename?: 'Mutation' }
   & { updateCourse: (
     { __typename?: 'CourseObject' }
-    & CourseFieldsFragment
+    & CourseBaseFieldsFragment
   ) }
 );
 
@@ -2298,8 +2334,15 @@ export const AuthenticationFieldsFragmentDoc = gql`
   accessToken
 }
     `;
-export const CourseFieldsFragmentDoc = gql`
-    fragment CourseFields on CourseObject {
+export const CollegeBaseFieldsFragmentDoc = gql`
+    fragment CollegeBaseFields on CollegeObject {
+  id
+  name
+  universityId
+}
+    `;
+export const CourseBaseFieldsFragmentDoc = gql`
+    fragment CourseBaseFields on CourseObject {
   id
   name
   collegeId
@@ -2308,14 +2351,13 @@ export const CourseFieldsFragmentDoc = gql`
     `;
 export const CollegeFieldsFragmentDoc = gql`
     fragment CollegeFields on CollegeObject {
-  id
-  name
-  universityId
+  ...CollegeBaseFields
   courses {
-    ...CourseFields
+    ...CourseBaseFields
   }
 }
-    ${CourseFieldsFragmentDoc}`;
+    ${CollegeBaseFieldsFragmentDoc}
+${CourseBaseFieldsFragmentDoc}`;
 export const SectionFieldsFragmentDoc = gql`
     fragment SectionFields on SectionObject {
   id
@@ -3353,6 +3395,52 @@ export function useCollegesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CollegesQueryHookResult = ReturnType<typeof useCollegesQuery>;
 export type CollegesLazyQueryHookResult = ReturnType<typeof useCollegesLazyQuery>;
 export type CollegesQueryResult = Apollo.QueryResult<CollegesQuery, CollegesQueryVariables>;
+export const GradesDocument = gql`
+    query Grades($universityId: String!) {
+  colleges(universityId: $universityId) {
+    ...CollegeBaseFields
+    courses {
+      ...CourseBaseFields
+      activitiesGrade {
+        activityId
+        activityName
+        activityType
+        grade
+        maxGrade
+      }
+    }
+  }
+}
+    ${CollegeBaseFieldsFragmentDoc}
+${CourseBaseFieldsFragmentDoc}`;
+
+/**
+ * __useGradesQuery__
+ *
+ * To run a query within a React component, call `useGradesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGradesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGradesQuery({
+ *   variables: {
+ *      universityId: // value for 'universityId'
+ *   },
+ * });
+ */
+export function useGradesQuery(baseOptions: Apollo.QueryHookOptions<GradesQuery, GradesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GradesQuery, GradesQueryVariables>(GradesDocument, options);
+      }
+export function useGradesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GradesQuery, GradesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GradesQuery, GradesQueryVariables>(GradesDocument, options);
+        }
+export type GradesQueryHookResult = ReturnType<typeof useGradesQuery>;
+export type GradesLazyQueryHookResult = ReturnType<typeof useGradesLazyQuery>;
+export type GradesQueryResult = Apollo.QueryResult<GradesQuery, GradesQueryVariables>;
 export const CreateAssignmentDocument = gql`
     mutation CreateAssignment($data: CreateAssignmentInput!, $files: [Upload!]!) {
   createAssignment(data: $data, files: $files) {
@@ -3390,10 +3478,10 @@ export type CreateAssignmentMutationOptions = Apollo.BaseMutationOptions<CreateA
 export const CreateCourseDocument = gql`
     mutation CreateCourse($data: CreateCourseInput!) {
   createCourse(data: $data) {
-    ...CourseFields
+    ...CourseBaseFields
   }
 }
-    ${CourseFieldsFragmentDoc}`;
+    ${CourseBaseFieldsFragmentDoc}`;
 export type CreateCourseMutationFn = Apollo.MutationFunction<CreateCourseMutation, CreateCourseMutationVariables>;
 
 /**
@@ -3592,10 +3680,10 @@ export type DeleteActivityMutationOptions = Apollo.BaseMutationOptions<DeleteAct
 export const DeleteCourseDocument = gql`
     mutation DeleteCourse($id: String!) {
   deleteCourse(id: $id) {
-    ...CourseFields
+    ...CourseBaseFields
   }
 }
-    ${CourseFieldsFragmentDoc}`;
+    ${CourseBaseFieldsFragmentDoc}`;
 export type DeleteCourseMutationFn = Apollo.MutationFunction<DeleteCourseMutation, DeleteCourseMutationVariables>;
 
 /**
@@ -3693,10 +3781,10 @@ export type UpdateAssignmentMutationOptions = Apollo.BaseMutationOptions<UpdateA
 export const UpdateCourseDocument = gql`
     mutation UpdateCourse($id: String!, $data: CreateCourseInput!) {
   updateCourse(id: $id, data: $data) {
-    ...CourseFields
+    ...CourseBaseFields
   }
 }
-    ${CourseFieldsFragmentDoc}`;
+    ${CourseBaseFieldsFragmentDoc}`;
 export type UpdateCourseMutationFn = Apollo.MutationFunction<UpdateCourseMutation, UpdateCourseMutationVariables>;
 
 /**

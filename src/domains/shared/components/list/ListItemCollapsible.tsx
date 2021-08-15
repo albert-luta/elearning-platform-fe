@@ -3,29 +3,32 @@ import {
 	Box,
 	ListItemText,
 	Collapse,
-	ListItemSecondaryAction
+	ListItemSecondaryAction,
+	TypographyProps
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { FC, memo, ReactNode } from 'react';
 
 interface ListItemCollapsibleProps {
 	name: string;
-	isOpen: boolean;
-	onToggle: () => void;
 	action?: ReactNode;
+	variant?: TypographyProps['variant'];
 }
 
 export const ListItemCollapsible: FC<ListItemCollapsibleProps> = memo(
-	function ListItemCollapsible({ name, isOpen, onToggle, action, children }) {
+	function ListItemCollapsible({ name, action, variant = 'h5', children }) {
+		const [isOpen, , , toggleIsOpen] = useBooleanState();
+
 		return (
 			<>
-				<ListItem button onClick={onToggle}>
+				<ListItem button onClick={toggleIsOpen}>
 					<Box display="flex" alignItems="center" pr={2}>
 						{isOpen ? <ExpandLess /> : <ExpandMore />}
 					</Box>
 					<ListItemText
 						primary={name}
-						primaryTypographyProps={{ variant: 'h5' }}
+						primaryTypographyProps={{ variant }}
 					/>
 					{action && (
 						<ListItemSecondaryAction>

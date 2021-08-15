@@ -1,0 +1,6 @@
+fragment CourseBaseFields on CourseObject {
+	id
+	name
+	collegeId
+	universityId
+}

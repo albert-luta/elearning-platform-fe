@@ -2,7 +2,6 @@ import { Box, Typography } from '@material-ui/core';
 import { AddButton } from 'domains/shared/components/buttons/AddButton';
 import { ListItemCollapsible } from 'domains/shared/components/list/ListItemCollapsible';
 import { ModifyResourceAction } from 'domains/shared/components/ModifyResourceAction';
-import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import {
 	QuestionCategoryObject,
 	useDeleteQuestionCategoryMutation,
@@ -22,8 +21,6 @@ interface QuestionCategoryCollapsibleProps {
 
 export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> = memo(
 	function QuestionCategoryCollapsible({ category }) {
-		const [isOpen, , , toggleIsOpen] = useBooleanState();
-
 		const [
 			deleteQuestionCategory,
 			{ loading: deleteQuestionCategoryLoading }
@@ -47,8 +44,6 @@ export const QuestionCategoryCollapsible: FC<QuestionCategoryCollapsibleProps> =
 
 		return (
 			<ListItemCollapsible
-				isOpen={isOpen}
-				onToggle={toggleIsOpen}
 				name={category.name}
 				action={
 					<ModifyResourceAction

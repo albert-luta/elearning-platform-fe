@@ -1,8 +1,6 @@
 fragment CollegeFields on CollegeObject {
-	id
-	name
-	universityId
+	...CollegeBaseFields
 	courses {
-		...CourseFields
+		...CourseBaseFields
 	}
 }

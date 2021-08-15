@@ -12,11 +12,11 @@ import { Routes } from 'domains/shared/constants/Routes';
 import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
-import { CollegeObject } from 'generated/graphql';
+import { CollegeFieldsFragment } from 'generated/graphql';
 import { FC, memo } from 'react';
 
 interface CollegeDrawerCollapsibleProps {
-	college: CollegeObject;
+	college: CollegeFieldsFragment;
 	onClose?: () => void;
 }
 

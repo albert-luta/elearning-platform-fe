@@ -1,5 +1,5 @@
 mutation CreateCourse($data: CreateCourseInput!) {
 	createCourse(data: $data) {
-		...CourseFields
+		...CourseBaseFields
 	}
 }

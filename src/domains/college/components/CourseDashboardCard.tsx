@@ -8,12 +8,15 @@ import { Routes } from 'domains/shared/constants/Routes';
 import { UserRole } from 'domains/shared/constants/UserRole';
 import { composeDynamicRoute } from 'domains/shared/utils/route/composeDynamicRoute';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
-import { CourseObject, useDeleteCourseMutation } from 'generated/graphql';
+import {
+	CourseBaseFieldsFragment,
+	useDeleteCourseMutation
+} from 'generated/graphql';
 import { FC, memo, useCallback } from 'react';
 
 interface CourseDashboardCardProps {
 	collegeId: string;
-	course: CourseObject;
+	course: CourseBaseFieldsFragment;
 }
 
 export const CourseDashboardCard: FC<CourseDashboardCardProps> = memo(

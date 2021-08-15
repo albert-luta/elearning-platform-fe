@@ -1,11 +1,14 @@
 import { useFormikSubmit } from 'domains/shared/hooks/useFormikSubmit';
 import { normalizeUpdateFormInitialValues } from 'domains/shared/utils/form/normalizeUpdateFormInitialValues';
-import { CollegeObject, useUpdateCollegeMutation } from 'generated/graphql';
+import {
+	CollegeFieldsFragment,
+	useUpdateCollegeMutation
+} from 'generated/graphql';
 import { FC, memo } from 'react';
 import { CollegeForm, UpdateCollegeFormValues } from './CollegeForm';
 
 interface UpdateCollegeFormProps {
-	college: CollegeObject;
+	college: CollegeFieldsFragment;
 	onSuccess: () => void;
 }
 

@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { QuestionIcon } from 'domains/shared/components/icons/QuestionIcon';
 import { ListItemCollapsible } from 'domains/shared/components/list/ListItemCollapsible';
-import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
 import { Countdown } from 'domains/shared/hooks/useCountdown';
 import { capitalize } from 'domains/shared/utils/capitalize';
 import { formatDuration } from 'domains/shared/utils/formatDuration';
@@ -40,8 +39,6 @@ type QuizStatusProps = {
 );
 
 export const QuizStatus: FC<QuizStatusProps> = memo(function QuizStatus(props) {
-	const [isQuestionsOpen, , , toggleIsQuestionsOpen] = useBooleanState();
-
 	return (
 		<>
 			<TableContainer>
@@ -132,11 +129,7 @@ export const QuizStatus: FC<QuizStatusProps> = memo(function QuizStatus(props) {
 
 			{props.type === 'teacher' && (
 				<Box mt={2}>
-					<ListItemCollapsible
-						name="Questions"
-						isOpen={isQuestionsOpen}
-						onToggle={toggleIsQuestionsOpen}
-					>
+					<ListItemCollapsible name="Questions">
 						{props.quizQuestions.length ? (
 							<TableContainer>
 								<Table>

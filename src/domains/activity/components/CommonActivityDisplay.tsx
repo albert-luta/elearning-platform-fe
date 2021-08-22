@@ -19,7 +19,9 @@ export const CommonActivityDisplay: FC<CommonActivityDisplayProps> = memo(
 					}
 				/>
 				{activity.description && (
-					<Typography>{activity.description}</Typography>
+					<Box mt={2}>
+						<Typography>{activity.description}</Typography>
+					</Box>
 				)}
 				{!!activity.files.length && (
 					<Box mt={2}>

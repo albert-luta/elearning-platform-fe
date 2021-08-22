@@ -38,7 +38,7 @@ export default function AssignmentDashboard() {
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>
-						<Box mt={2}>
+						<Box mt={4}>
 							<AssignmentSpecificDisplay
 								activity={activityQuery.data.activity}
 							/>

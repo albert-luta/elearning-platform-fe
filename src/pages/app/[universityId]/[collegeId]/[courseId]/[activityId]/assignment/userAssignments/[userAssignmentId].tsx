@@ -71,7 +71,7 @@ export default function AssignmentReview() {
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>
-						<Box mt={2}>
+						<Box mt={4}>
 							<Typography variant="h5">
 								Assignment status
 							</Typography>

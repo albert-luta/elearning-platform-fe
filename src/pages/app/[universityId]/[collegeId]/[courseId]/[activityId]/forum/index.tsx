@@ -50,7 +50,7 @@ export default function ForumDashboard() {
 								activity={activityQuery.data.activity}
 							/>
 						</Box>
-						<Box mt={2}>
+						<Box mt={4}>
 							<ForumSpecificDisplay
 								activity={activityQuery.data.activity}
 							/>

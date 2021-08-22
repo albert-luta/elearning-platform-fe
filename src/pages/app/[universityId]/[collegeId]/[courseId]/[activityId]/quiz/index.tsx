@@ -37,7 +37,7 @@ export default function QuizDashboard() {
 						<CommonActivityDisplay
 							activity={activityQuery.data.activity}
 						/>
-						<Box mt={2}>
+						<Box mt={4}>
 							<QuizSpecificDisplay
 								activity={activityQuery.data.activity}
 							/>

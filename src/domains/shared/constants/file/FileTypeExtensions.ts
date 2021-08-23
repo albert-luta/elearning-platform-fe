@@ -16,6 +16,7 @@ export const FileTypeExtensions: Record<FileType, Record<string, true>> = {
 	},
 	[FileType.TEXT]: { '.txt': true },
 	[FileType.IMAGE]: {
+		'.webp': true,
 		'.jpg': true,
 		'.jpeg': true,
 		'.gif': true,

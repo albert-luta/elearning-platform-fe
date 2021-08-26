@@ -1,0 +1,9 @@
+fragment CourseUserFields on CourseUserObject {
+	id
+	courseId
+	collegeUserId
+	course {
+		id
+		name
+	}
+}

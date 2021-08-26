@@ -30,6 +30,10 @@ export const Routes = inferRoutes({
 		QUESTION_BANK: {
 			path: '/app/:universityId/question-bank',
 			universityRoles: [UserRole.TEACHER, UserRole.ADMIN]
+		},
+		USERS: {
+			path: '/app/:universityId/users',
+			universityRoles: [UserRole.ADMIN]
 		}
 	},
 	university: {

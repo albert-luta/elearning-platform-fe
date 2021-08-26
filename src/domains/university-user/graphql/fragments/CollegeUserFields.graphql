@@ -1,0 +1,12 @@
+fragment CollegeUserFields on CollegeUserObject {
+	id
+	universityUserId
+	collegeId
+	college {
+		id
+		name
+	}
+	coursesEnrolledAt {
+		...CourseUserFields
+	}
+}

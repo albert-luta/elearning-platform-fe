@@ -14,7 +14,8 @@ import {
 	DateRange,
 	// Person,
 	// Forum,
-	AccountBalance
+	AccountBalance,
+	People
 } from '@material-ui/icons';
 import { Routes, RoutesGroups } from 'domains/shared/constants/Routes';
 import { UserRole } from 'domains/shared/constants/UserRole';
@@ -69,7 +70,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 		]);
 
 		const university = useReactiveVar(selectedUniversityVar);
-		const shouldShowTeacherSpecificButtons = useMemo(
+		const shouldShowTeacherOrAdminSpecificButtons = useMemo(
 			() =>
 				[UserRole.TEACHER, UserRole.ADMIN].includes(
 					university?.role ?? UserRole.STUDENT
@@ -136,6 +137,25 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 									<ListItemText primary="Grades" />
 								</MenuLinkItem>
 							)}
+							{university?.role === UserRole.ADMIN && (
+								<MenuLinkItem
+									href={composeDynamicRoute(
+										Routes.userUniversity.USERS.path,
+										{
+											universityId: String(
+												router.query.universityId
+											)
+										}
+									)}
+									onClick={popupState.close}
+									button
+								>
+									<ListItemIcon>
+										<People />
+									</ListItemIcon>
+									<ListItemText primary="Users" />
+								</MenuLinkItem>
+							)}
 							{/* <MenuLinkItem
 								href={composeDynamicRoute(
 									Routes.userUniversity.FORUM.path,
@@ -153,7 +173,7 @@ export const UserDropDownMenu: FC<UserDropDownMenuProps> = memo(
 								</ListItemIcon>
 								<ListItemText primary="Forum" />
 							</MenuLinkItem> */}
-							{shouldShowTeacherSpecificButtons && (
+							{shouldShowTeacherOrAdminSpecificButtons && (
 								<MenuLinkItem
 									href={composeDynamicRoute(
 										Routes.userUniversity.QUESTION_BANK

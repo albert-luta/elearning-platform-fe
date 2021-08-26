@@ -125,6 +125,15 @@ export type CollegeUser = {
   universityUserId: Scalars['String'];
 };
 
+export type CollegeUserObject = {
+  __typename?: 'CollegeUserObject';
+  college: CollegeObject;
+  collegeId: Scalars['String'];
+  coursesEnrolledAt: Array<CourseUserObject>;
+  id: Scalars['ID'];
+  universityUserId: Scalars['String'];
+};
+
 export type Course = {
   __typename?: 'Course';
   college: College;
@@ -151,6 +160,14 @@ export type CourseUser = {
   collegeUser: CollegeUser;
   collegeUserId: Scalars['String'];
   course: Course;
+  courseId: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+export type CourseUserObject = {
+  __typename?: 'CourseUserObject';
+  collegeUserId: Scalars['String'];
+  course: CourseObject;
   courseId: Scalars['String'];
   id: Scalars['ID'];
 };
@@ -553,6 +570,7 @@ export type Query = {
   myQuiz?: Maybe<UserQuizObject>;
   questionBank: Array<QuestionCategoryObject>;
   sections: Array<SectionObject>;
+  universityUsers: Array<UniversityUserObject>;
   upcomingActivities: Array<BaseActivityInterface>;
   userAssignment?: Maybe<UserAssignmentObject>;
   userAssignments: Array<UserAssignmentObject>;
@@ -588,6 +606,11 @@ export type QueryMyQuizArgs = {
 
 export type QuerySectionsArgs = {
   courseId: Scalars['String'];
+};
+
+
+export type QueryUniversityUsersArgs = {
+  universityId: Scalars['String'];
 };
 
 
@@ -853,6 +876,7 @@ export type UniversityUser = {
 
 export type UniversityUserObject = {
   __typename?: 'UniversityUserObject';
+  collegesEnrolledAt: Array<CollegeUserObject>;
   id: Scalars['ID'];
   role: RoleObject;
   roleId: Scalars['String'];
@@ -2020,6 +2044,44 @@ export type UniversityFieldsFragment = (
   & Pick<UniversityObject, 'id' | 'name' | 'logo'>
 );
 
+export type CollegeUserFieldsFragment = (
+  { __typename?: 'CollegeUserObject' }
+  & Pick<CollegeUserObject, 'id' | 'universityUserId' | 'collegeId'>
+  & { college: (
+    { __typename?: 'CollegeObject' }
+    & Pick<CollegeObject, 'id' | 'name'>
+  ), coursesEnrolledAt: Array<(
+    { __typename?: 'CourseUserObject' }
+    & CourseUserFieldsFragment
+  )> }
+);
+
+export type CourseUserFieldsFragment = (
+  { __typename?: 'CourseUserObject' }
+  & Pick<CourseUserObject, 'id' | 'courseId' | 'collegeUserId'>
+  & { course: (
+    { __typename?: 'CourseObject' }
+    & Pick<CourseObject, 'id' | 'name'>
+  ) }
+);
+
+export type UniversityUsersQueryVariables = Exact<{
+  universityId: Scalars['String'];
+}>;
+
+
+export type UniversityUsersQuery = (
+  { __typename?: 'Query' }
+  & { universityUsers: Array<(
+    { __typename?: 'UniversityUserObject' }
+    & { collegesEnrolledAt: Array<(
+      { __typename?: 'CollegeUserObject' }
+      & CollegeUserFieldsFragment
+    )> }
+    & UniversityUserFieldsFragment
+  )> }
+);
+
 export type CreateUniversityMutationVariables = Exact<{
   data: CreateUniversityInput;
   logo?: Maybe<Scalars['Upload']>;
@@ -2377,6 +2439,31 @@ export const UniversityFieldsFragmentDoc = gql`
   logo
 }
     `;
+export const CourseUserFieldsFragmentDoc = gql`
+    fragment CourseUserFields on CourseUserObject {
+  id
+  courseId
+  collegeUserId
+  course {
+    id
+    name
+  }
+}
+    `;
+export const CollegeUserFieldsFragmentDoc = gql`
+    fragment CollegeUserFields on CollegeUserObject {
+  id
+  universityUserId
+  collegeId
+  college {
+    id
+    name
+  }
+  coursesEnrolledAt {
+    ...CourseUserFields
+  }
+}
+    ${CourseUserFieldsFragmentDoc}`;
 export const CreateForumCommentDocument = gql`
     mutation CreateForumComment($forumId: String!, $data: CreateForumCommentInput!) {
   createForumComment(forumId: $forumId, data: $data) {
@@ -4021,6 +4108,45 @@ export function useSectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SectionsQueryHookResult = ReturnType<typeof useSectionsQuery>;
 export type SectionsLazyQueryHookResult = ReturnType<typeof useSectionsLazyQuery>;
 export type SectionsQueryResult = Apollo.QueryResult<SectionsQuery, SectionsQueryVariables>;
+export const UniversityUsersDocument = gql`
+    query UniversityUsers($universityId: String!) {
+  universityUsers(universityId: $universityId) {
+    ...UniversityUserFields
+    collegesEnrolledAt {
+      ...CollegeUserFields
+    }
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}
+${CollegeUserFieldsFragmentDoc}`;
+
+/**
+ * __useUniversityUsersQuery__
+ *
+ * To run a query within a React component, call `useUniversityUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUniversityUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUniversityUsersQuery({
+ *   variables: {
+ *      universityId: // value for 'universityId'
+ *   },
+ * });
+ */
+export function useUniversityUsersQuery(baseOptions: Apollo.QueryHookOptions<UniversityUsersQuery, UniversityUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UniversityUsersQuery, UniversityUsersQueryVariables>(UniversityUsersDocument, options);
+      }
+export function useUniversityUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UniversityUsersQuery, UniversityUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UniversityUsersQuery, UniversityUsersQueryVariables>(UniversityUsersDocument, options);
+        }
+export type UniversityUsersQueryHookResult = ReturnType<typeof useUniversityUsersQuery>;
+export type UniversityUsersLazyQueryHookResult = ReturnType<typeof useUniversityUsersLazyQuery>;
+export type UniversityUsersQueryResult = Apollo.QueryResult<UniversityUsersQuery, UniversityUsersQueryVariables>;
 export const CreateUniversityDocument = gql`
     mutation CreateUniversity($data: CreateUniversityInput!, $logo: Upload) {
   createUniversity(data: $data, logo: $logo) {

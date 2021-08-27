@@ -1,0 +1,8 @@
+mutation UpdateUniversityUser($id: String!, $data: UpdateUniversityUserInput!) {
+	updateUniversityUser(id: $id, data: $data) {
+		...UniversityUserFields
+		collegesEnrolledAt {
+			...CollegeUserFields
+		}
+	}
+}

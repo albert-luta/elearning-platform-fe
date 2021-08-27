@@ -1,0 +1,5 @@
+mutation DeleteUniversityUser($id: String!) {
+	deleteUniversityUser(id: $id) {
+		...UniversityUserFields
+	}
+}

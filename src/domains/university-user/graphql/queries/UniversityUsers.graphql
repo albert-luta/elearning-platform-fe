@@ -1,8 +1,5 @@
 query UniversityUsers($universityId: String!) {
 	universityUsers(universityId: $universityId) {
 		...UniversityUserFields
-		collegesEnrolledAt {
-			...CollegeUserFields
-		}
 	}
 }

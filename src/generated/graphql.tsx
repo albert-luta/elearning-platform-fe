@@ -115,6 +115,11 @@ export type CollegeObject = {
   universityId: Scalars['String'];
 };
 
+export type CollegeToEnrollAtInput = {
+  coursesToEnrollAt: Array<CourseToEnrollAtInput>;
+  id: Scalars['String'];
+};
+
 export type CollegeUser = {
   __typename?: 'CollegeUser';
   college: College;
@@ -153,6 +158,10 @@ export type CourseObject = {
   id: Scalars['ID'];
   name: Scalars['String'];
   universityId: Scalars['String'];
+};
+
+export type CourseToEnrollAtInput = {
+  id: Scalars['String'];
 };
 
 export type CourseUser = {
@@ -249,6 +258,12 @@ export type CreateUniversityInput = {
   name: Scalars['String'];
 };
 
+export type CreateUniversityUserInput = {
+  collegesToEnrollAt: Array<CollegeToEnrollAtInput>;
+  roleId: Scalars['String'];
+  userEmail: Scalars['String'];
+};
+
 
 export type Forum = {
   __typename?: 'Forum';
@@ -323,6 +338,7 @@ export type Mutation = {
   createResource: ResourceObject;
   createSection: SectionObject;
   createUniversity: UniversityObject;
+  createUniversityUser: UniversityUserObject;
   deleteActivity: BaseActivityInterface;
   deleteCollege: CollegeObject;
   deleteCourse: CourseObject;
@@ -330,6 +346,7 @@ export type Mutation = {
   deleteQuestionCategory: QuestionCategoryObject;
   deleteSection: SectionObject;
   deleteUniversity: UniversityObject;
+  deleteUniversityUser: UniversityUserObject;
   leaveUniversity: UniversityObject;
   login: Authentication;
   logout?: Maybe<Authentication>;
@@ -348,6 +365,7 @@ export type Mutation = {
   updateResource: ResourceObject;
   updateSection: SectionObject;
   updateUniversity: UniversityObject;
+  updateUniversityUser: UniversityUserObject;
   updateUserAssignment: UserAssignmentObject;
 };
 
@@ -419,6 +437,11 @@ export type MutationCreateUniversityArgs = {
 };
 
 
+export type MutationCreateUniversityUserArgs = {
+  data: CreateUniversityUserInput;
+};
+
+
 export type MutationDeleteActivityArgs = {
   id: Scalars['String'];
   type: ActivityType;
@@ -451,6 +474,11 @@ export type MutationDeleteSectionArgs = {
 
 
 export type MutationDeleteUniversityArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteUniversityUserArgs = {
   id: Scalars['String'];
 };
 
@@ -555,6 +583,12 @@ export type MutationUpdateUniversityArgs = {
 };
 
 
+export type MutationUpdateUniversityUserArgs = {
+  data: UpdateUniversityUserInput;
+  id: Scalars['String'];
+};
+
+
 export type MutationUpdateUserAssignmentArgs = {
   data: UpdateUserAssignmentInput;
   id: Scalars['String'];
@@ -569,7 +603,9 @@ export type Query = {
   myAssignment?: Maybe<UserAssignmentObject>;
   myQuiz?: Maybe<UserQuizObject>;
   questionBank: Array<QuestionCategoryObject>;
+  roles: Array<RoleObject>;
   sections: Array<SectionObject>;
+  universityUser?: Maybe<UniversityUserObject>;
   universityUsers: Array<UniversityUserObject>;
   upcomingActivities: Array<BaseActivityInterface>;
   userAssignment?: Maybe<UserAssignmentObject>;
@@ -606,6 +642,11 @@ export type QueryMyQuizArgs = {
 
 export type QuerySectionsArgs = {
   courseId: Scalars['String'];
+};
+
+
+export type QueryUniversityUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -945,6 +986,11 @@ export type UpdateResourceInput = {
   name: Scalars['String'];
   oldFiles: Array<Scalars['String']>;
   sectionId: Scalars['String'];
+};
+
+export type UpdateUniversityUserInput = {
+  collegesToEnrollAt: Array<CollegeToEnrollAtInput>;
+  roleId: Scalars['String'];
 };
 
 export type UpdateUserAssignmentInput = {
@@ -2065,6 +2111,78 @@ export type CourseUserFieldsFragment = (
   ) }
 );
 
+export type CreateUniversityUserMutationVariables = Exact<{
+  data: CreateUniversityUserInput;
+}>;
+
+
+export type CreateUniversityUserMutation = (
+  { __typename?: 'Mutation' }
+  & { createUniversityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & UniversityUserFieldsFragment
+  ) }
+);
+
+export type DeleteUniversityUserMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteUniversityUserMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteUniversityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & UniversityUserFieldsFragment
+  ) }
+);
+
+export type UpdateUniversityUserMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateUniversityUserInput;
+}>;
+
+
+export type UpdateUniversityUserMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUniversityUser: (
+    { __typename?: 'UniversityUserObject' }
+    & { collegesEnrolledAt: Array<(
+      { __typename?: 'CollegeUserObject' }
+      & CollegeUserFieldsFragment
+    )> }
+    & UniversityUserFieldsFragment
+  ) }
+);
+
+export type RolesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RolesQuery = (
+  { __typename?: 'Query' }
+  & { roles: Array<(
+    { __typename?: 'RoleObject' }
+    & Pick<RoleObject, 'id' | 'name'>
+  )> }
+);
+
+export type UniversityUserQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type UniversityUserQuery = (
+  { __typename?: 'Query' }
+  & { universityUser?: Maybe<(
+    { __typename?: 'UniversityUserObject' }
+    & { collegesEnrolledAt: Array<(
+      { __typename?: 'CollegeUserObject' }
+      & CollegeUserFieldsFragment
+    )> }
+    & UniversityUserFieldsFragment
+  )> }
+);
+
 export type UniversityUsersQueryVariables = Exact<{
   universityId: Scalars['String'];
 }>;
@@ -2074,10 +2192,6 @@ export type UniversityUsersQuery = (
   { __typename?: 'Query' }
   & { universityUsers: Array<(
     { __typename?: 'UniversityUserObject' }
-    & { collegesEnrolledAt: Array<(
-      { __typename?: 'CollegeUserObject' }
-      & CollegeUserFieldsFragment
-    )> }
     & UniversityUserFieldsFragment
   )> }
 );
@@ -4108,9 +4222,75 @@ export function useSectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<S
 export type SectionsQueryHookResult = ReturnType<typeof useSectionsQuery>;
 export type SectionsLazyQueryHookResult = ReturnType<typeof useSectionsLazyQuery>;
 export type SectionsQueryResult = Apollo.QueryResult<SectionsQuery, SectionsQueryVariables>;
-export const UniversityUsersDocument = gql`
-    query UniversityUsers($universityId: String!) {
-  universityUsers(universityId: $universityId) {
+export const CreateUniversityUserDocument = gql`
+    mutation CreateUniversityUser($data: CreateUniversityUserInput!) {
+  createUniversityUser(data: $data) {
+    ...UniversityUserFields
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}`;
+export type CreateUniversityUserMutationFn = Apollo.MutationFunction<CreateUniversityUserMutation, CreateUniversityUserMutationVariables>;
+
+/**
+ * __useCreateUniversityUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUniversityUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUniversityUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUniversityUserMutation, { data, loading, error }] = useCreateUniversityUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateUniversityUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUniversityUserMutation, CreateUniversityUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUniversityUserMutation, CreateUniversityUserMutationVariables>(CreateUniversityUserDocument, options);
+      }
+export type CreateUniversityUserMutationHookResult = ReturnType<typeof useCreateUniversityUserMutation>;
+export type CreateUniversityUserMutationResult = Apollo.MutationResult<CreateUniversityUserMutation>;
+export type CreateUniversityUserMutationOptions = Apollo.BaseMutationOptions<CreateUniversityUserMutation, CreateUniversityUserMutationVariables>;
+export const DeleteUniversityUserDocument = gql`
+    mutation DeleteUniversityUser($id: String!) {
+  deleteUniversityUser(id: $id) {
+    ...UniversityUserFields
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}`;
+export type DeleteUniversityUserMutationFn = Apollo.MutationFunction<DeleteUniversityUserMutation, DeleteUniversityUserMutationVariables>;
+
+/**
+ * __useDeleteUniversityUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUniversityUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUniversityUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUniversityUserMutation, { data, loading, error }] = useDeleteUniversityUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteUniversityUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUniversityUserMutation, DeleteUniversityUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUniversityUserMutation, DeleteUniversityUserMutationVariables>(DeleteUniversityUserDocument, options);
+      }
+export type DeleteUniversityUserMutationHookResult = ReturnType<typeof useDeleteUniversityUserMutation>;
+export type DeleteUniversityUserMutationResult = Apollo.MutationResult<DeleteUniversityUserMutation>;
+export type DeleteUniversityUserMutationOptions = Apollo.BaseMutationOptions<DeleteUniversityUserMutation, DeleteUniversityUserMutationVariables>;
+export const UpdateUniversityUserDocument = gql`
+    mutation UpdateUniversityUser($id: String!, $data: UpdateUniversityUserInput!) {
+  updateUniversityUser(id: $id, data: $data) {
     ...UniversityUserFields
     collegesEnrolledAt {
       ...CollegeUserFields
@@ -4119,6 +4299,114 @@ export const UniversityUsersDocument = gql`
 }
     ${UniversityUserFieldsFragmentDoc}
 ${CollegeUserFieldsFragmentDoc}`;
+export type UpdateUniversityUserMutationFn = Apollo.MutationFunction<UpdateUniversityUserMutation, UpdateUniversityUserMutationVariables>;
+
+/**
+ * __useUpdateUniversityUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUniversityUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUniversityUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUniversityUserMutation, { data, loading, error }] = useUpdateUniversityUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUniversityUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUniversityUserMutation, UpdateUniversityUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUniversityUserMutation, UpdateUniversityUserMutationVariables>(UpdateUniversityUserDocument, options);
+      }
+export type UpdateUniversityUserMutationHookResult = ReturnType<typeof useUpdateUniversityUserMutation>;
+export type UpdateUniversityUserMutationResult = Apollo.MutationResult<UpdateUniversityUserMutation>;
+export type UpdateUniversityUserMutationOptions = Apollo.BaseMutationOptions<UpdateUniversityUserMutation, UpdateUniversityUserMutationVariables>;
+export const RolesDocument = gql`
+    query Roles {
+  roles {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useRolesQuery__
+ *
+ * To run a query within a React component, call `useRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRolesQuery(baseOptions?: Apollo.QueryHookOptions<RolesQuery, RolesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RolesQuery, RolesQueryVariables>(RolesDocument, options);
+      }
+export function useRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RolesQuery, RolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RolesQuery, RolesQueryVariables>(RolesDocument, options);
+        }
+export type RolesQueryHookResult = ReturnType<typeof useRolesQuery>;
+export type RolesLazyQueryHookResult = ReturnType<typeof useRolesLazyQuery>;
+export type RolesQueryResult = Apollo.QueryResult<RolesQuery, RolesQueryVariables>;
+export const UniversityUserDocument = gql`
+    query UniversityUser($id: String!) {
+  universityUser(id: $id) {
+    ...UniversityUserFields
+    collegesEnrolledAt {
+      ...CollegeUserFields
+    }
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}
+${CollegeUserFieldsFragmentDoc}`;
+
+/**
+ * __useUniversityUserQuery__
+ *
+ * To run a query within a React component, call `useUniversityUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUniversityUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUniversityUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUniversityUserQuery(baseOptions: Apollo.QueryHookOptions<UniversityUserQuery, UniversityUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UniversityUserQuery, UniversityUserQueryVariables>(UniversityUserDocument, options);
+      }
+export function useUniversityUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UniversityUserQuery, UniversityUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UniversityUserQuery, UniversityUserQueryVariables>(UniversityUserDocument, options);
+        }
+export type UniversityUserQueryHookResult = ReturnType<typeof useUniversityUserQuery>;
+export type UniversityUserLazyQueryHookResult = ReturnType<typeof useUniversityUserLazyQuery>;
+export type UniversityUserQueryResult = Apollo.QueryResult<UniversityUserQuery, UniversityUserQueryVariables>;
+export const UniversityUsersDocument = gql`
+    query UniversityUsers($universityId: String!) {
+  universityUsers(universityId: $universityId) {
+    ...UniversityUserFields
+  }
+}
+    ${UniversityUserFieldsFragmentDoc}`;
 
 /**
  * __useUniversityUsersQuery__

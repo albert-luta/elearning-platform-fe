@@ -1,0 +1,8 @@
+query UniversityUser($id: String!) {
+	universityUser(id: $id) {
+		...UniversityUserFields
+		collegesEnrolledAt {
+			...CollegeUserFields
+		}
+	}
+}

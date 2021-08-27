@@ -1,0 +1,5 @@
+mutation CreateUniversityUser($data: CreateUniversityUserInput!) {
+	createUniversityUser(data: $data) {
+		...UniversityUserFields
+	}
+}

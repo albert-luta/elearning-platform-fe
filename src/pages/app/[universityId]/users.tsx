@@ -1,7 +1,18 @@
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import {
+	Box,
+	CircularProgress,
+	Typography,
+	Tooltip,
+	IconButton,
+	Dialog
+} from '@material-ui/core';
+import { Add } from '@material-ui/icons';
+import { Content } from 'domains/shared/components/layout/Content';
 import { ContentHeader } from 'domains/shared/components/layout/ContentHeader';
 import { MyHead } from 'domains/shared/components/MyHead';
-import { UsersTable } from 'domains/university-user/components/UsersTable';
+import { useBooleanState } from 'domains/shared/hooks/useBooleanState';
+import { CreateUniversityUserForm } from 'domains/university-user/components/UniversityUserForm/CreateUniversityUserForm';
+import { UniversityUsersTable } from 'domains/university-user/components/UniversityUsersTable';
 import { selectedUniversityVar } from 'domains/university/reactiveVars';
 import { useUniversityUsersQuery } from 'generated/graphql';
 
@@ -12,11 +23,26 @@ export default function Users() {
 		}
 	});
 
+	const [
+		isAddUserDialogOpen,
+		openAddUserDialog,
+		closeAddUserDialog
+	] = useBooleanState();
+
 	return (
 		<>
 			<MyHead title="Users" />
 
-			<ContentHeader title="Users" />
+			<ContentHeader
+				title="Users"
+				action={
+					<Tooltip title="Add User">
+						<IconButton onClick={openAddUserDialog}>
+							<Add />
+						</IconButton>
+					</Tooltip>
+				}
+			/>
 
 			{(() => {
 				if (universityUsers.loading) {
@@ -44,9 +70,23 @@ export default function Users() {
 				}
 
 				return (
-					<UsersTable users={universityUsers.data.universityUsers} />
+					<UniversityUsersTable
+						universityUsers={universityUsers.data.universityUsers}
+					/>
 				);
 			})()}
+
+			<Dialog
+				open={isAddUserDialogOpen}
+				onClose={closeAddUserDialog}
+				fullWidth
+				maxWidth="sm"
+			>
+				<Content>
+					<ContentHeader title="Add User" />
+					<CreateUniversityUserForm onSuccess={closeAddUserDialog} />
+				</Content>
+			</Dialog>
 		</>
 	);
 }

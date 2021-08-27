@@ -12,6 +12,9 @@ export const cache = new InMemoryCache({
 				},
 				questionBank: {
 					merge: false
+				},
+				universityUsers: {
+					merge: false
 				}
 			}
 		},

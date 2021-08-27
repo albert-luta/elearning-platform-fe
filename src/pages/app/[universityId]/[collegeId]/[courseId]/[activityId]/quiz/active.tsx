@@ -69,3 +69,5 @@ export default function QuizActive() {
 		</>
 	);
 }
+
+// TODO: show the prevent exit dialog - you may lose all your progress
